@@ -1,0 +1,263 @@
+# Pokemon Server
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Pokemon Server">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/traffic_light_server.livemd">Traffic Light Server</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/games_score_tracker.livemd">Games: Score Tracker</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Overview
+
+You're going to create a pokemon battle game with persistence.
+
+Each Pokemon will be a [GenServer](https://hexdocs.pm/elixir/GenServer.html) process storing the pokemon's stats in state.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+classDiagram
+ class Pokemon {
+  health: 20
+  attack: 5
+  type: :fire
+  name: "charmander"
+ }
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+Pokemon can attack each other. An attack should update the `Pokemon`'s health in the [GenServer](https://hexdocs.pm/elixir/GenServer.html)'s state.
+
+## Create Pokemon Server
+
+Create a `Pokemon` module which will be a [GenServer](https://hexdocs.pm/elixir/GenServer.html) and a struct definition. It should store the following in values in state. You do not need to validate these values, you can assume each will be the following:
+
+* `:name` will be a string.
+* `:type` will be an atom of either `:grass`, `:water`, or `:fire`
+* `:health` will be an integer with a default value of `20`
+* `:attack` will be an integer with a default value of `5`
+
+You should be able to create a `Pokemon` struct.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%Pokemon{name: "Charmander", type: :fire, health: 20, attack: 5}
+```
+
+`Pokemon` [GenServer](https://hexdocs.pm/elixir/GenServer.html)s should be able to attack one another. This should subtract one pokemon's `:attack` from the other pokemon's `:health`, and update the value in the state of the [GenServer](https://hexdocs.pm/elixir/GenServer.html). A pokemon's health should not be able to fall below `0`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+attacker = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur1", type: :grass})
+defender = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur2", type: :grass})
+
+Pokemon.attack(attacker, defender)
+%Pokemon{name: "Bulbasaur1", type: :grass, health: 15, attack: 20}
+```
+
+### Type Advantages And Weaknesses
+
+Multiply the damage dealt by an attack by `2` if the attacker has a type advantage. Multiply the damage applied by `0.5` if the attacker has a type weakness.
+
+Type Advantages are:
+
+* fire -> grass
+* grass -> water
+* water -> fire
+
+Type weaknesses are:
+
+* fire -> water
+* grass -> fire
+* water -> grass
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Example Solution</summary>
+
+```elixir
+defmodule Pokemon do
+  use GenServer
+  @enforce_keys [:name, :type]
+  defstruct @enforce_keys ++ [health: 20, attack: 5]
+
+  def start_link(opts \\ []) do
+    {pokemon, opts} = Keyword.pop!(opts, :pokemon)
+    GenServer.start_link(__MODULE__, pokemon, opts)
+  end
+
+  @impl true
+  def init(state) do
+    {:ok, state}
+  end
+
+  def attack(attacker, defender) do
+    attacker_type = Pokemon.get(attacker, :type)
+    defender_type = Pokemon.get(defender, :type)
+    damage_amount = Pokemon.get(attacker, :attack) * multiplier(attacker_type, defender_type)
+    GenServer.call(defender, {:apply_damage, damage_amount})
+  end
+
+  def multiplier(attacker_type, defender_type) do
+    case {attacker_type, defender_type} do
+      {:fire, :grass} -> 2
+      {:grass, :water} -> 2
+      {:water, :fire} -> 2
+      {:fire, :water} -> 0.5
+      {:grass, :fire} -> 0.5
+      {:water, :grass} -> 0.5
+      _ -> 1
+    end
+  end
+
+  def get(pokemon, key) do
+    GenServer.call(pokemon, {:get, key})
+  end
+
+  def handle_call({:get, key}, _from, pokemon) do
+    {:reply, Map.get(pokemon, key), pokemon}
+  end
+
+  @impl true
+  def handle_call({:apply_damage, amount}, _from, pokemon) do
+    updated_pokemon = Map.update!(pokemon, :health, fn health -> max(health - amount, 0) end)
+    {:reply, updated_pokemon, updated_pokemon}
+  end
+end
+```
+
+</details>
+
+Implement the `Pokemon` GenServer and struct definition as documented below.
+
+```elixir
+defmodule Pokemon do
+  @moduledoc """
+  Pokemon Server
+
+  Defines a Pokemon GenServer and struct.
+
+  ## Examples
+
+    iex> %Pokemon{name: "Charmander", type: :fire}
+    %Pokemon{name: "Charmander", type: :fire, health: 20, attack: 5}
+  """
+  use GenServer
+
+  @doc """
+  Start the Pokemon GenServer.
+
+  ## Examples
+      iex> {:ok, pokemon} = Pokemon.start_link([pokemon: %Pokemon{name: "Charmander", type: :fire}])
+  """
+  def start_link(opts \\ []) do
+  end
+
+  @doc """
+  Apply the attacker's attack damage to the defender's health.
+
+  ## Examples
+
+    With default values.
+      iex> {:ok, attacker} = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur1", type: :grass})
+      iex> {:ok, defender} = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur2", type: :grass})
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur2", type: :grass, health: 15, attack: 5}
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur2", type: :grass, health: 10, attack: 5}
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur2", type: :grass, health: 5, attack: 5}
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur2", type: :grass, health: 0, attack: 5}
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur2", type: :grass, health: 0, attack: 5}
+
+    With type advantage
+
+      iex> {:ok, attacker} = Pokemon.start_link(pokemon: %Pokemon{name: "Charmander", type: :fire})
+      iex> {:ok, defender} = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur", type: :grass})
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur", type: :grass, health: 10, attack: 5}
+
+    With type weakness
+
+      iex> {:ok, attacker} = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur", type: :grass})
+      iex> {:ok, defender} = Pokemon.start_link(pokemon: %Pokemon{name: "Charmander", type: :fire})
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Charmander", type: :fire, health: 17.5, attack: 5}
+
+    Ensure you use the attacking pokemon's attack number to apply damage to the defending pokemon's health.
+
+      iex> {:ok, attacker} = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur1", type: :grass, attack: 20})
+      iex> {:ok, defender} = Pokemon.start_link(pokemon: %Pokemon{name: "Bulbasaur2", type: :grass, health: 45})
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur2", type: :grass, health: 25, attack: 5}
+  """
+  def attack(attacker, defender) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Pokemon Server exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Pokemon Server">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/traffic_light_server.livemd">Traffic Light Server</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/games_score_tracker.livemd">Games: Score Tracker</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

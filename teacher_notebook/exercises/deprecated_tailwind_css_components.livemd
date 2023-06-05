@@ -1,0 +1,148 @@
+# Tailwind Components
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Tailwind Components">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/tailwind.livemd">Tailwind</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/portfolio.livemd">Portfolio</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Tailwind Components
+
+You're going to use [Tailwind CSS](https://tailwindcss.com/docs/installation) and HTML to mimic a provided image. Create a new HTML file in your projects folder for each exercise.
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
+</body>
+</html>
+```
+
+## Hoverable Outline Button
+
+Create a button with rounder corners, an underline, the `orange-500` background and `3xl` size text.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/outline-button.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+On hover, the button should change the background color to `orange-500`.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/outline-button-hover.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Sign Up Form
+
+Create the following Sign Up form.
+
+You can find an example solution here: https://play.tailwindcss.com/fghjDPOp7Y
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tailwind_components_signup_form.png)
+
+## Rainbow Boxes
+
+Create a series of rainbow colored boxes like the following.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/rainbow_component.png)
+
+## Card Component
+
+Components like the following are often called **Card Components**. Create a card component matching the following with an image, heading, subtitle, body, and bottom bar decoration.
+
+You can use https://picsum.photos/200/100 to retrieve a fake image:
+
+```html
+<img src="https://picsum.photos/200/100"></img>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/card_component_light_mode.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Bonus: Clone Component
+
+Front-end developers who focus on building UI often work together with Designers to build out an existing design. While you might not have access to your own designer, you can mimic this experience for further practice.
+
+Go to one of your favourite websites and pick an element on the page. Recreate the element using HTML + Tailwind. You may even create an entire "clone" of the page to really stretch your skills.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Tailwind Components exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Tailwind Components">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/tailwind.livemd">Tailwind</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/portfolio.livemd">Portfolio</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

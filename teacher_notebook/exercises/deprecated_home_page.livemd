@@ -1,0 +1,118 @@
+# Home Page
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Home Page">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/common_components.livemd">Common Components</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/apis.livemd">APIs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Home Page
+
+You're going to build the home page of an HTML portfolio site similar to the following.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/portfolio_home_page_exercise.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+Create a `home.html` file in your projects folder.
+
+Try to match the document above as best you can, however you may exercise your creativity and do not have to follow the example so long as you have:
+
+* navigation with a link to your github. Ideally use a `<nav>` tag for navigation.
+* a heading saying your name.
+* a paragraph with bold and italic text that describes who you are and what you do.
+* An image (it can be any image if you would prefer to not use a personal photo)
+* an ordered or unordered list with 3+ list items.
+
+## (Bonus) Skills Table
+
+Include a table of your skills with an associated score. For example:
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/skills%20table.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### (Bonus) Icons
+
+<!-- livebook:{"break_markdown":true} -->
+
+Include icons in your project.
+
+For example, you can include [Lineicons](https://lineicons.com/docs/) by placing the following inside of the `<head>` section in `home.html`.
+
+```html
+<link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet">
+```
+
+Then you could the use the `<i>` tag and [Lineicons icons](https://lineicons.com/icons/) to create a GitHub icon instead of text.
+
+```html
+<i class="lni lni-github-original"></i>
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Home Page exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Home Page">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/common_components.livemd">Common Components</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/apis.livemd">APIs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

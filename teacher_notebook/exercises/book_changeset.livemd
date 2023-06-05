@@ -1,0 +1,177 @@
+# Book Changeset
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"},
+  {:ecto, "~> 3.9.5"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Book Changeset">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/sign_up_form.livemd">Sign Up Form</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/agents_and_ets.livemd">State: Agent And ETS</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Book Changeset
+
+You're going to create a `Book` schemaless changeset struct. A book should have:
+
+* A required `:title` field between `3` and `100` characters.
+* A required `:content` string field.
+* A `:published_on` date field.
+* A `:category` field which must be either `"action"`, `"fiction"`, or `"mystery"` (you may choose to add more categories if you wish)
+* A `:books_sold` integer which must be `0` or above.
+* A `:publisher_email` field which must be in the format `name@domain.extension`
+* An `:author` string field.
+* An `:has_license` field which must always be true.
+* A `:price` integer field which must be above `0`.
+
+For example, creating a book with the following invalid fields would return an `{:error, changeset}` tuple similar to the following.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Book.new(%{category: "invalid", email: "invalid", books_sold: -1, price: -1})
+{:error,
+ #Ecto.Changeset<
+   action: :update,
+   changes: %{books_sold: -1, category: "invalid", price: -1},
+   errors: [
+     price: {"must be greater than %{number}",
+      [validation: :number, kind: :greater_than, number: 0]},
+     has_license: {"must be accepted", [validation: :acceptance]},
+     books_sold: {"must be greater than or equal to %{number}",
+      [validation: :number, kind: :greater_than_or_equal_to, number: 0]},
+     category: {"is invalid", [validation: :inclusion, enum: ["action", "fiction", "mystery"]]},
+     title: {"can't be blank", [validation: :required]},
+     content: {"can't be blank", [validation: :required]}
+   ],
+   data: #Book<>,
+   valid?: false
+ >}
+
+```
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+Read the [Ecto.Changeset](https://hexdocs.pm/ecto/Ecto.Changeset.html) documentation.
+There, you'll find all of the `validate*` functions necessary for each field. For example, [Ecto.Changeset.validate_change/3](https://hexdocs.pm/ecto/Ecto.Changeset.html#validate_change/3) allows you to create custom validation.
+
+You can also refer to the [primitive types](https://hexdocs.pm/ecto/Ecto.Schema.html#module-primitive-types) documentation for the list of allowed field types.
+
+</details>
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Book do
+  @types %{
+    title: :string,
+    content: :string,
+    published_on: :date,
+    category: :string,
+    books_sold: :integer,
+    publisher_email: :string,
+    author: :string,
+    has_license: :boolean,
+    price: :integer
+  }
+
+  @keys Map.keys(@types)
+  
+  defstruct @keys
+
+  def changeset(%__MODULE__{} = user, params \\ %{}) do
+    {user, @types}
+    |> Ecto.Changeset.cast(params, @keys)
+    |> Ecto.Changeset.validate_required([:title, :content])
+    |> Ecto.Changeset.validate_length(:title, min: 3, max: 100)
+    |> Ecto.Changeset.validate_inclusion(:category, ["action", "fiction", "mystery"])
+    |> Ecto.Changeset.validate_number(:books_sold, greater_than_or_equal_to: 0)
+    |> Ecto.Changeset.validate_change(:publisher_email, fn :publisher_email, publisher_email ->
+      if Regex.match?(~r/\w+@\w+\.\w+/, publisher_email) do
+        []
+      else
+        [email: "invalid email"]
+      end
+    end)
+    |> Ecto.Changeset.validate_acceptance(:has_license)
+    |> Ecto.Changeset.validate_number(:price, greater_than: 0)
+  end
+
+  def new(params) do
+    %__MODULE__{}
+    |> changeset(params)
+    |> Ecto.Changeset.apply_action(:update)
+  end
+end
+```
+
+</details>
+
+You should rely on Ecto Changesets and your own custom validation to validate the book information. Enter your solution below.
+
+```elixir
+defmodule Book do
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Book Changeset exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Book Changeset">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/sign_up_form.livemd">Sign Up Form</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/agents_and_ets.livemd">State: Agent And ETS</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

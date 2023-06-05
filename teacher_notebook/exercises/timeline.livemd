@@ -1,0 +1,183 @@
+# Timeline
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Timeline">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/itinerary.livemd">Itinerary</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/strings_and_binaries.livemd">Strings And Binaries</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Timeline
+
+You are building an application which creates a timeline of events.
+Users provide you with a list of [Date](https://hexdocs.pm/elixir/Date.html)s. You will provide the number of days between each date.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+dates = [~D[2020-01-01], ~D[2020-01-02], ~D[2020-01-22]]
+
+Timeline.from_dates(dates)
+[1, 20]
+```
+
+**BONUS**: `Timeline.from_strings/1`.
+
+As a bonus, implement the `Timeline.from_strings/1` function which accepts a list of strings instead of a list of [Date](https://hexdocs.pm/elixir/Date.html)s.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+date_strings = ["2020-01-01", "2020-01-02", "2020-01-22"]
+
+Timeline.from_strings(date_strings)
+[1, 20]
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Timeline do
+  
+  def from_dates(dates) do
+    Enum.chunk_every(dates, 2, 1, :discard)
+    |> Enum.map(fn chunk ->
+      [start, finish] = chunk
+      Date.diff(finish, start)
+    end)
+  end
+
+  def from_strings(date_strings) do
+    date_strings
+    |> Enum.map(&string_to_date/1)
+    |> from_dates()
+  end
+
+  defp string_to_date(date_string) do
+    [year, month, day] = String.split(date_string, "-")
+    Date.new!(String.to_integer(year), String.to_integer(month), String.to_integer(day))
+  end
+end
+```
+
+Alternatively, you might use `Date.from_iso8601/1` to convert strings into [Date](https://hexdocs.pm/elixir/Date.html) structs instead of creating your own solution as seen above.
+
+```elixir
+def from_strings(date_strings) do
+    Enum.map(date_strings, &Date.from_iso8601!/1)
+    |> from_dates()
+end
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+defmodule Timeline do
+  @moduledoc """
+  Documentation for `Timeline`
+  """
+
+  @doc """
+  Given a list of [Date](https://hexdocs.pm/elixir/Date.html)s return a timeline of days between each date.
+
+  ## Examples
+
+    iex> Timeline.from_dates([~D[2020-01-01]])
+    []
+
+    iex> Timeline.from_dates([~D[2020-01-01], ~D[2020-01-02]])
+    [1]
+
+    iex> Timeline.from_dates([~D[2020-01-01], ~D[2020-01-02], ~D[2020-01-22]])
+    [1, 20]
+    
+    iex> Timeline.from_dates([~D[2020-01-01], ~D[2020-01-10], ~D[2020-01-22], ~D[2020-01-24]])
+    [9, 12, 2]
+  """
+  def from_dates(dates) do
+  end
+
+  @doc """
+  Given a list of "YYYY-MM-DD" strings return a timeline of days between each date.
+  Assume you will always be given two or more strings.
+
+  ## Examples
+
+    iex> Timeline.from_strings(["2020-01-01", "2020-01-02"])
+    [1]
+
+    iex> Timeline.from_strings(["2020-01-01", "2020-01-02", "2020-01-22"])
+    [1, 20]
+    
+    iex> Timeline.from_strings(["2020-01-01", "2020-01-10", "2020-01-22", "2020-01-24"])
+    [9, 12, 2]
+  """
+  def from_strings(date_strings) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Timeline exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Timeline">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/itinerary.livemd">Itinerary</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/strings_and_binaries.livemd">Strings And Binaries</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

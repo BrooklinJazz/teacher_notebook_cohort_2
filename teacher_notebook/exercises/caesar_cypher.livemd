@@ -1,0 +1,174 @@
+# Caesar Cypher
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Caesar Cypher">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/email_validation.livemd">Email Validation</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/rollable_expressions.livemd">Rollable Expressions</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Caesar Cypher
+
+You're going to create a Caesar Cypher. A cypher alters characters in order to make secret messages. The Caesar cypher is a substitution cypher named after the Roman emperor Julius Caesar.
+
+A Caesar cypher shifts characters by some key. For example, if the key is `1` then each character shifts over by one, so `"a"` becomes `"b"`, `"b"` becomes `"c"` and so on.
+
+Create a `CaesarCypher.encode/1` function which shifts each letter in a string by a key. The default key should be `1`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+CaesarCypher.encode("abcdefghijklmnopqrstuvwxyz")
+"bcdefghijklmnopqrstuvwxyza"
+```
+
+You only need to handle **lowercase letters**.
+
+### Any Key
+
+Create a `CaesarCypher.encode/2` function which encodes the string by a provided key. For example, if the key is `2` then each letter shifts over by two, so `"a"` becomes `"c"`, `"b"` becomes `"d"` and so on.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+CaesarCypher.encode("abcdefghijklmnopqrstuvwxyz", 2)
+"cdefghijklmnopqrstuvwxyzab"
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule CaesarCypher do
+ def encode(string) do
+    encode(string, 1)
+  end
+
+  def encode(string, key) do
+    String.to_charlist(string)
+    |> Enum.map(fn char ->
+      overflow = char + key > ?z
+      if overflow do
+        ?a + rem(char + key, ?z) - 1
+      else
+        char + key
+      end
+    end)
+    |> List.to_string()
+  end
+end
+```
+
+</details>
+
+Implement the `CaesarCypher` module as documented.
+
+```elixir
+defmodule CaesarCypher do
+  @moduledoc """
+  Documentation for `CaesarCypher`
+  """
+
+  @doc """
+  Encode a string using the caesar cypher.
+  Shift every letter over by one.
+
+  ## Examples
+
+    iex> CaesarCypher.encode("abcdefghijklmnopqrstuvwxyz")
+    "bcdefghijklmnopqrstuvwxyza"
+
+  Encoding should work on any string
+
+    iex> CaesarCypher.encode("hello")
+    "ifmmp"
+  """
+  def encode(string) do
+  end
+
+  @doc """
+  Encode a string using the caesar cypher and a provided key.
+  Shift every letter over by the provided key.
+
+  ## Examples
+
+    iex> CaesarCypher.encode("abcdefghijklmnopqrstuvwxyz", 1)
+    "bcdefghijklmnopqrstuvwxyza"
+
+    iex> CaesarCypher.encode("abcdefghijklmnopqrstuvwxyz", 2)
+    "cdefghijklmnopqrstuvwxyzab"
+
+    iex> CaesarCypher.encode("abcdefghijklmnopqrstuvwxyz", 14)
+    "opqrstuvwxyzabcdefghijklmn"
+
+  Encoding should work on any string.
+
+    iex> CaesarCypher.encode("hello", 1)
+    "ifmmp"
+  """
+  def encode(string, key) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Caesar Cypher exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Caesar Cypher">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/email_validation.livemd">Email Validation</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/rollable_expressions.livemd">Rollable Expressions</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

@@ -1,0 +1,156 @@
+# Timer
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Timer">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/stack_server.livemd">Stack Server</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/testing_genservers.livemd">Testing GenServers</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Timer
+
+You're going to create a `Timer` GenServer.
+
+### Requirements
+
+* The initial timer state starts as an integer `0` number of seconds.
+* After spawning, the `Timer` should send itself a message every second to increment the timer.
+* Create the `start_link/1` and `get_time/1` client API functions to start the timer and retrieve the current time.
+* Define any necessary server callbacks.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+{:ok, pid} = Timer.start_link([])
+Timer.get_time(pid)
+0
+Process.sleep(1500)
+Timer.seconds(pid)
+1
+```
+
+Keep in mind, we cannot guarantee perfect timing when sending messages on an interval, and that is not the purpose of this exercise.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Timer do
+  use GenServer
+
+  def start_link(_opts) do
+    GenServer.start_link(__MODULE__, [])
+  end
+
+  def get_time(timer_pid) do
+    GenServer.call(timer_pid, :get_time)
+  end
+
+  @impl true
+  def init(_opts) do
+    schedule_timer()
+    {:ok, 0}
+  end
+
+  @impl true
+  def handle_info(:increment, state) do
+    schedule_timer()
+    {:noreply, state + 1}
+  end
+
+  @impl true
+  def handle_call(:get_time, _from, state) do
+    {:reply, state, state}
+  end
+
+  defp schedule_timer do
+    Process.send_after(self(), :increment, 1000)
+  end
+end
+```
+
+</details>
+
+Implement the `Timer` module as documented below.
+
+```elixir
+defmodule Timer do
+  @moduledoc """
+  iex> {:ok, pid} = Timer.start_link([])
+  iex> Timer.seconds(pid)
+  0
+  iex> Process.sleep(1200)
+  iex> Timer.seconds(pid)
+  1
+  """
+  use GenServer
+
+  def start_link(_opts) do
+  end
+
+  def get_time(timer_pid) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Timer exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Timer">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/stack_server.livemd">Stack Server</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/testing_genservers.livemd">Testing GenServers</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

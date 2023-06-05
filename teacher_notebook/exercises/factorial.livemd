@@ -1,0 +1,130 @@
+# Factorial
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Factorial">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/lucas_numbers.livemd">Lucas Numbers</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/pascals_triangle.livemd">Pascal's Triangle</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Factorial
+
+The factorial of a $n$ is the sum of the sequence of numbers leading up to $n$.
+
+```mermaid
+flowchart LR
+n --*--> n1[n - 1] --*--> n2[n - 2] --*--> n3[n - 3] --*--> 2 --*--> 1
+```
+
+Meaning the factorial of `5` is `5 * 4 * 3 * 2 * 1` which equals `120`.
+
+So $factorial(n) = n * factorial(n - 1)$
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Factorial do
+  def of(1), do: 1
+  def of(n) do
+    n * of(n - 1)
+  end
+end
+```
+
+</details>
+
+Our factorial function only needs to handle inputs above `1`.
+Implement the `Factorial` module as documented below.
+
+```elixir
+defmodule Factorial do
+  @doc """
+  Find the factorial of an integer.
+
+  ## Examples
+
+    iex> Factorial.of(1)
+    1
+
+    iex> Factorial.of(2)
+    2
+
+    iex> Factorial.of(3)
+    6
+
+    iex> Factorial.of(4)
+    24
+    
+    iex> Factorial.of(5)
+    120
+
+    iex> Factorial.of(10)
+    3628800
+  """
+  def of(n) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Factorial exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Factorial">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/lucas_numbers.livemd">Lucas Numbers</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/pascals_triangle.livemd">Pascal's Triangle</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

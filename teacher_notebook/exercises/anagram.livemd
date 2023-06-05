@@ -1,0 +1,173 @@
+# Anagram
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Anagram">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/palindrome.livemd">Palindrome</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/comprehension_search.livemd">Comprehension Product Search</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Anagram
+
+Two words that contain all the same letters are anagrams.
+For example **bored** and **robed** are anagrams.
+
+* Create a function `anagram?/2` which determines if two strings are anagrams.
+* Create a function `filter_anagrams/2` which filters a list based on if they are anagrams of a provided string.
+
+<details style="background-color: lightgreen; padding: 12px">
+<summary>Solution Example</summary>
+
+```elixir
+defmodule Anagram do
+  def anagram?(word, possible_anagram) do
+    sort_string(word) == sort_string(possible_anagram)
+  end
+
+  def filter_anagrams(words, string) do
+    Enum.filter(words, fn word -> anagram?(word, string) end)
+  end
+
+  defp sort_string(string) do
+    String.split(string, "", trim: true) |> Enum.sort() |> Enum.join()
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule Anagram do
+  @moduledoc """
+  Documentation for `Anagram`.
+  """
+
+  @doc """
+  Determine if two strings are anagrams.
+
+  ## Examples
+
+    iex> Anagram.anagram?("abc", "bac")
+    true
+
+    iex> Anagram.anagram?("sit", "its")
+    true
+
+    iex> Anagram.anagram?("cats", "dogs")
+    false
+
+    iex> Anagram.anagram?("robed", "bored")
+    true
+  """
+  def anagram?(word, possible_anagram) do
+  end
+
+  @doc """
+  Filter anagrams.
+
+  ## Examples
+
+    iex> Anagram.filter_anagrams(["abc", "bca", "abcd", "cat"], "bac")
+    ["abc", "bca"]
+
+    iex> Anagram.filter_anagrams(["rams", "mars", "arms", "alarms"], "arms")
+    ["rams", "mars", "arms"]
+
+    iex> Anagram.filter_anagrams(["stop"], "go")
+    []
+  """
+  def filter_anagrams(word_list, anagram) do
+  end
+end
+```
+
+## Bonus: Anagram Solver
+
+Given a string, return all possible permutations of the string to return a list of potential anagrams.
+
+<div style="background-color: lightcoral; font-weight: bold; padding: 1rem; margin: 1rem 0;">
+This is a HARD challenge. Move on to regular exercises before attempting this.
+</div>
+
+```elixir
+defmodule AnagramSolver do
+  @doc """
+  Return a list of all string permutations to solve for all anagrams.
+
+  ## Examples
+
+    iex> AnagramSolver.solve("a")
+    ["a"]
+
+    iex> AnagramSolver.solve("ab")
+    ["ab", "ba"]
+
+    iex> AnagramSolver.solve("abc")
+    ["abc", "acb", "bac", "bca", "cab", "cba"]
+  """
+  def solve(string) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Anagram exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Anagram">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/palindrome.livemd">Palindrome</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/comprehension_search.livemd">Comprehension Product Search</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

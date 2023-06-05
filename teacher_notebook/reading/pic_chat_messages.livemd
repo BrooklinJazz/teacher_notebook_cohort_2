@@ -1,0 +1,772 @@
+# PicChat: Messages
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=PicChat: Messages">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/math_game.livemd">Math Game</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/pic_chat_authentication.livemd">PicChat: Authentication</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How does the live action in the router interact with `handle_params/3` in `MessageLive.Index` to render UI for the `:index`, `:new`, and `:edit` actions?
+* Explain the LiveComponent LifeCycle.
+
+## PicChat: Messages
+
+Over the next several lessons, we're going to build a `PicChat` application where users can create messages with uploaded pictures. This lesson will focus on creating the `Messages` resource with just text content.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Initialize The Project
+
+Initialize the `pic_chat` phoenix project.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+mix phx.new pic_chat
+```
+
+Create the database.
+
+```
+mix ecto.create
+```
+
+Use the [LiveView Generators](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Live.html) to generate all of the LiveView boilerplate needed to manage a `Messages` resource.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+mix phx.gen.live Messages Message messages content:text
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Routes
+
+Add the routes for the generated resource.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Router.ex
+scope "/", PicChatWeb do
+  pipe_through :browser
+
+  get "/", PageController, :home
+  live "/messages", MessageLive.Index, :index
+  live "/messages/new", MessageLive.Index, :new
+  live "/messages/:id/edit", MessageLive.Index, :edit
+
+  live "/messages/:id", MessageLive.Show, :show
+  live "/messages/:id/show/edit", MessageLive.Show, :edit
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Order Messages
+
+Ensure messages are ordered from newest -> oldest. We order by both the `inserted_at` and the `id` fields to ensure consistent ordering for messages created at the same time.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Chat.ex
+def list_messages do
+  Message
+  |> from(order_by: [desc: :inserted_at, desc: :id])
+  |> Repo.all()
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Notify Parent
+
+We'll also have to modify how we notify the parent LiveView when we save a message, as streams will append messages by default, but we want to prepend them. See []
+
+Change the calls to `notify_parent` in `form_component.ex` to handle `:edit` and `:new` separately rather than using the `:saved` event for both.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Save_message :edit
+notify_parent({:edit, message})
+
+# Save_message :new
+notify_parent({:new, message})
+```
+
+Then add a separate handler for each in the parent LiveView.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Index.ex
+@impl true
+def handle_info({PicChatWeb.MessageLive.FormComponent, {:new, message}}, socket) do
+  # prepends the new message
+  {:noreply, stream_insert(socket, :messages, message, at: 0)}
+end
+
+@impl true
+def handle_info({PicChatWeb.MessageLive.FormComponent, {:edit, message}}, socket) do
+  # updates the new message in its current position
+  {:noreply, stream_insert(socket, :messages, message)}
+end
+```
+
+That's it! The rest of this lesson will focus on understanding what the generators built for us and the changes we've added.
+
+## Building Understanding
+
+The generators have done a lot for us, but it's important we understand what was generated.
+
+Here's a broad view of our application's new `MessageLive.Index` LiveView and how it ultimately renders the HTML response for the following routes:
+
+* http://localhost:4000/messages
+* http://localhost:4000/messages/new
+* http://localhost:4000/messages/:id/edit
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant R as Router
+  participant L as MessageLive.Index
+  participant FC as MessageLive.FormComponent
+
+  R->>L: GET "/messages" (live_action = :index, :new, or :edit)
+  L --> L: disconnected mount/3
+  L --> L: connected mount/3
+  L --> L: handle_params/3
+  L --> L: apply_action/3
+  L --> L: render/3 index.html.heex
+  L->> FC: live_component (:new and :edit only)
+  FC --> FC : mount/1
+  FC --> FC : update/2
+  FC --> FC : render/1 form_component.html.heex
+```
+
+We're going to dive deeper into each part of the application. If you're taking the official DockYard Academy course your teacher is going to walk you through this process.
+
+## LiveView
+
+We're going to breakdown the `MessageLive.Index` liveview found in `live/message_live/index.ex` to better understand how LiveView works with Ecto, and what the LiveView generators provide for us as scaffolding.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule PicChatWeb.MessageLive.Index do
+  use PicChatWeb, :live_view
+
+  alias PicChat.Chat
+  alias PicChat.Chat.Message
+
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok, stream(socket, :messages, Chat.list_messages())}
+  end
+
+  @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Message")
+    |> assign(:message, Chat.get_message!(id))
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New Message")
+    |> assign(:message, %Message{})
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing Messages")
+    |> assign(:message, nil)
+  end
+
+  @impl true
+  def handle_info({PicChatWeb.MessageLive.FormComponent, {:new, message}}, socket) do
+    {:noreply, stream_insert(socket, :messages, message, at: 0)}
+  end
+
+  @impl true
+  def handle_info({PicChatWeb.MessageLive.FormComponent, {:edit, message}}, socket) do
+    {:noreply, stream_insert(socket, :messages, message)}
+  end
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    message = Chat.get_message!(id)
+    {:ok, _} = Chat.delete_message(message)
+
+    {:noreply, stream_delete(socket, :messages, message)}
+  end
+end
+```
+
+When the LiveView first loads, it calls the `mount/3` function to assign a list of messages in the socket.
+
+Then, `handle_params/3` delegates to the `apply_action/3` function to assign more data to the socket depending on whether or not the live action is `:index`, `:edit`, or `:new`:
+
+* The `page_title` is different for each page. It controllers the text displayed at the top of the browser tab.
+* The `:new` page creates a `Message` struct for the new message form.
+* The `:edit` page retrieves an existing `Message` based on the `"id"` url param.
+* `handle_info/3` receives a message from the form_component to insert a `Message` into the list of messages.
+* `handle_event/3` deletes a message.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Stream
+
+Phoenix 1.7 and LiveView 1.18 Introduced the [stream/4](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#stream/4), [stream_insert/4](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#stream_insert/4), and [stream_delete/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#stream_delete/3) functions.
+
+Previously, messages would have been stored in a list and the user would append and remove elements from the list.
+
+Now, the list of messages is instead treated as a stream, a more performant alternative to a list does not store data on the server but only stores the data on the client. This is ideal when dealing with large amounts of data.
+
+Streams are stored in `@streams` in the socket for a given key.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@impl true
+def mount(_params, _session, socket) do
+  {:ok, stream(socket, :messages, Chat.list_messages())}
+end
+```
+
+Elements are inserted into or removed from the stream.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@impl true
+def handle_info({PicChatWeb.MessageLive.FormComponent, {:saved, message}}, socket) do
+  {:noreply, stream_insert(socket, :messages, message)}
+end
+
+@impl true
+def handle_event("delete", %{"id" => id}, socket) do
+  message = Chat.get_message!(id)
+  {:ok, _} = Chat.delete_message(message)
+
+  {:noreply, stream_delete(socket, :messages, message)}
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Rendering Messages
+
+Streams are rendered in the template using a key in the `@streams` field from the assigns.
+The `phx-update="stream"` attribute configures the parent container to support stream operations. Elements in the stream are typically rendered using a comprehension.
+
+Here's a simplified example.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<section id="messages" phx-update="stream">
+  <article
+    :for={{dom_id, message} <- @streams.messages}
+    id={dom_id}
+  >
+    <%= message.content %>
+  </article>
+</section>
+```
+
+A table of messages is rendered in the corresponding template file `index.html.heex`. This table relies on [Phoenix.LiveView.JS](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html) for various actions such as navigation and pushing events to the server.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<.table
+  id="messages"
+  rows={@streams.messages}
+  row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message}") end}
+>
+  <:col :let={{_id, message}} label="Content"><%= message.content %></:col>
+  <:action :let={{_id, message}}>
+    <div class="sr-only">
+      <.link navigate={~p"/messages/#{message}"}>Show</.link>
+    </div>
+    <.link patch={~p"/messages/#{message}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, message}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: message.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Modals
+
+A modal containing the `FormComponent` live component is rendered for the `:new` and `:edit` live actions.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<.modal :if={@live_action in [:new, :edit]} id="message-modal" show on_cancel={JS.patch(~p"/messages")}>
+  <.live_component
+    module={PicChatWeb.MessageLive.FormComponent}
+    id={@message.id || :new}
+    title={@page_title}
+    action={@live_action}
+    message={@message}
+    patch={~p"/messages"}
+  />
+</.modal>
+```
+
+## LiveComponent
+
+[Phoenix.LiveComponent](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveComponent.html) encapsulates the behavior of a LiveView (state, message handling, displaying html) into reusable components within other LiveViews.
+
+We use the [Phoenix.Component.live_component/1](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#live_component/1) to render a LiveComponent. The `id` and `module` attributes are required. Other attributes are bound to the socket assigns. LiveComponents do not inherit socket values from their parent, so **socket values must be explicitly provided**.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<.live_component
+  module={PicChatWeb.MessageLive.FormComponent}
+  id={@message.id || :new}
+  title={@page_title}
+  action={@live_action}
+  message={@message}
+  patch={~p"/messages"}
+/>
+```
+
+We're going to break down the `MessageLive.FormComponent` to better understand LiveComponents.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule PicChatWeb.MessageLive.FormComponent do
+  use PicChatWeb, :live_component
+
+  alias PicChat.Chat
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div>
+      <.header>
+        <%= @title %>
+        <:subtitle>Use this form to manage message records in your database.</:subtitle>
+      </.header>
+
+      <.simple_form
+        for={@form}
+        id="message-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+      >
+        <.input field={@form[:content]} type="text" label="Content" />
+        <:actions>
+          <.button phx-disable-with="Saving...">Save Message</.button>
+        </:actions>
+      </.simple_form>
+    </div>
+    """
+  end
+
+  @impl true
+  def update(%{message: message} = assigns, socket) do
+    changeset = Chat.change_message(message)
+
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> assign_form(changeset)}
+  end
+
+  @impl true
+  def handle_event("validate", %{"message" => message_params}, socket) do
+    changeset =
+      socket.assigns.message
+      |> Chat.change_message(message_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign_form(socket, changeset)}
+  end
+
+  def handle_event("save", %{"message" => message_params}, socket) do
+    save_message(socket, socket.assigns.action, message_params)
+  end
+
+  defp save_message(socket, :edit, message_params) do
+    case Chat.update_message(socket.assigns.message, message_params) do
+      {:ok, message} ->
+        notify_parent({:edit, message})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Message updated successfully")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp save_message(socket, :new, message_params) do
+    case Chat.create_message(message_params) do
+      {:ok, message} ->
+        notify_parent({:new, message})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Message created successfully")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### LiveComponent Life-Cycle
+
+The LiveComponent life-cycle is similar to a LiveView with some important differences.
+
+```mermaid
+sequenceDiagram
+    LiveView-->>LiveComponent: render/1
+    LiveComponent-->>LiveComponent: mount/1
+    LiveComponent-->>LiveComponent: update/2
+    LiveComponent-->>LiveComponent: render/1
+```
+
+Unlike a LiveView, we don't typically retrieve data in the `mount/1` callback. Instead, the parent LiveView usually provides the component with any initial data it needs. The LiveComponent then calls the `update/2` callback anytime the LiveComponent is re-rendered (usually if the data provided by the parent LiveView changes).
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@impl true
+def update(%{message: message} = assigns, socket) do
+  changeset = Chat.change_message(message)
+
+  {:ok,
+    socket
+    |> assign(assigns)
+    |> assign_form(changeset)}
+end
+```
+
+See [LiveComponent life-cycle](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveComponent.html#module-life-cycle) for more information.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Sending/Receiving Process Messages
+
+By default, a LiveComponent sends messages to the parent. We can use the `phx-target={@myself}` attribute on an element to instead send messages to the LiveComponent itself.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<.simple_form
+  for={@form}
+  id="message-form"
+  phx-target={@myself}
+  phx-change="validate"
+  phx-submit="save"
+>
+  <.input field={@form[:content]} type="text" label="Content" />
+  <:actions>
+    <.button phx-disable-with="Saving...">Save Message</.button>
+  </:actions>
+</.simple_form>
+```
+
+These messages are then handled in the LiveComponent rather than the parent LiveView.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def handle_event("save", %{"message" => message_params}, socket) do
+  save_message(socket, socket.assigns.action, message_params)
+end
+```
+
+The `FormComponent` also provides an example of sending the parent LiveView process a message when a new `Message` is created.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+```
+
+This is handled in the parent LiveView to update the stream of `Message` structs.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@impl true
+def handle_info({PicChatWeb.MessageLive.FormComponent, {:new, message}}, socket) do
+  {:noreply, stream_insert(socket, :messages, message, at: 0)}
+end
+
+@impl true
+def handle_info({PicChatWeb.MessageLive.FormComponent, {:edit, message}}, socket) do
+  {:noreply, stream_insert(socket, :messages, message)}
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Assign_form
+
+The `FormComponent` uses an `assign_form/2` helper function to assign the `Phoenix.HTML.Form` struct in the socket.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+  assign(socket, :form, to_form(changeset))
+end
+```
+
+This form is used to initialize form data and display errors. Observe the `:error` case when creating a new message. The `assign_form/2` function works with the changeset to display errors.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defp save_message(socket, :new, message_params) do
+  case Chat.create_message(message_params) do
+    {:ok, message} ->
+      notify_parent({:new, message})
+
+      {:noreply,
+        socket
+        |> put_flash(:info, "Message created successfully")
+        |> push_patch(to: socket.assigns.patch)}
+
+    {:error, %Ecto.Changeset{} = changeset} ->
+      {:noreply, assign_form(socket, changeset)}
+  end
+end
+```
+
+## LiveView Testing
+
+The `MessageLiveTest` module found in `test/pic_chat_web/live/message_live_test.ex` demonstrates how to mount a LiveView, simulate user interactions, and assert on the behavior and response of the LiveView.
+
+Read through the `MessageLiveTest` module to better understand patterns for testing LiveViews.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule PicChatWeb.MessageLiveTest do
+  use PicChatWeb.ConnCase
+
+  import Phoenix.LiveViewTest
+  import PicChat.ChatFixtures
+
+  @create_attrs %{content: "some content"}
+  @update_attrs %{content: "some updated content"}
+  @invalid_attrs %{content: nil}
+
+  defp create_message(_) do
+    message = message_fixture()
+    %{message: message}
+  end
+
+  describe "Index" do
+    setup [:create_message]
+
+    test "lists all messages", %{conn: conn, message: message} do
+      {:ok, _index_live, html} = live(conn, ~p"/messages")
+
+      assert html =~ "Listing Messages"
+      assert html =~ message.content
+    end
+
+    test "saves new message", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, ~p"/messages")
+
+      assert index_live |> element("a", "New Message") |> render_click() =~
+               "New Message"
+
+      assert_patch(index_live, ~p"/messages/new")
+
+      assert index_live
+             |> form("#message-form", message: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      assert index_live
+             |> form("#message-form", message: @create_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/messages")
+
+      html = render(index_live)
+      assert html =~ "Message created successfully"
+      assert html =~ "some content"
+    end
+
+    test "updates message in listing", %{conn: conn, message: message} do
+      {:ok, index_live, _html} = live(conn, ~p"/messages")
+
+      assert index_live |> element("#messages-#{message.id} a", "Edit") |> render_click() =~
+               "Edit Message"
+
+      assert_patch(index_live, ~p"/messages/#{message}/edit")
+
+      assert index_live
+             |> form("#message-form", message: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      assert index_live
+             |> form("#message-form", message: @update_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/messages")
+
+      html = render(index_live)
+      assert html =~ "Message updated successfully"
+      assert html =~ "some updated content"
+    end
+
+    test "deletes message in listing", %{conn: conn, message: message} do
+      {:ok, index_live, _html} = live(conn, ~p"/messages")
+
+      assert index_live |> element("#messages-#{message.id} a", "Delete") |> render_click()
+      refute has_element?(index_live, "#messages-#{message.id}")
+    end
+  end
+
+  describe "Show" do
+    setup [:create_message]
+
+    test "displays message", %{conn: conn, message: message} do
+      {:ok, _show_live, html} = live(conn, ~p"/messages/#{message}")
+
+      assert html =~ "Show Message"
+      assert html =~ message.content
+    end
+
+    test "updates message within modal", %{conn: conn, message: message} do
+      {:ok, show_live, _html} = live(conn, ~p"/messages/#{message}")
+
+      assert show_live |> element("a", "Edit") |> render_click() =~
+               "Edit Message"
+
+      assert_patch(show_live, ~p"/messages/#{message}/show/edit")
+
+      assert show_live
+             |> form("#message-form", message: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      assert show_live
+             |> form("#message-form", message: @update_attrs)
+             |> render_submit()
+
+      assert_patch(show_live, ~p"/messages/#{message}")
+
+      html = render(show_live)
+      assert html =~ "Message updated successfully"
+      assert html =~ "some updated content"
+    end
+  end
+end
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [HexDocs: LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html)
+* [HexDocs: LiveComponent](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveComponent.html)
+* [Elixir Schools: LiveView](https://elixirschool.com/blog/phoenix-live-view/)
+* [PragProg: Programming Phoenix LiveView](https://pragprog.com/titles/liveview/programming-phoenix-liveview/)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish PicChat: Messages reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=PicChat: Messages">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/math_game.livemd">Math Game</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/pic_chat_authentication.livemd">PicChat: Authentication</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

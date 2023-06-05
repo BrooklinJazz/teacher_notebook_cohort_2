@@ -1,0 +1,536 @@
+# Phoenix 1.7
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phoenix 1.7">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/sql_drills.livemd">SQL Drills</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/web_servers.livemd">Web Servers</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+* What are body params, url params, and query params in an HTTP request?
+* What is the conn?
+* What are the layers of a Phoenix application?
+
+## Overview
+
+### Phoenix 1.7
+
+Phoenix 1.7 introduced several significant changes compared with Phoenix 1.6. See the [Release Announcement](https://phoenixframework.org/blog/phoenix-1.7-final-released) for a full overview of changes made. One of the most significant changes was [Replacing Phoenix.View with Phoenix.Component](https://hexdocs.pm/phoenix_view/2.0.0/Phoenix.View.html#module-replaced-by-phoenix-component). In addition, Phoenix now comes with Tailwind out of the box.
+
+Phoenix 1.7 also introduced [Verified Routes](https://hexdocs.pm/phoenix/1.7.0-rc.0/Phoenix.VerifiedRoutes.html) using the `~p` sigil. These routes replace [Path Helpers](https://hexdocs.pm/phoenix/routing.html#path-helpers).
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+~p"/home"
+```
+
+Many projects in the Elixir ecosystem will still use Pheonix 1.6 or older. While this course focuses on Phoenix 1.7, consider reading the previous [Phoenix 1.6](./deprecated_phoenix_1.6.livemd) section to learn more about the older version.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix
+
+The [Phoenix Framework](https://phoenixframework.org/) is the most popular web development framework for Elixir. Using Phoenix, we can build rich interactive and real-time web applications quickly.
+
+[Chris McCord](http://chrismccord.com/), the creator of Phoenix, has an excellent video to demonstrate the power of Phoenix. You may follow along and build a Twitter clone application in only 15 minutes.
+
+<!-- livebook:{"attrs":{"source":"YouTube.new(\"https://www.youtube.com/watch?v=MZvmYaFkNJI\")","title":"Build a real-time Twitter clone in 15 minutes with LiveView"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+YouTube.new("https://www.youtube.com/watch?v=MZvmYaFkNJI")
+```
+
+The video above uses [Phoenix LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html) to create interactive and real-time features. We will cover LiveView in a future lesson.
+
+## Model View Controller (MVC) Architecture
+
+Phoenix is heavily influenced by MVC architecture, where an application is broken into several layers using [Model-View-Controller (MVC)](https://en.wikipedia.org/wiki/Model–view–controller) architecture.
+
+* **Model**: Manages the data and business logic of the application.
+* **View**: Represents visual information.
+* **Controller**: Handles requests and manipulates the model/view to respond to the user.
+
+More recently, Phoenix has been breaking away from strict MVC architecture, but understanding this style of architecture will help us better understand the overall design choices behind Phoenix.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![test](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MVC-Process.svg/300px-MVC-Process.svg.png)
+
+> source: https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Plug
+
+Under the hood, Phoenix uses the [Plug](https://hexdocs.pm/plug/readme.html) specification for composing a web application with functions. Plugs are functions that transform a `conn` (connection) data structure.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart LR
+subgraph Input
+  CP[conn, params]
+end
+subgraph Output
+  C[conn]
+end
+Output[conn]
+P[Plug Function]
+Input --> P --> Output
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+Phoenix sets up a pipeline of plugs and uses the transformed `conn` [Plug.Conn](https://hexdocs.pm/plug/Plug.Conn.html) struct to return a response to the client.
+
+Plug uses [Cowboy](https://github.com/ninenines/cowboy), a small and fast HTTP web server. Cowboy uses [Ranch](https://github.com/ninenines/ranch) to manage the underlying TCP connections for the web server.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart TB
+P[Phoenix]
+PG[Plug]
+C[Cowboy]
+R[Ranch]
+P --> PG --> C --> R
+
+click P "https://hexdocs.pm/phoenix/overview.html"
+click PG "https://hexdocs.pm/plug/readme.html"
+click C "https://github.com/ninenines/cowboy"
+click R "https://github.com/ninenines/ranch"
+```
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Layered Architecture
+
+Phoenix breaks the complexity of our application into several layers with different responsibilities. Separating an application into layers simplifies reasoning about and collaborating on complex applications.
+
+Phoenix generates the following layers of our architecture by default.
+
+* **Endpoint**: The boundary layer of the application.
+* **Router**: Routes the request to the correct controller.
+* **Controller**: Handles the request—generally, the controller delegates to the Model and View to manipulate business logic and return a response.
+* **Context**: a module that defines functions related to a specific part of your application, such as users or products. It helps to organize and simplify your code by separating concerns and making it easier to maintain.
+* **Schema**: A schema maps the database data into an Elixir struct.
+* **Migration**: Migrations are used to make changes to the database schema over time, such as adding, removing, or altering tables.
+* **Component (Previously the View in 1.6)**: Handles returning the response and may delegate to a template.
+* **Template**: Builds a response, typically using HEEx (HTML + Embedded Elixir) to build an HTML web page.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/Phoenix%201.7%20Architecture%20Diagram.png)
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Project Structure
+
+By default, Phoenix 1.7 contains the following project folder structure where `app` is the name of your application.
+
+```
+├── _build
+├── assets
+├── config
+├── deps
+├── lib
+│   ├── app
+│   ├── app.ex
+│   ├── app_web
+│   └── app_web.ex
+├── priv
+├── test
+├── formatter.exs
+├── .gitignore
+├── mix.exs
+├── mix.lock
+└── README.md
+```
+
+Phoenix projects use [Mix](./mix.livemd) so this folder structure should feel somewhat familiar. Here's a breakdown of each file/folder.
+
+* **_build**: Build artifacts, such as compiled .beam code.
+* **assets**: Static assets, such as JavaScript and CSS.
+* **config**: Configuration files for the application, such as the database configuration and environment-specific settings.
+* **deps**: Compiled project dependencies, which Mix manages.
+* **lib**: The application's source code.
+  * **app**: The business logic for the application, organized into contexts.
+  * **app.ex**: The main application module, which starts the web server and configures the application.
+  * **app_web**: The web-specific code for the application, such as controllers, components, and templates.
+  * **app_web.ex**: The main web module, which configures the Phoenix application.
+* **priv**: The "priv" directory in Phoenix contains resources needed for production that are not part of the source code, including static files such as images and fonts and generated assets from the "assets" directory.
+* **test**: Tests for the application.
+* **formatter.exs**: Formatter configuration.
+* **.gitignore**: Configuration for files that should be ignored in .git.
+* **mix.exs**:  Configures the application's dependencies and other settings for the Mix project.
+* **mix.lock**: The exact versions of the dependencies used in the application, generated by Mix.
+* **README.md**: Contains information about the project, such as installation instructions or documentation.
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Web Project Structure
+
+Requests flow through the Plug Pipeline. The router, controller, component, and template each play an important role in returning a response to the user request.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Router
+
+Phoenix generates a `router.ex` file that configures the URLs that clients can send HTTP requests to. See [Routing](https://hexdocs.pm/phoenix/routing.html) documentation for a full guide.
+
+The Phoenix router uses the [pipeline/2](https://hexdocs.pm/phoenix/Phoenix.Router.html#pipeline/2) macro to setup a plug pipeline.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+pipeline :browser do
+  plug :accepts, ["html"]
+  plug :fetch_session
+  plug :fetch_live_flash
+  plug :put_root_layout, {AppWeb.LayoutView, :root}
+  plug :protect_from_forgery
+  plug :put_secure_browser_headers
+end
+```
+
+Then the [scope/2] macro groups related routes together under a common base URL. Inside of the scope, the [get/4](https://hexdocs.pm/phoenix/Phoenix.Router.html#get/4), [post/4](https://hexdocs.pm/phoenix/Phoenix.Router.html#post/4), [put/4](https://hexdocs.pm/phoenix/Phoenix.Router.html#put/4), [patch/4](https://hexdocs.pm/phoenix/Phoenix.Router.html#patch/4), and [delete/4](https://hexdocs.pm/phoenix/Phoenix.Router.html#delete/4) macros can handle a specific HTTP request and delegate to a controller to return a response.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+scope "/", HelloWeb do
+  pipe_through :browser
+
+  get "/", PageController, :home
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Controller
+
+Controllers in the `app_web/controllers` manage the response to the HTTP request.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.PageController do
+  use AppWeb, :controller
+
+  def home(conn, _params) do
+    render(conn, :home)
+  end
+end
+```
+
+The controller delegates to a [function component](https://hexdocs.pm/phoenix/components.html) in a corresponding `*HTML` component module to return a HEEx template. The atom `:home` above corresponds to the function `home/1` called in the component module.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Component
+
+The `*HTML` component returns a HEEx template using sigil `~H`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.PageHTML do
+  use AppWeb, :html
+
+  def home(assigns) do
+    ~H"""
+    Hello World
+    """
+  end
+end
+```
+
+Or embeds template files contained in a folder using the [embed_templates/2](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#embed_templates/2) macro from [Phoenix.Component](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#content).
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.PageHTML do
+  use AppWeb, :html
+
+  embed_templates "page_html/*"
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Templates
+
+The template contains the HEEx code used to build an HTML response. For example, the following might be contained in `app_web/page_html/home.html.heex`.
+
+```html
+<p>Hello, World!</p>
+```
+
+## Conn
+
+In a Phoenix app, "conn" stands for "connection". It represents the connection between the client and the web server, and contains information about the HTTP request and response.
+
+The conn struct is a central concept in Phoenix and is used extensively throughout the framework. It is created when a client sends a request to the server and is passed around between the various parts of the application as the request is processed.
+
+The conn struct contains information such as the HTTP method, the request path, request headers, request body, and response headers. It also includes information about the client's session and any authentication information, among other things.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Assigns
+
+The [Plug.Conn](https://hexdocs.pm/plug/Plug.Conn.html) stores an `assigns` map that is injected into the HEEx template. Values in the `assigns` map can be bound by providing a keyword list as the third argument of the [Controller.render/3](https://hexdocs.pm/phoenix/Phoenix.Controller.html#render/3) function.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.PageController do
+  use AppWeb, :controller
+
+  def home(conn, _params) do
+    render(conn, :home, message: "Hello, World!", injected_class: "text-2xl")
+  end
+end
+```
+
+We can use `<%= %>` syntax to embed Elixir and use the `assigns` provided in the template file. Alternatively, we can use curly brackets `{}` to embed elixir in an HTML attribute.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<p class={"bg-black text-white #{assigns.injected_class}"}><%= assigns.message %></p>
+```
+
+`@` is a shorthand for `assigns.`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<p class={"bg-black text-white #{@injected_class}"}><%= @message %></p>
+```
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Layouts
+
+The `:put_root_layout` plug in the `:browser` pipeline in `router.ex` sets up layout HEEx templates that are rendered on every page.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+pipeline :browser do
+  plug :accepts, ["html"]
+  plug :fetch_session
+  plug :fetch_live_flash
+  plug :put_root_layout, {AppWeb.LayoutView, :root} # sets up root layout
+  plug :protect_from_forgery
+  plug :put_secure_browser_headers
+end
+```
+
+The root layout in `components/layouts/root.html.heex` is a template used by LiveView and regular views that contains the basic structure of an HTML document and any global styles or scripts. It ensures consistency across all pages of your application.
+
+The app layout in `components/layouts/app.html.heex` is the standard layout for regular HTTP requests and LiveViews.
+
+See [LiveLayouts](https://hexdocs.pm/phoenix_live_view/live-layouts.html) for more information on layouts and their use.
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Phoenix Components
+
+Phoenix 1.7 allows us to use function components in both LiveViews and Controller views.
+
+Phoenix generates some useful function components in the `app_web/components/core_components.ex` file and the [Phoenix.Component](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#components) module defines components such as [link/1](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#link/1) and [form/1](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#form/1).
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<.link navigate={~p"/"}>Home</.link>
+```
+
+We can create our own function components. A function component takes the `assigns` parameter, and returns a HEEx template. We can optionally define attributes with the [attr](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#attr/3) macro.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+attr :name, :string
+
+def hello(assigns) do
+  ~H"""
+  <p><%= @name %></p>
+  """
+end
+```
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Embedded Elixir
+
+We can embed Elixir in our template files using the following syntax.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<%= expression %>
+```
+
+Where `expression` is our Elixir code, for example:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<%= 1 + 1 %>
+```
+
+We can write any Elixir expression. So, for example, we could write an `if` statement to render different HTML depending on some condition.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<%= if DateTime.utc_now().hour > 12 do %>
+  <p>Good afternoon!</p>
+<% else %>
+  <p>Good morning!</p>
+<% end %>
+```
+
+Or a loop using the `for` comprehension. Often we use this to create multiple elements based on a collection.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<%= for int <- 1..10 do %>
+  <p><%= int %></p>
+<% end %>
+```
+
+Notice that all expressions that output a value use the `=` symbol. Expressions that don't output a value (or continue the current expression) omit the `=` symbol.
+
+Here's a quick tip, we can`IO.inspect/2` values in the page without injecting them into the HTML.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<% IO.inspect(@value) %>
+```
+
+Or, to view them in the HTML as a string, you can use `Kernel.inspect/2`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<%= inspect(@value) %>
+```
+
+<!-- livebook:{"branch_parent_index":2} -->
+
+## Controller Params
+
+Controllers actions accept `params` as the second argument. `params` is a combined map of comma-separated query params, the [body](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) of the request, and dynamic values in the URL.
+
+For example, if we sent a post request to the following URL:
+
+http://localhost:4000/1/?param1=some_value,param2=some_value
+
+With the following data in the POST body:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%{body_param: "value"}
+```
+
+Assuming we had the following route defined.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+
+post "/:id", PageController, :home
+```
+
+Then the `params` in the controller would be bound to:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%{
+  "body_param" => "value",
+  "id" => "1",
+  "param1" => "some_value",
+  "param2" => "some_value"
+}
+```
+
+## Further Reading
+
+For more on Phoenix, consider the following resources.
+
+* [Phoenix HexDocs](https://hexdocs.pm/phoenix/Phoenix.html)
+* [Plug HexDocs](https://hexdocs.pm/plug/readme.html)
+* [Phoenix a Web Framework for the New Web • José Valim • GOTO 2016](https://www.youtube.com/watch?v=bk3icU8iIto&ab_channel=GOTOConferences)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Phoenix 1.7 reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phoenix 1.7">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/sql_drills.livemd">SQL Drills</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/web_servers.livemd">Web Servers</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

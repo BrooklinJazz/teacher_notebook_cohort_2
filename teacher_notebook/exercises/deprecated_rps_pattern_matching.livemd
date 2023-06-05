@@ -1,0 +1,166 @@
+# Rock Paper Scissors Pattern Matching
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rock Paper Scissors Pattern Matching">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/drill-patternmatching-replace-nils.livemd">Replacing Nils</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/metric_conversion.livemd">Metric Conversion</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Rock Paper Scissors Using Pattern Matching
+
+You're going to recreate/refactor your rock paper scissors game using pattern matching.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+RockPaperScissors.play(:rock, :paper)
+"paper beats rock!"
+
+RockPaperScissors.play(:rock, :rock)
+"draw!"
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+Using multiple function clauses.
+
+```elixir
+defmodule RockPaperScissorsPatternMatching do
+  def play(:rock, :scissors), do: "rock beats scissors!"
+  def play(:paper, :rock), do: "paper beats rock!"
+  def play(:scissors, :paper), do: "scissors beats paper!"
+  def play(:rock, :paper), do: "paper beats rock!"
+  def play(:paper, :scissors), do: "scissors beats paper!"
+  def play(:scissors, :rock), do: "rock beats scissors!"
+  def play(_same, _same), do: "draw!"
+end
+```
+
+Here's how we might accomplish the same thing using `case`.
+
+```elixir
+defmodule RockPaperScissorsPatternMatching do
+  def play(guess1, guess2) do
+    case {guess1, guess2} do
+      {:rock, :scissors} -> "rock beats scissors!"
+      {:paper, :rock} -> "paper beats rock!"
+      {:scissors, :paper} -> "scissors beats paper!"
+      {:rock, :paper} -> "paper beats rock!"
+      {:paper, :scissors} -> "scissors beats paper!"
+      {:scissors, :rock} -> "rock beats scissors!"
+      {_same, _same} -> "draw!"
+    end
+  end
+end
+```
+
+</details>
+
+Implement the `RockPaperScissorsPatternMatching` module as documented below.
+
+```elixir
+defmodule RockPaperScissorsPatternMatching do
+  @moduledoc """
+  Documentation for `RockPaperScissorsPatternMatching`
+  """
+
+  @doc """
+  Play rock paper scissors. Returns a string to describe who won the game.
+
+  ## Examples
+
+    iex> RockPaperScissorsPatternMatching.play(:rock, :scissors)
+    "rock beats scissors!"
+
+    iex> RockPaperScissorsPatternMatching.play(:paper, :rock)
+    "paper beats rock!"
+
+    iex> RockPaperScissorsPatternMatching.play(:scissors, :paper)
+    "scissors beats paper!"
+
+    iex> RockPaperScissorsPatternMatching.play(:rock, :paper)
+    "paper beats rock!"
+
+    iex> RockPaperScissorsPatternMatching.play(:paper, :scissors)
+    "scissors beats paper!"
+
+    iex> RockPaperScissorsPatternMatching.play(:scissors, :rock)
+    "rock beats scissors!"
+
+    iex> RockPaperScissorsPatternMatching.play(:rock, :rock)
+    "draw!"
+
+    iex> RockPaperScissorsPatternMatching.play(:paper, :paper)
+    "draw!"
+
+    iex> RockPaperScissorsPatternMatching.play(:scissors, :scissors)
+    "draw!"
+  """
+  def play(guess1, guess2) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Rock Paper Scissors Pattern Matching exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rock Paper Scissors Pattern Matching">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/drill-patternmatching-replace-nils.livemd">Replacing Nils</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/metric_conversion.livemd">Metric Conversion</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

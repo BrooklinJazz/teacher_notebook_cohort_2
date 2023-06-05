@@ -1,0 +1,173 @@
+# Sign Up Form
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"},
+  {:ecto, "~> 3.9.5"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Sign Up Form">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/ecto_changeset.livemd">Ecto Changesets</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/book_changeset.livemd">Book Changeset</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## User Changeset
+
+Create a `User` schemaless changeset that validates a user.
+
+A user struct should have the following fields.
+
+* `username` (required) a 3-12 character string.
+* `password` (required) a 12-50 character string.
+* `age` an integer.
+* `birthdate` a date.
+* `terms_and_conditions` (required) a boolean which must be `true`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule User do
+  defstruct [:username, :password, :age, :birthdate, :terms_and_conditions]
+
+  @types %{
+    username: :string,
+    password: :string,
+    age: :integer,
+    birthdate: :date,
+    terms_and_conditions: :boolean
+  }
+
+  def changeset(%__MODULE__{} = user, params) do
+    {user, @types}
+    |> Ecto.Changeset.cast(params, Map.keys(@types))
+    |> Ecto.Changeset.validate_required([:username, :password])
+    |> Ecto.Changeset.validate_length(:username, min: 3, max: 12)
+    |> Ecto.Changeset.validate_length(:password, min: 12, max: 50)
+    |> Ecto.Changeset.validate_acceptance(:terms_and_conditions)
+  end
+
+  def new(params) do
+    %__MODULE__{}
+    |> changeset(params)
+    |> Ecto.Changeset.apply_action(:update)
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule User do
+  @moduledoc """
+  Documentation for `User`
+
+  Defines a schemaless changeset and `User` struct.
+
+  ## Examples
+
+      iex> %User{}
+      %User{username: nil, password: nil, age: nil, birthdate: nil, terms_and_conditions: nil}
+  """
+  defstruct []
+
+  @types %{}
+
+  @doc """
+  Create a User changeset.
+
+  ## Examples
+
+      iex> User.changeset(%User{}, %{username: "user1", password: "securepassword1", age: 20, terms_and_conditions: true})
+      #Ecto.Changeset<action: nil, changes: %{age: 20, password: "securepassword1", terms_and_conditions: true, username: "user1"}, errors: [], data: #User<>, valid?: true>
+  """
+  def changeset(%__MODULE__{} = user, params) do
+  end
+
+  @doc """
+  Validate and create a User struct.
+
+  ## Examples
+
+      iex> User.new(%{username: "user1", password: "securepassword1", age: 20, terms_and_conditions: true})
+      {:ok, %User{username: "user1", password: "securepassword1", age: 20, terms_and_conditions: true}}
+
+      Terms and conditions must be signed.
+
+      User.new(%{username: "user1", password: "securepassword1", age: 20, terms_and_conditions: false})
+      {:error, _changeset}
+  """
+  def new(params) do
+  end
+end
+```
+
+## Sign Up Form
+
+You're going to create a `SignUp` application that validates user data with a sign up form.
+Create a sign up form with appropriate form fields for the `User` changeset.
+
+```
+$ mix phx.new sign_up
+```
+
+Use the `User` changeset to provide error feedback on each of the form inputs `:username`, `:password`, `:age`, `:birthdate`, and `:terms_and_conditions`.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Sign Up Form exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Sign Up Form">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/ecto_changeset.livemd">Ecto Changesets</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/book_changeset.livemd">Book Changeset</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

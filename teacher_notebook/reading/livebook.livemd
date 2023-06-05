@@ -1,0 +1,278 @@
+# Livebook
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"},
+  {:smart_animation, github: "brooklinjazz/smart_animation"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Livebook">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/git.livemd">Git</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/code_editors.livemd">Code Editors</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do you evaluate LiveBook Elixir cells?
+* How do you format LiveBook Elixir cells?
+* How do you manipulate LiveBook Markdown cells?
+
+## Overview
+
+### LiveBook
+
+Livebook is an interactive and collaborative code notebook for Elixir.
+It's commonly used as a documentation tool, and this is the first course to use it so extensively for teaching Elixir.
+
+Inside these interactive notebooks, we can write formatted content (like you're reading right now) and execute Elixir code.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Markdown
+
+Markdown is a lightweight markup language that allows you to write
+formatted content using only special symbols. It's like writing a formatted google document with only text.
+
+```markdown
+<!-- headings -->
+# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+
+<!-- font styles -->
+**bold**
+*italic*
+
+<!-- bullet points -->
+1. First item
+2. Second item
+3. Third item
+```
+
+You can view the [Markdown cheat-sheet](https://www.markdownguide.org/cheat-sheet/) for
+an overview of markdown syntax.
+
+Markdown is everywhere! It's even valid input for chat apps like Slack and Discord.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Cells
+
+Livebooks are split into **cells**. There are **markdown cells** for formatted text, and **elixir cells** for Elixir code. There are also more advanced cells that are beyond the scope of this course.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Markdown Cells
+
+As you hover and click your cursor <i class="ri-cursor-fill"></i> on a markdown cell. You'll notice each has a <span style="color: rgba(101,131,255,.5)">blue</span> highlight on the left
+and some controls.
+
+You can edit <i class="ri-pencil-line"></i>, move up<i class="ri-arrow-up-s-line"></i>,
+move down <i class="ri-arrow-down-s-line"></i>, and delete <i class="ri-delete-bin-line"></i> cells. You can also upload images <i class="ri-image-add-line"></i>.
+
+While completing interactive reading material and exercises, you generally do not need to use these controls. However, it's useful to be aware of them if you would like to use Livebook in your own time, or to resolve an issue if you accidentally manipulate a Livebook.
+
+Double click on any markdown cell and you'll see the markdown editor for that cell.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Elixir Cells
+
+Elixir Cells are interactive code blocks that run Elixir code. These cells can be used to test and experiment with Elixir code, and the results of the code execution are displayed directly in the notebook. We'll often use these cells to show examples, and have you complete exercises.
+
+Here you can see an Elixir cell that adds two integers.
+
+```elixir
+2 + 2
+```
+
+You can create an Elixir cell anywhere throughout this course if you want to experiment with some Elixir code. Just be careful not to break existing code examples or affect further examples be rebinding already bound variables.
+
+To create an Elixir cell, hover your cursor between two cells and press the `+Code` button.
+
+Livebook may change this UI, so if this is instruction is no longer accurate please speak to your instructor and/or [Report An Issue](https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Create an Elixir code cell below. Run some Elixir code such as `1 + 2` in the cell.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Livebook Shortcuts
+
+Click on the keyboard shortcuts <i class="ri-keyboard-box-line"></i> icon on the sidebar to view
+available Livebook shortcuts depending on the current mode.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Navigation Mode Vs Insert Mode
+
+**Navigation mode** is the default mode. If you are editing a Markdown cell or Elixir cell, then you are in **insert mode**.
+
+For example, while in Navigation mode, you can evaluate every Elixir cell in a Livebook notebook by pressing <kbd>e</kbd> and then <kbd>a</kbd>.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### LiveMarkdown
+
+Livebook allows us to create `.livemd` files that power the interactive notebooks that you've read so far! `.livemd` stands for **live markdown**. Livebook persists the notebook information in the `.livemd` file.
+
+You can see the changes made to these files in your git version control. This is often useful if you accidentally deleted part of a lesson or exercise and need to refer to the old version.
+
+## Edit A Markdown Cell
+
+Hover and click on this markdown cell to see the controls. Click the <i class="ri-pencil-line"></i> edit button
+to see the Markdown content inside.
+
+<!-- livebook:{"break_markdown":true} -->
+
+<div style="padding: 1rem;background-color:lightgray; text-align: center;">
+
+### Click Me Then Press Edit<i Class="ri-pencil-line"></i>
+
+</div>
+
+## Evaluate An Elixir Cell
+
+Elixir cells contain Elixir code. You can evaluate the cell to show the result of the code.
+
+Click on an Elixir cell and press the <i class="ri-play-circle-fill"></i> Evaluate button to see the cell's output.
+
+Alternatively, you can press <kbd>CTRL</kbd>+<kbd>Enter</kbd> (Windows & Linux) or <kbd>CMD</kbd>+<kbd>Enter</kbd> (MacOS) while focused on the cell to re-evaluate it.
+
+Evaluate the cell below. You should see `10` because `5 + 5` equals `10`.
+
+```elixir
+5 + 5
+```
+
+In Elixir, the last value will always be the return value
+
+For example, this cell returns `10`, not `5`.
+
+```elixir
+5
+10
+```
+
+As you complete reading material, you're expected to evaluate cells to see their output. Alternatively, you can press `ea` to evaluate every cell in a Livebook.
+
+## Evaluation Order
+
+By default, Elixir cells evaluate in order when you run the `ea` command. Cells above
+automatically evaluate when you evaluate a cell below.
+
+Here are two empty Elixir cells. By default, an empty cell returns `nil`.
+
+```elixir
+
+```
+
+```elixir
+
+```
+
+Evaluate the first cell and notice that the cell below becomes **Stale**.
+
+This means that if the second cell relies on any value in the first cell, it is now outdated.
+
+If you change a cell, **Evaluated** changes to *Evaluated\** to indicate that the cell has changed
+since the last time it was evaluated.
+
+Evaluate the Elixir cell below, then change `5` to `4` to see **Evaluated** change to *Evaluated\**.
+Re-evaluate the cell to see *Evaluated\** change to **Evaluated**.
+
+```elixir
+5
+```
+
+Sometimes order of evaluation can cause issues in Exercises by using a stale version of an Elixir cell. Make sure to evaluate a code cell whenever you make a change.
+
+## Formatting
+
+You can format Elixir code using the <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>I</kbd> (Windows & Linux) Keybinding or <kbd>SHIFT</kbd>+<kbd>OPTION</kbd>+<kbd>F</kbd> (MacOS).
+
+Try uncommenting the following code (Remove the `#` character) then press <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>I</kbd> (Windows & Linux) or <kbd>SHIFT</kbd>+<kbd>OPTION</kbd>+<kbd>F</kbd> (MacOS) to format the code.
+
+Notice that the `1 + 1` code moves to the left.
+
+```elixir
+# 1 + 1
+```
+
+If you have not evaluated any Elixir code cells, you may see a warning.
+
+> You need to start a runtime (or evaluate a cell) to enable code formatting.
+
+Ensure you evaluate any Elixir cell before attempting to use the code format command.
+
+If you cannot format an Elixir cell, you can use this as a clue that you have a syntax error in your code. For example, the following
+code is invalid. Notice that you cannot use <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>I</kbd> to format the code.
+
+```elixir
+          1 +
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Livebook reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Livebook">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/git.livemd">Git</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/code_editors.livemd">Code Editors</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

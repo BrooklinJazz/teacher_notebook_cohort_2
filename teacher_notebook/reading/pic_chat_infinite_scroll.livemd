@@ -1,0 +1,626 @@
+# PicChat: Pagination
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=PicChat: Pagination">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/pic_chat_pub_sub.livemd">PicChat: PubSub</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/picchat_emails.livemd">PicChat: Emails</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How and why do we paginate large data in a Phoenix Application?
+* How to implement client-server communication with Phoenix Hooks.
+* How to implement server to client communication with [Phoenix.LiveView.push_event/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#push_event/3)
+
+## Overview
+
+### JavaScript Interoperability
+
+JavaScript interoperability refers to the ability to call JavaScript functions from Elixir code, and vice versa. In a Phoenix Application with LiveView, we can push events from the server to the client, and push events from the client to the server.
+
+* **client to server communication:** A client `pushEvent` function sends a message to the server which is handled by LiveView `handle_event/3` callback function.
+* **server to client communication** A LiveView calls the [Phoenix.LiveView.push_event/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#push_event/3) function on the `socket`, which is then handled by a `handleEvent` JS event listener.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### JavaScript Events
+
+JavaScript uses `listeners` to listen to triggered events on some target such as an element or the `window`. Listeners trigger a callback function whenever the specified event is delivered to the target.
+
+Listeners are added to a target using [addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener).
+
+```javascript
+element.addEventListener("click", function(event) {
+  console.log("element was clicked")
+})
+```
+
+See [MDN: Event Listing](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing) for a full list of events if you would like to learn more.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### [Window](https://developer.mozilla.org/en-US/docs/Web/API/Window)
+
+In a web browser, the `window` object represents the current web page that is being displayed. It is the top-level object in the browser's object model, and provides access to the browser's features and the web page's content. The `window` contains the `document` which points to the HTML Document Object Model (DOM) loaded in that window.
+
+Phoenix LiveView dispatches several events prefixed with `phx:` to the `window`. The `window` can listen to these events and handle them appropriately. For example, every `app.js` file in any Phoenix application handles the `phx:page-loading-start` and `phx:page-loading-stop` events by displaying and hiding a topbar.
+
+```javascript
+import topbar from "topbar"
+window.addEventListener("phx:page-loading-start", info => topbar.show())
+window.addEventListener("phx:page-loading-stop", info => topbar.hide())
+```
+
+The window can also handle any server initiated events sent with [Phoenix.LiveView.push_event/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#push_event/3).
+
+First, some event handler would call `push_event/3`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def handle_info(_some_message, socket) do
+  params = %{} # some Elixir term
+  {:noreply, push_event(socket, "my_event", params})}
+end
+```
+
+Then the `window` can handle the pushed event through an event listener. Event params will be stored on the `event` object's `detail` property.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+window.addEventListener(`phx:my_event`, (event) => {
+  let params = event.detail
+  # js code to handle the event
+})
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### [Document (DOM)](https://developer.mozilla.org/en-US/docs/Glossary/DOM)
+
+The Document Object Model (DOM) is a programming interface for HTML documents. It represents the structure of a document as a tree of objects, with each object representing a part of the document (such as an element or an attribute). For example, consider the following HTML document:
+
+```html
+<html>
+  <head>
+    <title>My Page</title>
+  </head>
+  <body>
+    <h1>Welcome to my page</h1>
+    <p>This is some text</p>
+  </body>
+</html>
+```
+
+In the DOM, this document would be represented as a tree of objects like this:
+
+```
+- html
+    - head
+      - title
+        - #text My Page
+    - body
+      - h1 
+        - #text Welcome to my page
+      - p 
+        - #text This is some text
+```
+
+The DOM allows a program to access and manipulate the content, structure, and style of a document.
+
+Typically we'll use the `document` object in a JavaScript `.js` file to select an HTML element.
+
+```javascript
+dragndrop = document.getElementById("element-1")
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### [Client Hooks](https://hexdocs.pm/phoenix_live_view/js-interop.html#client-hooks-via-phx-hook)
+
+Client-side hooks are JavaScript functions that are executed at specific points during the rendering and lifecycle of an element. We can hook into the following element lifecycle callbacks.
+
+* `mounted`: the element has been added to the DOM and its server LiveView has finished mounting
+* `beforeUpdate`: the element is about to be updated in the DOM
+* `updated`: the element has been updated in the DOM by the server
+* `destroyed`: the element has been removed from the page
+* `disconnected`: the element's parent LiveView has disconnected from the server
+* `reconnected`: the element's parent LiveView has reconnected to the server
+
+For example, we connect an element with a hook using `phx-hook`.
+
+```html
+<div phx-hook="MyHook" />
+```
+
+Then trigger the JavaScript by providing a matching `Hooks` callback object to the socket.
+The object specifies the JS to run, and the lifecycle event to trigger the JS during.
+
+```javascript
+// app.js
+
+let Hooks = {
+  MyHook: {
+    mounted() {
+      // run the following JS on upon mounting the HTML element.
+      // `this` references an object containing properties related to the current element.
+      // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this for more on `this`.
+      this.el.addEventListener("click", event => {
+        // run the following JS when the "click" event is triggered on the HTML element.
+        console.log("clicked") 
+      })
+    }
+  }
+}
+
+// modify the existing liveSocket
+let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken }, hooks: Hooks })
+```
+
+## PicChat: Pagination
+
+Over the next several lessons, we're going to build a `PicChat` application where users can create messages with uploaded pictures. This lesson will focus adding pagination and infinite scroll to enable our system to be more performant for larger amounts of data.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Pagination: Limit And Offset
+
+[Ecto.Query.limit/3](https://hexdocs.pm/ecto/Ecto.Query.html#limit/3) and [Ecto.Query.offset/3](https://hexdocs.pm/ecto/Ecto.Query.html#offset/3) allow us to paginate data.
+
+Imagine we have we have 15 records. If we `limit` our query to `5`, then each page would have five elements. To retrieve a page, we would use an `offset` in multiples of `5`.
+
+* page 1
+  * offset: `0`
+  * limit: `5`
+* page 2
+  * offset: `5`
+  * limit: `5`
+* page 3
+  * offset: `10`
+  * limit: `5`
+
+Here's a graphic to help visualize these pages of data.
+
+```mermaid
+flowchart TB
+subgraph Page 3
+  direction RL
+  11[record 11]
+  12[record 12]
+  13[record 13]
+  14[record 14]
+  15[record 15]
+end
+
+subgraph Page 2
+  direction RL
+  6[record 6]
+  7[record 7]
+  8[record 8]
+  9[record 9]
+  10[record 10]
+end
+
+subgraph Page 1
+  direction RL
+  1[record 1]
+  2[record 2]
+  3[record 3]
+  4[record 4]
+  5[record 5]
+end
+```
+
+Modify the `Chat.list_messages/0` function into the following to allow it to optionally paginate data. This does not break the existing interface, so all tests should still pass.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def list_messages(opts \\ []) do
+  limit = Keyword.get(opts, :limit)
+  offset = Keyword.get(opts, :offset, 0)
+
+  Message
+  |> from(order_by: [desc: :inserted_at])
+  |> limit(^limit)
+  |> offset(^offset)
+  |> Repo.all()
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Load Paginated Data On Mount
+
+Modify the `mount/3` function to retrieve the first page of data. We're also going to store the `page` information in the LiveView.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Index.ex
+@limit 10
+
+@impl true
+def mount(_params, _session, socket) do
+if connected?(socket) do
+  PicChatWeb.Endpoint.subscribe("messages")
+end
+
+{:ok,
+  socket
+  |> assign(:page, 1)
+  |> stream(:messages, Chat.list_messages(limit: @limit))}
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Load More Paginated Data
+
+Define an event handler that will load more data and insert them into the stream of messages.
+
+> At the time of writing, there is no function for inserting many items into a stream so we've written a custom `stream_insert_many/3` helper function. However [streams](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#stream/4) are very new to LiveView so that may change.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Index.ex
+@impl true
+def handle_event("load-more", _params, socket) do
+  offset =  socket.assigns.page * @limit
+  messages = Chat.list_messages(offset: offset, limit: @limit)
+
+  {:noreply,
+    socket
+    |> assign(:page, socket.assigns.page + 1)
+    |> stream_insert_many(:messages, messages)}
+end
+
+defp stream_insert_many(socket, ref, messages) do
+  Enum.reduce(messages, socket, fn message, socket ->
+    stream_insert(socket, ref, message)
+  end)
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Seeding
+
+Seeding makes it easier to test situations that would be difficult to reproduce manually. For example, instead of creating messages to test pagination manually, add the following to `seeds.exs`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Seeds.ex
+{:ok, user} =
+  PicChat.Accounts.register_user(%{
+    email: "test@test.test",
+    password: "testtesttest"
+  })
+
+
+for n <- 1..100 do
+  PicChat.Chat.create_message(%{user_id: user.id, content: "message #{n}"})
+end
+```
+
+Then reset the database to seed the data.
+
+```
+$ mix ecto.reset
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Load More Button
+
+Here's a simple button to trigger loading more messages. Add this below the table of messages to verify loading more messages works as expected.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Index.ex
+<.button phx-click="load-more">Load More</.button>
+```
+
+## PicChat: Infinite Scroll
+
+Infinite scroll is a common behavior you'll often see on social media sites or other websites with a feed of data to automatically load more data when the user scrolls past a certain point on the page.
+
+To implement **infinite scroll** we need to work with the [JavaScript scroll event](https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event).
+
+However, there is no `phx-scroll` binding, as this would send way too many messages to the server. For times like this, we can rely on [JavaScript Interoperability](https://hexdocs.pm/phoenix_live_view/js-interop.html#content), specifically in our case [Client Hooks](https://hexdocs.pm/phoenix_live_view/js-interop.html#client-hooks-via-phx-hook).
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Client Hooks
+
+Hooks are defined in `app.js` in a JavaScript object and provided to the `live_socket`.
+
+Add the following to `app.js` to create an InfiniteScroll hook. This snippet was created by [Chris McChord](https://elixirforum.com/t/how-can-i-implement-an-infinite-scroll-in-liveview/30457/2). It checks if the scroll position is greater than `90%` and that we're not currently loading more data, then uses `pushEvent` to send the `"load-more"` message to the server.
+
+```javascript
+let Hooks = {}
+
+let scrollAt = () => {
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+    let clientHeight = document.documentElement.clientHeight
+
+    return scrollTop / (scrollHeight - clientHeight) * 100
+}
+
+Hooks.InfiniteScroll = {
+    page() { return this.el.dataset.page },
+    mounted() {
+        this.pending = this.page()
+        window.addEventListener("scroll", e => {
+            if (this.pending == this.page() && scrollAt() > 90) {
+                this.pending = this.page() + 1
+                this.pushEvent("load-more", {})
+            }
+        })
+    },
+    reconnected() { this.pending = this.page() },
+    updated() { this.pending = this.page() }
+}
+
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### `phx-hook` Binding
+
+At the time of writing, the `table` core component does not support the `phx-hook` attribute, so we're unable to simply add `phx-hook="InfiniteScroll"` to connect our component and the `InfiniteScroll` hook we've created.
+
+As `core_components` are new, this may change in the future.
+
+There are two main solutions to this problem:
+
+1. Modify the core component
+2. Wrap the table in an element.
+
+We're going to modify the core component. Core components might feel special, but they are a part of our application. We can modify them as we please!
+
+Modify the `table` component to include a `@rest` attribute that allows us to provide arbitrary HTML attributes to the component.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Add Alphabetically To The Other `attr` For The Table In Core_components.ex
+attr :rest, :global, doc: "the arbitrary HTML attributes to add to the table"
+
+# Add `@rest` To The Table Body Element In Core_components.ex
+<tbody
+  id={@id}
+  phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
+  class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
+  {@rest}
+>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Attach The Hook
+
+Add the `phx-hook` binding to the table element. We also need the `data-page` attribute used in the `InfiniteScroll` hook to access which page of data was last loaded.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Add Phx-hook And Data-page Attributes To The Table Element In `index.ex`
+<.table 
+  id="messages" 
+  rows={@streams.messages} 
+  phx-hook="InfiniteScroll" 
+  data-page={@page} 
+  row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message}") end}
+>
+```
+
+## PicChat: Highlighting
+
+We've seen that our client can send the server a message using `pushEvent`. Our server can also send the client a message using [Phoenix.LiveView.push_event/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#push_event/3). This is often useful when we want to trigger some JavaScript logic.
+
+To demonstrate this feature we're going to highlight messages whenever they are updated or created.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Push The "highlight" Event From The Server
+
+Add [push_event/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#push_event/3) to your handlers for the `"new"` and `"edit"` actions.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@impl true
+def handle_info(
+      %Phoenix.Socket.Broadcast{topic: "messages", event: "new", payload: message},
+      socket
+    ) do
+  {:noreply,
+    socket
+    |> push_event("highlight", %{id: message.id})
+    |> stream_insert(:messages, message, at: 0)}
+end
+
+@impl true
+def handle_info(
+      %Phoenix.Socket.Broadcast{topic: "messages", event: "edit", payload: message},
+      socket
+    ) do
+  {:noreply,
+    socket
+    |> push_event("highlight", %{id: message.id})
+    |> stream_insert(:messages, message)}
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Receive Message On The Client
+
+Use `handleEvent` to receive the message on the client and add the `"highlight"` class to the new or updated element. Add the following inside of the `mounted` function.
+
+```javascript
+mounted() {
+    // Keep the existing InfiniteScroll code and add this below it.
+    this.handleEvent("highlight", () => {
+        new_message = document.getElementById(`message-${id}`)
+        if (new_message) {
+            new_message.classList.add("highlight")
+        }
+    })
+}
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Style The Highlighted Element
+
+```css
+.highlight {
+  border-radius: 3px;
+  animation: highlight 1000ms ease-out;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: lightgrey;
+  }
+
+  100% {
+    background-color: white;
+  }
+}
+```
+
+## Tests
+
+### Context Test
+
+Add the following test to ensure the `limit` and `offset` work as expected in the `Chat` context.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+test "list_messages/1 returns paginated messages" do
+  user = user_fixture()
+  message1 = message_fixture(user_id: user.id)
+  message2 = message_fixture(user_id: user.id)
+  assert Chat.list_messages(limit: 1, offset: 1) == [message1]
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### LiveView Test
+
+We can use [render_hook/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#render_hook/3) to send a hook event for the sake of testing the `"load-more"` event handler.
+
+Add the following test inside of the `"Index"` describe block. This test ensures we only display the next page of data after triggering the `"load-more"` event.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+test "infinite load 10 messages at a time", %{conn: conn} do
+  user = user_fixture()
+
+  messages =
+    Enum.map(1..20, fn n ->
+      message_fixture(user_id: user.id, content: "message-content-#{n}")
+    end)
+    |> Enum.reverse()
+
+  page_one_message = Enum.at(messages, 0)
+  page_two_message = Enum.at(messages, 10)
+
+  {:ok, index_live, html} = live(conn, ~p"/messages")
+
+  assert html =~ "Listing Messages"
+
+  assert html =~ page_one_message.content
+  refute html =~ page_two_message.content
+  assert render_hook(index_live, "load-more", %{}) =~ page_two_message.content
+end
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [HexDocs: Simulating Latency](https://hexdocs.pm/phoenix_live_view/js-interop.html#simulating-latency)
+* [HexDocs: JavaScript Interoperability](https://hexdocs.pm/phoenix_live_view/js-interop.html#content)
+* [HexDocs: Client Hooks](https://hexdocs.pm/phoenix_live_view/js-interop.html#client-hooks-via-phx-hook)
+* [HexDocs: Phoenix.LiveView.JS](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html)
+* [HexDocs: Handling server-pushed events](https://hexdocs.pm/phoenix_live_view/js-interop.html#handling-server-pushed-events)
+* [MDN: CSS Animations](https://developer.mozilla.org/pt-BR/docs/Web/CSS/CSS_Animations)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish PicChat: Pagination reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=PicChat: Pagination">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/pic_chat_pub_sub.livemd">PicChat: PubSub</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/picchat_emails.livemd">PicChat: Emails</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

@@ -1,0 +1,257 @@
+# Strings
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Strings">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/arithmetic.livemd">Arithmetic</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/io.livemd">IO</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* What are strings, and what kind of information are they useful for storing?
+* How do we add two strings together using string concatenation?
+* How do we interpret Elixir code inside of a string using string interpolation?
+
+## Strings
+
+A string is any sequence of characters contained within two double quotes `""`.
+A character is any single number, letter, or symbol.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+"T" # letters
+"t" # letters
+"1" # numbers
+"1.2" # numbers
+"&" # symbols
+"_" # symbols
+```
+
+You can visualize a string as characters joined together by strings.
+Strings can be a single character, no characters, or many characters!
+
+```mermaid
+flowchart LR
+  S --- T --- R --- I --- N --- G
+```
+
+Strings can contain single quotes and other symbols such as `!@#$%^&*()_+-=';:` and more.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+"!@#$%^&*()_+-=';:"
+```
+
+They are useful for representing all kinds of information as text.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+In the Elixir cell below, create a string `"Hello, world!"`. This is a rite of passage for every
+programmer.
+
+```elixir
+
+```
+
+## Multiline Strings
+
+Sometimes we want to represent a string with multiple lines. The newline `\n` character represents a new line in a string.
+
+```elixir
+string = "line 1\nline 2\nline 3"
+
+IO.puts(string)
+```
+
+To make defining multiline strings easier, Elixir allows us to use three quotes `"""` to define a multiline string.
+
+```elixir
+string = """
+line 1
+line 1
+line 1
+"""
+
+IO.puts(string)
+```
+
+## String Operators
+
+String operators allow us to manipulate strings.
+
+The `<>` operator joins two strings together. Joining strings together is called **string concatenation**.
+
+```elixir
+"hello, " <> "world."
+```
+
+Only strings can be concatenated together using the `<>` operator. You'll notice concatenating `1` causes an error `expected binary argument in <> operator but got 1`
+This error occurs because we're asking the computer to concatenate a string with an integer.
+
+```elixir
+"hello" <> 1
+```
+
+### Your Turn
+
+In the Elixir cell below, use string concatenation to join `"Hi "` and the name of one
+of your classmates.
+
+So `"Peter"` would be come `"Hi Peter."`.
+
+Replace `nil` with your answer.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+"Hi " <> "Peter."
+```
+
+</details>
+
+```elixir
+
+```
+
+### String Interpolation
+
+<!-- livebook:{"break_markdown":true} -->
+
+Using `#{}`, We can also **interpolate** values in strings. Essentially, this means we can evaluate code inside of
+a string. The code you want to interpolate inside of the string
+goes between the curly braces `{}`.
+
+So we can evaluate `4 + 4`, which equals `8` inside a string.
+
+```elixir
+"I have #{4 + 4} apples."
+```
+
+String interpolation is often useful when your string has many computed values or tricky punctuation.
+Otherwise, it's easy to make mistakes.
+
+Notice that there's a grammar mistake below that could easily be missed when using string concatenation.
+
+```elixir
+"I have" <> "8" <> "apples"
+```
+
+### Your Turn
+
+In the Elixir cell below, use **string interpolation** to say `I have #{X - 1} classmates.`. Where X is the number of people in your cohort including yourself.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+"I have #{1 - 1} classmates."
+```
+
+</details>
+
+```elixir
+answer = nil
+```
+
+## Escaping Characters
+
+Elixir allows you to use [Escape Characters](https://hexdocs.pm/elixir/main/String.html#module-escape-characters) to represent special values in a string. We've already seen the `\n` escape character for a newline.
+
+For example, we can use the `\` symbol to escape special characters in a string. This is handy when you want to include characters that would have alternative meaning in the string. For example, if you wanted to include double quotes in a string, you can escape the double quote `\"`.
+
+```elixir
+string = "They said \"so this is how you include double quotes in a string!\""
+
+IO.puts(string)
+```
+
+There are other special characters such as backslashes `\`, or interpolation syntax that you might want to escape.
+
+```elixir
+string = "Use \#{} to interpolate a value in a string"
+
+IO.puts(string)
+```
+
+```elixir
+string = "If you don't escape using backslash \\, then #{} doesn't appear"
+
+IO.puts(string)
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepend your understanding of the topic.
+
+* [Joy of Elixir: Strings](https://joyofelixir.com/book#chapter-8)
+* [Elixir-lang: binaries, strings, and charlists](https://elixir-lang.org/getting-started/binaries-strings-and-char-lists.html)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Strings reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Strings">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/arithmetic.livemd">Arithmetic</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/io.livemd">IO</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

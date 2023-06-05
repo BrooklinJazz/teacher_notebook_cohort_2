@@ -1,0 +1,183 @@
+# Process Mailbox
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Process Mailbox">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/process_drills.livemd">Process Drills</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/genservers.livemd">GenServers</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Process Mailbox
+
+Using [spawn/1](https://hexdocs.pm/elixir/Kernel.html#spawn/1), [send/2](https://hexdocs.pm/elixir/Kernel.html#send/2), and `receive` You're going to create a `Mailbox` process which recursively sends and receives messages.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Spawn The Mailbox
+
+The `Mailbox` should recursively loop and wait to receive a message.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+maibox_process = spawn(fn -> Mailbox.loop() end)
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Send Mail
+
+Send the mailbox process a `{:send, message}` message and it should store the message.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+send(mailbox_process, {:send, "You've got mail!"})
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Read Mail
+
+Send the mailbox process a {:read, from_pid} message and it should send the most recent message back to the sender and remove it from the mailbox.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+send(mailbox_process, {:read, self()})
+
+receive do
+  message -> message 
+end
+# Returns "You've Got Mail!"
+```
+
+If there are no messages, send an `:empty` message back.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+send(mailbox_process, {:read, self()})
+
+receive do
+  message -> message 
+end
+# Returns :empty
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Mailbox do
+  def loop(state \\ []) do
+    receive do
+      {:send, message} ->
+        IO.inspect(message)
+        loop([message | state])
+
+      {:read, from_pid} ->
+        case state do
+          [head | tail] ->
+            send(from_pid, head)
+            loop(tail)
+
+          [] ->
+            send(from_pid, :empty)
+            loop([])
+        end
+    end
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule Mailbox do
+  @moduledoc """
+  Documentation for `Mailbox`
+  """
+
+  @doc """
+  Recursively loop and receive messages.
+  This doctest will timeout if there is no implementation.
+
+  ## Examples
+
+      iex> mailbox_process = spawn(fn -> Mailbox.loop() end)
+      iex> send(mailbox_process, {:send, "Hello!"})
+      iex> send(mailbox_process, {:read, self()})
+      iex> receive do
+      ...>  message -> message 
+      ...> end
+      "Hello!"
+  """
+  def loop(state \\ []) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Process Mailbox exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Process Mailbox">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/process_drills.livemd">Process Drills</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/genservers.livemd">GenServers</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

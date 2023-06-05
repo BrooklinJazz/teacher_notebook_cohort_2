@@ -1,0 +1,191 @@
+# Weighted Voting
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Weighted Voting">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/number_finder.livemd">Number Finder</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/custom_enum_with_reduce.livemd">Custom Enum With Reduce</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Weighted Voting
+
+In the previous [Counting Votes](./counting_votes.livemd) exercise, we created a module to count a list of votes. For example, users would vote for their favorite animal to decide if `:birds`, `:dogs`, or `:cats` were more popular.
+
+Now, you're going to create a `WeightedVoting.count/2` that can count the number of votes for a single value such as `:dogs` or `:cats`. provided in a keyword list.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+WeightedVoting.count([cats: 10, dogs: 20, dogs: 20], :dogs)
+40
+```
+
+You're also going to create a `WeightedVoting.tally/1` function that will count the votes provided in a keyword list, and return the results as a keyword list like so.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+WeightedVoting.tally([cats: 10, dogs: 20, dogs: 20])
+[cats: 10, dogs: 40]
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule WeightedVoting do
+  def count(votes, vote_to_count) do
+    Enum.reduce(votes, 0, fn {key, value}, acc ->
+      if key == vote_to_count do
+        acc + value
+      else
+        acc
+      end
+    end)
+  end
+
+  def tally(votes) do
+    Enum.reduce(votes, [], fn {key, vote_count}, acc ->
+      Keyword.update(acc, key, vote_count, fn existing_value ->
+        existing_value + vote_count
+      end)
+    end)
+  end
+
+  def tally_map(votes) do
+    Enum.reduce(votes, %{}, fn {key, vote_count}, acc ->
+      Map.update(acc, key, vote_count, fn existing_value ->
+        existing_value + vote_count
+      end)
+    end)
+  end
+end
+```
+
+</details>
+
+Implement the `WeightedVoting` module as documented below.
+
+```elixir
+defmodule WeightedVoting do
+  @doc """
+  Count the total number of votes for some key in a keyword list.
+
+  ## Examples
+
+    iex> WeightedVoting.count([dogs: 20, dogs: 10], :dogs)
+    30
+    iex> WeightedVoting.count([cats: 10, dogs: 20, dogs: 30], :dogs)
+    50
+    iex> WeightedVoting.count([cats: 10, dogs: 20, dogs: 10, cats: 30], :cats)
+    40
+  """
+  def count(votes, vote_to_count) do
+  end
+
+  @doc """
+  Tally the total number of votes in a keyword list, and return
+  the results as a keyword list.
+
+  The keyword list should be sorted in alphabetical order.
+
+  ## Examples
+
+    iex> WeightedVoting.tally([dogs: 20, dogs: 10])
+    [dogs: 30]
+    iex> WeightedVoting.tally([cats: 10, dogs: 20, dogs: 10])
+    [cats: 10, dogs: 30]
+    iex> WeightedVoting.tally([cats: 10, dogs: 20, cats: 20, dogs: 10, birds: 20])
+    [birds: 20, cats: 30, dogs: 30]
+  """
+  def tally(votes) do
+  end
+end
+```
+
+### Bonus: Tally Map
+
+Create a `WeightedVoting.tally_map/1` function which returns a map instead of a keyword list.
+You may copy the following code into the `WeightedVoting` module above to get started.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+  @doc """
+  Tally the total number of votes in a keyword list, and return
+  the results as a map.
+
+  ## Examples
+
+    iex> WeightedVoting.tally_map([dogs: 20, dogs: 10])
+    %{dogs: 30}
+    iex> WeightedVoting.tally_map([cats: 10, dogs: 20, dogs: 10])
+    %{cats: 10, dogs: 30}
+    iex> WeightedVoting.tally_map([cats: 10, dogs: 20, cats: 20, dogs: 10, birds: 20])
+    %{birds: 20, cats: 30, dogs: 30}
+  """
+  def tally_map(votes) do
+  end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Weighted Voting exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Weighted Voting">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/number_finder.livemd">Number Finder</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/custom_enum_with_reduce.livemd">Custom Enum With Reduce</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

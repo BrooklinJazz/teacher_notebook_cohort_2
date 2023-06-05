@@ -1,0 +1,634 @@
+# Tailwind
+
+```elixir
+Mix.install(
+  [
+    {:jason, "~> 1.4"},
+    {:kino, "~> 0.9", override: true},
+    {:youtube, github: "brooklinjazz/youtube"},
+    {:hidden_cell, github: "brooklinjazz/hidden_cell"},
+    {:kino_tailwind_playground, github: "BrooklinJazz/kino_tailwind_playground"}
+  ],
+  force: true
+)
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Tailwind">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/blog_cover_image.livemd">Blog: Cover Image</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/blog_home_page.livemd">Blog: Home Page</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* Why use Tailwind vs pure CSS?
+* How do you find Tailwind utility classes?
+
+## Overview
+
+[Tailwind CSS](https://tailwindcss.com/) is a CSS utility framework. It allows us to use utility classes defined by Tailwind to conveniently apply CSS styles.
+
+For example, we can use the `underline` class to apply an underline to an HTML element.
+
+```html
+<h1 class="underline">
+  Hello world!
+</h1>
+```
+
+This applies the following CSS to the heading 3 element.
+
+```CSS
+text-decoration-line: underline;
+```
+
+Keep in mind, there is nothing we can do in Tailwind that we cannot do with pure CSS.
+Tailwind is purely for convenience. In general, you'll want to learn CSS styles, then learn the appropriate CSS class on Tailwind. Knowledge of pure CSS will always be more generally applicable than knowledge of Tailwind.
+
+However, Tailwind is a very popular and important CSS framework in the Elixir ecosystem. Many projects use Tailwind, and it's become part of the standard PETAL (Phoenix, Elixir Tailwind, AlpineJS and LiveView) stack, which is a set of common tools used to create Elixir web applications.
+
+## Play CDN
+
+To experiment with Tailwind, we can use the Tailwind CDN (Content Delivery Network) in an HTML file. This CDN provides the JavaScript necessary to run Tailwind.
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
+</body>
+</html>
+```
+
+We've also created a [Livebook Tailwind Playground](https://github.com/BrooklinJazz/kino_tailwind_playground) for the purposes of demonstration. All tailwind examples are editable and render live.
+
+<!-- livebook:{"attrs":{"html":"<div class=\"flex items-center justify-center h-screen w-full bg-green-200\">\n  <h1 class=\"text-3xl font-bold underline text-center\">\n    Go Ahead And Change This Text!\n  </h1>\n</div>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+### Your Turn
+
+Tailwind provides the [Tailwind Play](https://play.tailwindcss.com/) playground to experiment with Tailwind classes.
+
+Go to [Tailwind Play](https://play.tailwindcss.com/) and enter the following HTML to create an HTML heading 3 element with bold font, an underline, and a triple extra large font size.
+
+```html
+<h1 class="font-bold underline text-3xl">
+  Hello world!
+</h1>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tailwind_play_heading_3.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+This is the same as applying the following CSS styles.
+
+```css
+h1 {
+  // underline
+  text-decoration-line: underline;
+
+  // font-bold
+  font-weight: 700;
+
+  // text-3xl
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
+}
+```
+
+## Documentation
+
+We can find all available Tailwind utility classes from the [Tailwind Documentation](https://tailwindcss.com/docs/installation). They have a handy Quick Search for finding Tailwind classes.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tailwind_quick_search.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn (BONUS)
+
+Use the [Tailwind Documentation](https://tailwindcss.com/docs/installation) to create the following button.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tailwind_button_example.png)
+
+<!-- livebook:{"attrs":{"html":"<button class=\"\">Click Me!</button>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Colors
+
+Tailwind comes with a [default color palette](https://tailwindcss.com/docs/customizing-colors#default-color-palette). Each color has a base name such as `red` then a number to indicate the shade of color.
+
+The default colors are `slate`, `gray`, `zinc`, `neutral`, `stone`, `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, and `rose`.
+
+The default shades are `50`, `100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, and `900`.
+
+This color pallet works with a variety of utility classes such as [text-color](https://tailwindcss.com/docs/text-color) and [background-color](https://tailwindcss.com/docs/background-color).
+
+So we can apply a background color and text color to an HTML element like so.
+
+<!-- livebook:{"attrs":{"html":"<p class=\"text-red-600 bg-blue-200\">I have a blue background and red text!</p>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Text
+
+### [Font Size](https://tailwindcss.com/docs/font-size)
+
+We can change font size using `text-{size}` utilities.
+
+```html
+<p class="text-3xl">
+```
+
+We have access to the following sizes: `xs`, `sm`, `base`, `lg`, `xl`, `2xl`, `3xl`, `4xl`, `5xl`, `6xl`, `7xl`, `8xl`, and `9xl`.
+
+With Tailwind, `<p>`, `h1`, `h2`, `h3`, `h4`, `h5`, and `h6` are purely semantic and do not apply any styles by default.
+
+<!-- livebook:{"attrs":{"html":"<p>paragraph</p>\n<h1>h1</h1>\n<h2>h2</h2>\n<h3>h3</h3>\n<h4>h4</h4>\n<h5>h5</h5>\n<h6>h6</h6>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+### [Font Weight](https://tailwindcss.com/docs/font-weight)
+
+`font-{weight}` sets the font weight of text. The `weight` can be `thin`, `extralight`, `light`, `normal`, `medium`, `semibold`, `bold`, `extrabold`, and `black`.
+
+<!-- livebook:{"attrs":{"html":"<section class=\"text-3xl\">\n  <p class=\"font-thin\">100</p>\n  <p class=\"font-extralight\">200</p>\n  <p class=\"font-light\">300</p>\n  <p class=\"font-normal\">400</p>\n  <p class=\"font-medium\">500</p>\n  <p class=\"font-semibold\">600</p>\n  <p class=\"font-bold\">700</p>\n  <p class=\"font-extrabold\">800</p>\n  <p class=\"font-black\">900</p>\n</section>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+### [Text Align](https://tailwindcss.com/docs/text-align)
+
+We can use `text-left`, `text-center`, and `text-right` as well as other [text-align](https://tailwindcss.com/docs/text-align) classes to align text inside its container.
+
+<!-- livebook:{"attrs":{"html":"<p class=\"text-center\">centered text</p>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Height And Width
+
+We can set height and width using the `h-{size}` and `w-{size}` classes. Refer to the [Height](https://tailwindcss.com/docs/height) and [Width](https://tailwindcss.com/docs/width) documentation for more.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Fixed
+
+We can provide a fixed-size for the height and width of `0`, `0.5`, `1`, `1.5`, `2`, `2.5`, `3`, `3.5`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `14`, `16`, `20`, `24`, `28`, `32`, `36`, `40`, `44`, `48`, `52`, `56`, `60`, `64`, `72`, `80`, or `96`. These correspond to certain `rem`/`px` values.
+
+```html
+<!-- Height -->
+<h1 class="h-64">The height of this element is 16rem or 256px</h1>
+
+<!-- Width -->
+<h1 class="w-64">The width of this element is 16rem or 256px</h1>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Fractions
+
+The `size` can also be provided as a fraction of halves, thirds, fourths, fifths, sixths, or twelfths. For example: `1/2`, `2/3`, `3/4`, `2/5`, `4/6`, and `7/12`. This size will be relative to the parent container.
+
+```html
+<!-- Height -->
+<div class="h-64">
+  <h1 class="h-1/2">This height will be 8rem or 128px because it is half the height of `h-64`</h1>
+</div>
+
+<!-- Width -->
+<div class="w-64">
+  <h1 class="w-1/2">This width will be 8rem or 128px because it is half the width of `w-64`</h1>
+</div>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Full/Viewport
+
+We can use `-screen` to use the full height or width of the screen.
+
+```html
+<h1 class="h-screen">This will be the full height of the screen regardless of parent container</h1>
+<h1 class="w-screen">This will be the full width of the screen regardless of parent container</h1>
+```
+
+We can use `-full` to set the height or width to the full size of the parent container. This has the same effect as `-screen` if the parent container is already the size of the screen.
+
+```html
+<!-- Height -->
+<div class="h-64">
+  <h1 class="h-full">This height will be 16rem or 256px because it is the full the height of `h-64`</h1>
+</div>
+
+<!-- Width -->
+<div class="w-64">
+  <h1 class="w-full">This width will be 16rem or 256px because it is the full the width of `w-64`</h1>
+</div>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Max Height And Width
+
+We can set the max/min or height/width using the `max-h-{size}`, `min-h-{size}`, `max-w-{size}`. The acceptable `size` values are specific for each. Refer to the [Max-Height](https://tailwindcss.com/docs/max-height), [Max-Width](https://tailwindcss.com/docs/max-width), [Min-Height](https://tailwindcss.com/docs/min-height), and [Min-Width](https://tailwindcss.com/docs/min-width) documentation for more.
+
+```html
+<p class="max-h-12">The max height of this paragraph will be 2rem or 48px</p>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Centering Fitted Content
+
+Combining `w-fit`
+
+<!-- livebook:{"attrs":{"html":""},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+### Your Turn
+
+Create a paragraph tag that will wrap text on a new line when wider than 10rem.
+
+<p style="width: 10rem; background-color: lightgrey">
+For example, this paragraph will wrap words when the text is wider than 10rem.<p>
+</p>
+
+<!-- livebook:{"attrs":{},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Display
+
+Tailwind has [display](https://tailwindcss.com/docs/display) utility classes for controlling the display type of an element. Here are a few examples:
+
+* `block`
+* `inline-block`
+* `inline`
+* `flex`
+
+See [basic-usage](https://tailwindcss.com/docs/display#basic-usage) for an explanation of these properties.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Apply the `inline-block` on all of these span tags so that they can have height apply to them, and display on the same line.
+
+Then change `inline-block` to `block` to see each span tag rendered on their own line.
+
+<!-- livebook:{"attrs":{"html":"<span class=\"h-6 w-6 bg-red-400\"></span>\n<span class=\"h-6 w-6 bg-orange-400\"></span>\n<span class=\"h-6 w-6 bg-yellow-400\"></span>\n<span class=\"h-6 w-6 bg-green-400\"></span>\n<span class=\"h-6 w-6 bg-blue-400\"></span>\n<span class=\"h-6 w-6 bg-purple-400\"></span>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Padding And Margin
+
+We can use `p-{size}` and `m-{size}` to set padding and margin.
+
+The acceptable size values are the same integers as height and width: `0`, `0.5`, `1`, `1.5`, `2`, `2.5`, `3`, `3.5`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `14`, `16`, `20`, `24`, `28`, `32`, `36`, `40`, `44`, `48`, `52`, `56`, `60`, `64`, `72`, `80`, and `96`.
+
+```html
+<p class="p-10">This paragraph has 2.5 rem or 40px of padding on each side.</p>
+<p class="m-12">This paragraph has 3 rem or 48px of margin on each side.</p>
+```
+
+We can also set the horizontal padding/margin using `py`, `px`, `my`, and `mx`.
+
+```html
+<p class="px-10">This paragraph has 2.5 rem or 40px of padding on the left and right side.</p>
+<p class="my-12">This paragraph has 3 rem or 48px of margin on the top and bottom side.</p>
+```
+
+We can set padding/margin on a specific side using `pt`, `pr`, `pb`, `pl`, `mt`, `mr`, `mb`, or `ml`.
+
+```html
+<p class="pl-10">This paragraph has 2.5 rem or 40px of padding on the left side.</p>
+<p class="mt-12">This paragraph has 3 rem or 48px of margin on the top side.</p>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Auto And Centering Content.
+
+We're also able to set margin and padding to automatically fill the available space using `-auto`. For example, we can center content using `mx-auto`. Note that the content must have some width. We can sent the width of an element to be the size of its child content using `w-fit`.
+
+```html
+<p class="mx-auto w-fit">centered paragraph</p>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Create a series of rainbow boxes in the center of the page. Each box should be `3/4` of the page width.
+
+![](images/layered-rainbow.png)
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```html
+<div class="bg-red-400 p-6 w-3/4 mx-auto mt-10"></div>
+<div class="bg-orange-400 p-6 w-3/4 mx-auto mt-10"></div>
+<div class="bg-yellow-400 p-6 w-3/4 mx-auto mt-10"></div>
+<div class="bg-green-400 p-6 w-3/4 mx-auto mt-10"></div>
+<div class="bg-blue-400 p-6 w-3/4 mx-auto mt-10"></div>
+<div class="bg-purple-400 p-6 w-3/4 mx-auto mt-10"></div>
+```
+
+</details>
+
+<!-- livebook:{"attrs":{"html":""},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Border
+
+We have several Tailwind classes for modifying the border of an HTML element.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### [Border Width](https://tailwindcss.com/docs/border-width)
+
+We can set the border-width to `1px` using `border` or provide a size using `border-{size}` where `size` is a valid integer of `0`, `2`, `4`, or `8`.
+
+```html
+<!-- 1px -->
+<p class="border">bordered paragraph</p>
+
+<!-- 2px -->
+<p class="border-2">bordered paragraph</p>
+
+<!-- 4px -->
+<p class="border-4">bordered paragraph</p>
+
+<!-- 8px -->
+<p class="border-8">bordered paragraph</p>
+```
+
+We can also set the vertical border using `border-y` or the horizontal border using `border-x`.
+
+```html
+<p class="border-y-2">This paragraph has a 2px border on top and bottom side</p>
+<p class="border-x-2">This paragraph has a 2px border on left and right side</p>
+```
+
+Finally, we can set the border width on a specific side using `border-t`, `border-r`, `border-b`, and `border-l`.
+
+```html
+<p class="border-t-2">This paragraph has a 2px border on top side</p>
+<p class="border-l-2">This paragraph has a 2px border on left side</p>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### [Border Color](https://tailwindcss.com/docs/border-color)
+
+We can set the border-color using any colors from the [default color palette](https://tailwindcss.com/docs/customizing-colors#default-color-palette) using `border-{color}` in combination with `border-{size}`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<p class="border-2 border-red-500">bordered paragraph</p>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### [Border Radius](https://tailwindcss.com/docs/border-radius)
+
+We can round the corners of our border using `rounded`.
+
+```html
+<p class="rounded">This paragraph has a border-radius of 0.25rem or 4px </p>
+```
+
+We can set the border radius size using `rounded-{size}`. The `size` may be `none`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, or `full`.
+
+```html
+<p class="rounded-lg">This paragraph has a border-radius of 0.5 rem or 8px</p>
+```
+
+We can also set the radius of a specific border corner using `t`, `r`, `b`, `l`, `tl`, `tr`, `br`, and `bl`.
+
+```html
+<p class="rounded-r-lg">This paragraph has a top and bottom right border-radius of 0.5 rem or 8px</p>
+
+<p class="rounded-br-lg">This paragraph has a bottom right border-radius of 0.5 rem or 8px</p>
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Create a rounded rainbow using `border` styles and `padding`.
+
+![](images/rounded-rainbow.png)
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```html
+<div class="border-4 border-red-400 rounded-full p-2 mt-10 m-2">
+  <div class="p-2 border-4 border-orange-400 rounded-full">
+    <div class="p-2 border-4 border-yellow-400 rounded-full">
+      <div class="p-2 border-4 border-green-400 rounded-full">
+        <div class="p-2 border-4 border-blue-400 rounded-full">
+          <div class="p-2 border-4 border-purple-400 rounded-full">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+</details>
+
+<!-- livebook:{"attrs":{"html":""},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Position
+
+We can set the position value of an HTML element using `static` (default), `fixed`, `absolute`, `relative`, and `sticky`. We often use position together with `top-{size}`, `right-{size}`, `left-{size}`, and `bottom-{size}` to adjust their positioning on the web page.
+
+```html
+<!-- positions an element at the bottom of the screen regardless of scroll position -->
+<p class="fixed bottom-0">
+
+<!-- positions an element at the top of their parent container  -->
+<p class="absolute top-0">
+
+<!-- An element will stick to the top of the current scroll position -->
+<p class="sticky top-0">
+
+<!-- positions an element 3rem or 48px downwards of where it would normally be -->
+<p class="sticky bottom-12">
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Use `absolute` positioning to play a paragraph tag on the bottom-right corner of the display.
+
+<!-- livebook:{"attrs":{"html":""},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Hover, Focus, And Other States
+
+We can apply styles based on the state of the element.
+
+For example, we can use `hover:` with any style to only apply that style on hover.
+
+```html
+<button class="hover:bg-red-300 bg-red-500">hover button</button>
+```
+
+We can also use `focus:` with any style to apply that style on focusing an element. (`outline-none` removes the default outline on a text input.)
+
+```html
+<input class="border-4 focus:border-blue-200 outline-none"></input>
+```
+
+See the [Hover, Focus, and Other States](https://tailwindcss.com/docs/hover-focus-and-other-states) documentation for more.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Make a button that changes styles on hover.
+
+<!-- livebook:{"attrs":{},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Responsive Styles
+
+We can apply styles based on the screen size using `sm:`, `md:`, `lg:`, `xl:`, and `2xl:`.
+Omitting the screen size applies the style on all screens (including those smaller than `sm`.)
+
+```html
+<div class="bg-red-400 md:bg-orange-400">
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Change the text size of a paragraph tag based on the screen size. Use the `xs`, `sm`, and `md` buttons in the playground to see the styles applied.
+
+<!-- livebook:{"attrs":{"html":"<p class=\"\">Dynamic Text Size</p>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+
+```elixir
+Kino.nothing()
+```
+
+## Further Reading
+
+There's plenty more to learn! Here's a curated list of some optional reading you may find interesting and useful.
+
+* [Utility-First Fundamentals](https://tailwindcss.com/docs/utility-first) Tailwind has written an excellent overview of the benefits of using utility classes rather than an alternative approach.
+* [Tailwind Phoenix Guide](https://tailwindcss.com/docs/guides/phoenix). Tailwind includes an installation guide for using Tailwind in a Phoenix project. We'll learn more about Tailwind with Phoenix in a future lesson.
+* [Dark Mode](https://tailwindcss.com/docs/dark-mode) Tailwind includes a `dark:` class you can use to apply styles only in dark mode.
+* [Reusing Styles](https://tailwindcss.com/docs/reusing-styles) A guide on how to avoid repeating yourself with Tailwind.
+* [Adding Custom Styles](https://tailwindcss.com/docs/adding-custom-styles) how to add custom styles to Tailwind.
+
+Refer to the [Tailwind Documentation](https://tailwindcss.com/docs/installation) for more!
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Tailwind reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Tailwind">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/blog_cover_image.livemd">Blog: Cover Image</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/blog_home_page.livemd">Blog: Home Page</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

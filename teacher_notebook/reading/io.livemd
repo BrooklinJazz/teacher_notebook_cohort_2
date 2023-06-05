@@ -1,0 +1,108 @@
+# IO
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=IO">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/strings.livemd">Strings</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/booleans.livemd">Booleans</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## IO
+
+We can use the [IO](https://hexdocs.pm/elixir/IO.html) module for retrieving user input and displaying output.
+
+We can use [IO.inspect/2](https://hexdocs.pm/elixir/IO.html#inspect/2) and [IO.puts/2](https://hexdocs.pm/elixir/IO.html#puts/2) print displaying information.
+
+We can also use [IO.gets/2](https://hexdocs.pm/elixir/IO.html#gets/2) to retrieve input from the user.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> input = IO.gets("Give me some input: ")
+Give me some input: sure!
+"sure!\n"
+iex> input
+"sure!\n"
+```
+
+Keep in mind, this will work when running an Elixir project or in the [IEx](https://hexdocs.pm/iex/IEx.html) shell, but will fail with an `:enotsup` (error not supported) error when we run it from Livebook.
+
+```elixir
+IO.gets("I will fail!")
+```
+
+That's because there is no command line or other device to retrieve user input from.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Run [IO.gets/2](https://hexdocs.pm/elixir/IO.html#gets/2) in the command line from the [IEx](https://hexdocs.pm/iex/IEx.html) shell and bind the return value to an `input` variable.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> input = IO.gets("Give me some input: ")
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish IO reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=IO">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/strings.livemd">Strings</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/booleans.livemd">Booleans</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

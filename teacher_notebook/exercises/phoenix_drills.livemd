@@ -1,0 +1,106 @@
+# Phoenix Drills
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phoenix Drills">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/phoenix_follow_along_counter_app.livemd">Follow Along: Phoenix Counter App</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/group_project_blog.livemd">Group Project: Blog</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Phoenix Drills
+
+Drills help you develop familiarity and muscle memory with syntax through repeated exercises. Unlike usual problems, Drills are not intended to develop problem solving skills, they are purely for developing comfort and speed.
+
+This set of drills is for the [Phoenix](../reading/phoenix_1.7.livemd) framework. Follow the instructions for each drill and complete them as quickly as you can.
+
+## Hello World
+
+Create a hello world and replace any existing content on the `"/"` route with "Hello World".
+
+```
+$ mix phx.new hello_world --no-ecto
+```
+
+## Random Number
+
+Create a random number web app that generates a random number between `1` and `100` on the `"/random_number"` route.
+
+```
+$ mix phx.new random_number --no-ecto
+```
+
+## Phoenix Navigation
+
+Create a Pheonix application with three pages:
+
+* Home
+* About
+* Projects
+
+Create a simple navigation bar at the top of every page that lets you navigate to each page.
+
+## Counter
+
+Recreate the counter found in the [Follow Along: Counter](../exercises/phoenix_follow_along_counter_app.livemd) exercise without referring to the exercise material (as much as possible).
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Phoenix Drills exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phoenix Drills">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/phoenix_follow_along_counter_app.livemd">Follow Along: Phoenix Counter App</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/group_project_blog.livemd">Group Project: Blog</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

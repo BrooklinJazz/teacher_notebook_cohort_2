@@ -1,0 +1,257 @@
+# Battle Map
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Battle Map">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/math_with_protocols.livemd">Math With Protocols</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/streams.livemd">Streams</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Overview
+
+You're developing a 2D tactical combat game.
+
+Characters in your game fight on a grid of potentially infinite size.
+![](images/battle_map.png)
+
+## Character Attack
+
+You're going to use **protocols** create a `Character.can_attack?/3` function
+that expects the following:
+
+1. A `Barbarian` or `Wizard` struct.
+2. The player's coordinate `{x, y}`
+3. An enemy's coordinate `{x, y}`
+
+It should then return a boolean.
+
+Here's the `Character` protocol as well as the `Barbarian` and `Wizard` struct you're going to use.
+
+**Do not modify this code:**
+
+```elixir
+defprotocol Character do
+  def can_attack?(character, origin, target)
+end
+
+defmodule Wizard do
+  defstruct []
+end
+
+defmodule Barbarian do
+  defstruct []
+end
+```
+
+## Barbarian
+
+A <b style="color: red;">Barbarian</b> can attack in 2 square radius.
+
+You should be able to check if a character can attack a coordinate `{x, y}` given their
+starting location in `{x, y}`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Character.can_attack?(%Barbarian{}, {4, 4}, {6, 6})
+true
+```
+
+![](images/barbarian_attack.png)
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defimpl Character, for: Barbarian do
+  def can_attack?(_character, {init_x, init_y}, {x, y}) do
+    x_diff = init_x - x
+    y_diff = init_y - y
+
+    abs(x_diff) <= 2 && abs(y_diff) <= 2
+  end
+end
+```
+
+</details>
+
+```elixir
+# Implementation Goes Here:
+
+# You May Use The Following Test Suite To Validate Your Solution.
+ExUnit.start(auto_run: false)
+
+defmodule BarbarianTests do
+  use ExUnit.Case
+
+  describe "Barbarian" do
+    test "can attack within two squares of current position" do
+      for x <- 2..6, y <- 2..6 do
+        assert Character.can_attack?(%Barbarian{}, {4, 4}, {x, y})
+      end
+    end
+
+    test "cannot attack beyond two squares of current position" do
+      refute Character.can_attack?(%Barbarian{}, {4, 4}, {1, 1})
+      refute Character.can_attack?(%Barbarian{}, {4, 4}, {7, 7})
+      refute Character.can_attack?(%Barbarian{}, {4, 4}, {7, 1})
+      refute Character.can_attack?(%Barbarian{}, {4, 4}, {1, 7})
+    end
+
+    test "logic is not hardcoded to the {4, 4} position" do
+      refute Character.can_attack?(%Barbarian{}, {3, 3}, {6, 6})
+    end
+  end
+end
+
+ExUnit.run()
+```
+
+## Wizard
+
+A <b style="color: purple;">Wizard</b> can attack in straight or diagonal lines of any length.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Character.can_attack?(%Wizard{}, {4, 4}, {6, 6})
+true
+```
+
+![](images/wizard_attack.png)
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defimpl Character, for: Wizard do
+  def can_attack?(_character, {init_x, init_y}, {x, y}) do
+    x_diff = init_x - x
+    y_diff = init_y - y
+
+    init_x == x || init_y == y || abs(x_diff) == abs(y_diff)
+  end
+end
+```
+
+</details>
+
+Create a `Wizard` implementation for the `Character` protocol.
+
+```elixir
+# Implementation Goes Here:
+
+# You May Use The Following Test Suite To Validate Your Solution.
+ExUnit.start(auto_run: false)
+
+defmodule WizardTests do
+  use ExUnit.Case
+
+  describe "Wizard" do
+    test "can attack in eight directions" do
+      # up, up-right, right, down-right, down, down-left, left, up-left
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {4, 5})
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {5, 5})
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {5, 4})
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {5, 3})
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {4, 3})
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {3, 3})
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {3, 4})
+      assert Character.can_attack?(%Wizard{}, {4, 4}, {3, 5})
+    end
+
+    test "cannot attack invalid squares" do
+      refute Character.can_attack?(%Wizard{}, {4, 4}, {6, 5})
+      refute Character.can_attack?(%Wizard{}, {4, 4}, {2, 5})
+      refute Character.can_attack?(%Wizard{}, {4, 4}, {3, 2})
+      refute Character.can_attack?(%Wizard{}, {4, 4}, {6, 3})
+    end
+  end
+end
+
+ExUnit.run()
+```
+
+## Custom Character (BONUS)
+
+Create your own customer character with an attack pattern than you decide on. It should not
+match the existing characters.
+
+For example, you might create an `Archer` who can only attack in a 3 radius square.
+
+![](images/archer_attack.png)
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Character.can_attack?(%Archer{}, {4, 4}, {7, 7})
+true
+```
+
+Implement your custom character below.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Battle Map exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Battle Map">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/math_with_protocols.livemd">Math With Protocols</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/streams.livemd">Streams</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

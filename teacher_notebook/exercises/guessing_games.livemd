@@ -1,0 +1,178 @@
+# Guessing Games
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Guessing Games">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/mad_libs.livemd">Mad Libs</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/atoms.livemd">Atoms</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Guess The Word
+
+Create a word guessing game. Manually bind a `guess` and an `answer`. Return `"Correct"` if the guess is equal to the answer, and otherwise return `"Incorrect."`
+
+Ensure your solutions works for both an incorrect and correct player guess.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Example Solution</summary>
+
+  ```elixir
+  guess = "hello"
+  answer = "hello"
+
+  guess == answer && "Correct!" || "Incorrect."
+  ```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Bonus: Guess The Random Word
+
+We can use [Enum.random/1](https://hexdocs.pm/elixir/Enum.html#random/1) to pick a random value from a list.
+
+```elixir
+Enum.random(["hello", "hi", "howdy"])
+```
+
+Armed with this knowledge, you're going to create a word guessing game.
+
+* Bind a variable `guess` to the player's guess as a string.
+* Bind a variable `answer` to a random word (you may create a list of random words to choose from)
+* If the `guess` matches the answer, return `"Correct!"`, otherwise return `"Incorrect."`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Example Solution</summary>
+
+  ```elixir
+  guess = "hello"
+  answer = Enum.random(["hello", "hi", "howdy"])
+
+  guess == answer && "Correct!" || "Incorrect."
+  ```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Bonus: Guess The Number
+
+We can generate a random integer between two values by providing a range to [Enum.random/1](https://hexdocs.pm/elixir/Enum.html#random/1).
+
+```elixir
+Enum.random(1..10)
+```
+
+Now let's build a number guessing game
+
+* Bind a variable `answer` to a random integer between `1` and `10`.
+* Bind a variable `guess` to the player's guess.
+* If the `guess` equals `answer`, return `"Correct!"`.
+* If the `guess` is lower than the answer, return `"Too low!"`.
+* If the `guess` is higher than the answer, return `"Too high!"`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Example Solution</summary>
+
+
+  `cond` allows us to handle several different conditions.
+
+  ```elixir
+  guess = Enum.random(1..10)
+  answer = 7
+
+  cond do
+    guess == answer -> "Correct!"
+    guess < answer -> "Too low!"
+    guess > answer -> "Too high!"
+  end
+  ```
+
+  However, we can also solve this problem using purely boolean operators.
+
+  ```elixir
+  guess = Enum.random(1..10)
+  answer = 7
+
+  guess == answer && "Correct" || guess < answer && "Too low!" || guess > answer && "Too high!"
+  ```
+
+  We can optionally simplify the solution by omitting the last condition. However, this could lead to unhandled bugs.
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Guessing Games exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Guessing Games">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/mad_libs.livemd">Mad Libs</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/atoms.livemd">Atoms</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

@@ -1,0 +1,302 @@
+# PicChat: Image Upload
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=PicChat: Image Upload">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/pic_chat_authentication.livemd">PicChat: Authentication</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/pic_chat_pub_sub.livemd">PicChat: PubSub</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do we allow image uploads in a Phoenix LiveView or LiveComponent?
+* How do we create a file input with an image preview for image/file uploads?
+* How do we consume uploaded files and save them locally or externally?
+* How can we enable drag and drop for file/image uploads?
+
+## PicChat: Image Uploads
+
+Over the next several lessons, we're going to build a `PicChat` application where users can create messages with uploaded pictures. This lesson will focus on uploading images with messages.
+
+Phoenix LiveView supports [File Uploads](https://hexdocs.pm/phoenix_live_view/uploads.html). To handle image uploads we need to:
+
+1. Use [allow_upload/3](https://hexdocs.pm/phoenix_live_view/0.18.1/Phoenix.LiveView.html#allow_upload/3) to store file upload information in the socket.
+2. Use [live_file_input/3](https://hexdocs.pm/phoenix_live_view/0.18.1/Phoenix.Component.html#live_file_input/1) to create a file input for uploading images.
+3. Use [consume_uploaded_entries](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#consume_uploaded_entries/3) to consume the uploaded image files stored in temp storage and save them in some permanent storage such as the filesystem or [Amazon S3](https://aws.amazon.com/s3/)
+
+We'll also modify the messages table/schema to store the path of the picture in a `:picture` field and display the picture on the index and show pages.
+
+## Migration And Schema
+
+### Create A Migration
+
+In order to store pictures on each message, we'll add a `:picture` field that will store the source of the image such as a path or URL.
+
+Create a new migration.
+
+```
+mix ecto.gen.migration add_picture_to_messages
+```
+
+In the generated migration file, add a `:picture` column to our existing `:messages` table.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def change do
+  alter table(:messages) do
+    add :picture, :text
+  end
+end
+```
+
+Run migrations.
+
+```
+mix ecto.migrate
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Modify The Schema
+
+Our schema should reflect the data in our database, so let's add a `picture` field.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule PicChat.Chat.Message do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "messages" do
+    field :content, :string
+    # added picture field
+    field :picture, :string
+    belongs_to :user, PicChat.Accounts.User
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(message, attrs) do
+    message
+    # added :picture to casted fields
+    |> cast(attrs, [:content, :user_id, :picture])
+    |> validate_required([:content])
+  end
+end
+```
+
+## Allow Uploads
+
+Use [allow_upload/3](https://hexdocs.pm/phoenix_live_view/0.18.1/Phoenix.LiveView.html#allow_upload/3) in the form component. This causes the LiveView to automatically store `:picture` upload information in an `@uploads` field on the socket assigns.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Form_component.ex
+@impl true
+def update(%{message: message} = assigns, socket) do
+  changeset = Chat.change_message(message)
+
+  {:ok,
+    socket
+    |> assign(assigns)
+    |> assign_form(changeset)
+    |> allow_upload(:picture, accept: ~w(.jpg .jpeg .png), max_entries: 1)
+  }
+end
+```
+
+## Live File Input
+
+Create a [live_file_input/1](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#live_file_input/1) in the message form.
+
+We've added the optional attribute `phx-drop-target` supports drag and drop for image uploads and used [live_img_preview/1](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#live_img_preview/1) to display a preview of the uploaded image.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Form.html.heex
+<.simple_form
+  for={@form}
+  id="message-form"
+  phx-target={@myself}
+  phx-change="validate"
+  phx-submit="save"
+  phx-drop-target={@uploads.picture.ref}
+>
+  <.input field={@form[:content]} type="text" label="Content" />
+  <.live_file_input upload={@uploads.picture} />
+  <%= for entry <- @uploads.picture.entries do %>
+    <.live_img_preview entry={entry} width="75" />
+  <% end %>
+  <.input field={@form[:user_id]} type="hidden" value={@current_user.id} />
+  <:actions>
+    <.button phx-disable-with="Saving...">Save Message</.button>
+  </:actions>
+</.simple_form>
+```
+
+## Consume Upload Entries
+
+Consume the uploaded entries when we save a message and copy them to the filesystem for long term persistence. Note that is is not an ideal solution. Ideally we would upload these files to a storage system such as [Amazon S3](https://aws.amazon.com/s3/) but that is beyond the scope of this lesson.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Form_component.ex
+@impl true
+def handle_event("save", %{"message" => message_params}, socket) do
+  file_uploads =
+    consume_uploaded_entries(socket, :picture, fn %{path: path}, entry ->
+      ext = "." <> get_entry_extension(entry)
+      # The `static/uploads` directory must exist for `File.cp!/2`
+      # and PicChat.static_paths/0 should contain uploads to work,.
+      dest = Path.join("priv/static/uploads", Path.basename(path <> ext))
+      File.cp!(path, dest)
+      {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+    end)
+
+  message_params = Map.put(message_params, "picture", List.first(file_uploads))
+  save_message(socket, socket.assigns.action, message_params)
+end
+
+defp get_entry_extension(entry) do
+  [ext | _] = MIME.extensions(entry.client_type)
+  ext
+end
+```
+
+Make sure to create a `priv/static/uploads` folder, and add `uploads` to `PicChat.static_paths/0` in `pic_chat_web.ex`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Pic_chat_web.ex
+def static_paths, do: ~w(assets uploads fonts images favicon.ico robots.txt)
+```
+
+## Display Images
+
+Display pictures on the message index page by adding a column to the table component.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<:col :let={{_id, message}} label="Picture"><img src={message.picture}/></:col>
+```
+
+Display the picture on the show page by adding it to the list items.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<:item title="Picture"><img src={@message.picture} /></:item>
+```
+
+## Live Image Preview
+
+We can add an image preview with [live_image_preview]
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Added To Form_component.ex
+<.live_file_input upload={@uploads.picture} />
+<%= for entry <- @uploads.picture.entries do %>
+  <.live_img_preview entry={entry} width="75" />
+<% end %>
+```
+
+## Tests
+
+To ensure our migration and schema work, it would be wise to write a test.
+
+Modify your existing `create_message/1 with valid data creates a message` test in `chat_test.exs` to ensure we can create a message with a picture.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+test "create_message/1 with valid data creates a message" do
+  user = user_fixture()
+  valid_attrs = %{content: "some content", user_id: user.id, picture: "images/picture.png"}
+
+  assert {:ok, %Message{} = message} = Chat.create_message(valid_attrs)
+  assert message.content == "some content"
+  assert message.user_id == user.id
+  assert message.picture == "images/picture.png"
+end
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [Sophie DeBenedetto: How to Do Live Uploads in Phoenix LiveView](https://blog.appsignal.com/2021/10/12/how-to-do-live-uploads-in-phoenix-liveview.html)
+* [HexDocs: Phoenix LiveView Uploads](https://hexdocs.pm/phoenix_live_view/uploads.html)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish PicChat: Image Upload reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=PicChat: Image Upload">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/pic_chat_authentication.livemd">PicChat: Authentication</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/pic_chat_pub_sub.livemd">PicChat: PubSub</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

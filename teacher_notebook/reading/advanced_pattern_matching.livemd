@@ -1,0 +1,575 @@
+# Advanced Pattern Matching
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Advanced Pattern Matching">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/games_menu.livemd">Games: Menu</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/treasure_matching.livemd">Drills: Pattern Matching</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should understand:
+
+* How to achieve polymorphism with multiple function heads and case statements.
+* How to simplify our program's control-flow using polymorphism.
+* How to use pattern matching with enumeration.
+
+## Overview
+
+### Polymorphism
+
+In functional programming, polymorphism refers to the ability of program to behave differently under different conditions.
+
+There are many ways to achieve polymorphism in Elixir such as pattern matching, higher-order functions, and multi-clause functions.
+
+In data-based polymorphism, a function can work with multiple types of inputs. For example, the [Enum](https://hexdocs.pm/elixir/Enum.html) module is polymorphic, because it is data-agnostic and works on any enumerable data structure.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Pattern Matching
+
+Pattern matching with the `=` coerces the left side of the operator to match the right side.
+
+```
+left = right
+```
+
+We can use this to match on values in the right side of the expression and bind them to variables.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+{a, b} = {1, 2}
+```
+
+In addition to binding values, we can use pattern matching to trigger functionality.
+
+For example, when we use pattern matching with a `case` statement, we can trigger a different case clause depending on the shape of the data.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+case {1, 2} -> do
+  [a, b] -> "behavior for list" 
+  {a, b} -> "behavior for tuple"
+end
+```
+
+See the previous reading material if you need a refresher on how to pattern match on each data type.
+
+* [Atoms](./atoms.livemd)
+* [Tuples](./tuples.livemd)
+* [Lists](./lists.livemd)
+* [Keyword Lists](./keyword_lists.livemd)
+* [Maps](./maps.livemd)
+
+## Pattern Matching With The Match Operator
+
+We can pattern match using the match operator.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+{:ok, one} = {:ok, 1}
+```
+
+We're able to use the match operator in more places than you might think. Anytime we have an Elixir term bound to a parameter or a variable we can use the `=` operator. This is useful for binding the entire parameter of a function while still using pattern matching to match on values within the parameter.
+
+```elixir
+defmodule PatternParamExample do
+  def inspect([a, b, c] = param1) do
+    IO.inspect(a, label: "a")
+    IO.inspect(b, label: "b")
+    IO.inspect(c, label: "c")
+    IO.inspect(param1, label: "c")
+  end
+end
+
+PatternParamExample.inspect([1, 2, 3])
+```
+
+Sometimes we use this pattern to validate that a particular parameter is the shape of data that we expect. For example, the following confirms the parameter in the function is a `map`.
+
+```elixir
+defmodule MapsOnly do
+  def inspect(%{} = map) do
+    IO.inspect(map)
+  end
+end
+
+MapsOnly.inspect(%{})
+```
+
+Any non-map data type would crash the function with a [FunctionClauseError](https://hexdocs.pm/elixir/FunctionClauseError.html).
+
+```elixir
+MapsOnly.inspect("this should crash")
+```
+
+We can do the same inside of a `case` statement, or with other data types such as lists.
+
+```elixir
+case [1, 2, 3] do
+  [head | tail] = list ->
+    IO.inspect(head, label: "head")
+    IO.inspect(tail, label: "tail")
+    IO.inspect(list, label: "list")
+end
+```
+
+We can use the match operator anytime we have a value bound to a parameter or variable that we want to match on. Pattern matching can also be used with control flow to trigger application behavior based on if the pattern matches.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+<!-- livebook:{"break_markdown":true} -->
+
+Create a `case` statement that will return the first element in a 2 element tuple, or the first element in 2 element a list.
+
+```elixir
+
+```
+
+Use pattern matching to ensure the `Check.must_have_elements!/1` function returns true when called with a list that has more than one element and otherwise causes a [FunctionClauseError](https://hexdocs.pm/elixir/FunctionClauseError.html).
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Check do
+  def must_have_elements!([_head | _tail] = list) do
+    true
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule Check do
+  @doc """
+  Doubles a list
+
+  ## Examples
+
+      iex> Check.must_have_elements!([1, 2, 3])
+      true
+
+      iex> Check.must_have_elements!([1])
+      true
+
+      iex> Check.must_have_elements!([])
+      ** (FunctionClauseError) no function clause matching in Check.must_have_elements!/1
+  """
+  def must_have_elements!(list) do
+    true
+  end
+end
+```
+
+## Pattern Matching In A Function Clause
+
+We can omit the `=` when pattern matching in a function.
+
+```elixir
+defmodule Coords do
+  def inspect({x, y}) do
+    IO.inspect(x, label: "x axis")
+    IO.inspect(y, label: "y axis")
+  end
+end
+
+Coords.inspect({1, 2})
+```
+
+### Multi-Clause Functions
+
+We can use pattern matching with multi-clause functions. This essentially uses multi-clause functions to replicate the same behavior as a single function with a case statement.
+
+```elixir
+defmodule SingleCaseExample do
+  def run(param) do
+    case param do
+      [] -> "1"
+      [_] -> "2"
+      [_, _] -> "3"
+    end
+  end
+end
+
+SingleCaseExample.run([]) |> IO.inspect(label: "first")
+SingleCaseExample.run([1]) |> IO.inspect(label: "second")
+SingleCaseExample.run([1, 1]) |> IO.inspect(label: "third")
+```
+
+```elixir
+defmodule MultiClauseExample do
+  def run([]) do
+    "1"
+  end
+
+  def run([_]) do
+    "2"
+  end
+
+  def run([_, _]) do
+    "3"
+  end
+end
+
+MultiClauseExample.run([]) |> IO.inspect(label: "first")
+MultiClauseExample.run([1]) |> IO.inspect(label: "second")
+MultiClauseExample.run([1, 1]) |> IO.inspect(label: "third")
+```
+
+This is often used for advanced control flow.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Anonymous Functions
+
+We can also pattern match in multiple function heads in an anonymous callback function.
+
+```elixir
+anonymous_run = fn
+  [] -> "1"
+  [_] -> "2"
+  [_, _] -> "3"
+end
+
+anonymous_run.([]) |> IO.inspect(label: "first")
+anonymous_run.([1]) |> IO.inspect(label: "second")
+anonymous_run.([1, 1]) |> IO.inspect(label: "third")
+```
+
+### Your Turn
+
+Use multi-clause functions to create a `Greeter` module which says different greetings based on what's provided as input to the `hello/1` function.
+
+```elixir
+defmodule Greeter do
+  @moduledoc """
+  Greeter
+  """
+
+  @doc """
+  Return different greetings based on the number of elements in the list provided.
+
+  ## Examples
+
+      iex> Greeter.hello(["Russel"])
+      "Hi Russel!"
+
+      iex> Greeter.hello(["Icia", "Stephen"])
+      "Hi Icia, Hello Stephen!"
+
+      iex> Greeter.hello(["Swamy", "Jeff", "Jeremy"])
+      "Hello everyone!"
+  """
+  def hello(names) do
+  end
+end
+```
+
+## Pattern Matching In Enumeration
+
+We can combine pattern matching in a function with enumeration to achieve polymorphic behavior with an enumerable data structure.
+
+```elixir
+enumerable = [double: 1, double: 2, triple: 3, quadruple: 4]
+
+Enum.map(enumerable, fn
+  {:double, value} -> value * 2
+  {:triple, value} -> value * 3
+  {:quadruple, value} -> value * 4
+end)
+```
+
+The same can be done with other [Enum](https://hexdocs.pm/elixir/Enum.html) functions that accept a callback function such as [Enum.filter/2](https://hexdocs.pm/elixir/Enum.html#filter/2) and [Enum.reduce/3](https://hexdocs.pm/elixir/Enum.html#reduce/3).
+
+```elixir
+enumerable = [add: 1, subtract: 2, add: 4, multiply: 3]
+
+Enum.reduce(enumerable, 0, fn
+  {:add, value}, acc -> acc + value
+  {:subtract, value}, acc -> acc - value
+  {:multiply, value}, acc -> acc * value
+end)
+```
+
+```elixir
+enumerable = [keep: 1, remove: 2, keep: 4, remove: 1]
+
+Enum.filter(enumerable, fn
+  {:keep, _} -> true
+  {:remove, _} -> false
+end)
+```
+
+### Your Turn
+
+Use [Enum.map/2](https://hexdocs.pm/elixir/Enum.html#map/2) with pattern matching and multi-clause functions to double `{:double, integer}` tuples and divide (`div`) `{:halve, integer}` tuples in the following list.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+[{:double, 2}, {:halve, 10}, {:double, 4}] -> [4, 5, 8]
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+Enum.map([{:double, 2}, {:halve, 10}, {:double, 4}], fn
+  {:double, integer} -> integer * 2
+  {:halve, integer} -> div(integer, 2)
+end)
+```
+
+</details>
+
+```elixir
+
+```
+
+## Pattern Matching Vs. If
+
+Often we have many tools to accomplish the same action.
+For example, let's say we're building an application where users send each other messages.
+However, only admin users are allowed to send messages.
+
+Using `if`, we could write the following.
+
+```elixir
+defmodule MessageIfExample do
+  def send(user, message) do
+    if user.is_admin do
+      message
+    else
+      {:error, :not_authorized}
+    end
+  end
+end
+```
+
+Let's say we also need to handle empty messages.
+
+```elixir
+defmodule MessageNestedIfExample do
+  def send(user, message) do
+    if user.is_admin do
+      if message == "" do
+        {:error, :empty_message}
+      else
+        message
+      end
+    else
+      {:error, :not_authorized}
+    end
+  end
+end
+
+MessageNestedIfExample.send(%{is_admin: true}, "")
+```
+
+Nested `if` statements are generally a clue that we should consider an alternative implementation.
+
+Let's see how we could solve this problem with pattern matching.
+
+```elixir
+defmodule MessageMatchExample do
+  def send(%{is_admin: true}, "") do
+    {:error, :empty_message}
+  end
+
+  def send(%{is_admin: true}, message) do
+    {:ok, message}
+  end
+
+  def send(%{is_admin: false}, _) do
+    {:error, :not_authorized}
+  end
+end
+```
+
+```elixir
+MessageMatchExample.send(%{is_admin: true}, "")
+```
+
+```elixir
+MessageMatchExample.send(%{is_admin: false}, "Error!")
+```
+
+```elixir
+MessageMatchExample.send(%{is_admin: true}, "Successful!")
+```
+
+## Pin Operator
+
+The **pin operator** allows us to use variables as hard-coded values,
+rather than rebinding a variable.
+
+Often we use the pin operator when testing our code to assert that the value is correct.
+
+For example, the following will rebind the **received** variable to `[1, 2, 3]`.
+
+```elixir
+received = [1, 2]
+expected = [1, 2, 3]
+
+received = expected
+```
+
+But instead, we might use the match operator to check that the received value matches the expected
+value.
+
+```elixir
+received = [1, 2]
+expected = [1, 2, 3]
+
+^received = expected
+```
+
+By using the pin operator above, we accomplish the same as if we had written:
+
+```elixir
+[1, 2] = [1, 2, 3]
+```
+
+We can also use this for internal values in a collection. The following is the same
+as `[1, 2, 3] = [2, 2, 3]`
+
+```elixir
+first = 1
+actual = [2, 2, 3]
+[^first, 2, 3] = actual
+```
+
+And the following is the same as `[1, 2, 3] = [1, 2, 3]`
+
+```elixir
+first = 1
+actual = [1, 2, 3]
+[^first, 2, 3] = actual
+```
+
+We'll also use the pin operator when triggering control flow with pattern matching. For example, we might use it in a case statement.
+
+```elixir
+pinned_value = 1
+
+case {:ok, 1} do
+  {:ok, ^pinned_value} -> "clause 1"
+  {:ok, generic_value} -> "clause 2"
+end
+```
+
+If we don't pin the value, the bound variable will be treated as though we were re-binding the variable, and the first case clause will always match.
+
+```elixir
+pinned_value = 1
+
+# Despite Being 2, Not 1, Clause 1 Is Triggered Because We Didn't Pin The Value.
+case {:ok, 2} do
+  {:ok, pinned_value} -> "clause 1"
+  {:ok, generic_value} -> "clause 2"
+end
+```
+
+### Your Turn
+
+<!-- livebook:{"break_markdown":true} -->
+
+Use the pin operator to make the following code crash with a [MatchError](https://hexdocs.pm/elixir/MatchError.html) because `expected` does not match `actual`, rather than rebinding `expected` as it is currently doing.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+expected = {"hello"}
+actual = {"hello", "hi"}
+
+^expected = actual
+```
+
+</details>
+
+```elixir
+expected = {"hello"}
+actual = {"hello", "hi"}
+
+expected = actual
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [Elixir Schools: Pattern Matching](https://elixirschool.com/en/lessons/basics/pattern_matching)
+* [Exercism.io: Pattern Matching](https://exercism.org/tracks/elixir/concepts/pattern-matching)
+* [elixir-lang.org: Pattern Matching](https://elixir-lang.org/getting-started/pattern-matching.html)
+* [HexDocs: Patterns and Guards](https://hexdocs.pm/elixir/master/patterns-and-guards.html)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Advanced Pattern Matching reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Advanced Pattern Matching">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/games_menu.livemd">Games: Menu</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/treasure_matching.livemd">Drills: Pattern Matching</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

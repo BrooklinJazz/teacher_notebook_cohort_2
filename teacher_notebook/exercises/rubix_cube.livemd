@@ -1,0 +1,101 @@
+# Rubix Cube
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rubix Cube">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/worker_pools.livemd">Worker Pools</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href=""></a>
+<i style="display: none;" class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Rubix's Cube
+
+You are going to create a Rubix Cube application.
+
+[Rubix's Cubes](https://en.wikipedia.org/wiki/Rubik%27s_Cube) are a toy with six sides. Each side has nine colored squares on it.
+Players rotate columns and rows on the cube with the goal of having each side with a single matching color.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/rubix.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+Create a `RubixCube` supervised mix project.
+
+```
+mix new rubix_cube --sup
+```
+
+Your `RubixCube` project should have the following features:
+
+### Requirements
+
+* Represent the Rubix's Cube as data in a process.
+* Start the Rubix's Cube process under a supervisor.
+* Horizontally rotate a row of the cube to the right and left
+* Vertically rotate a column of the cube up and down.
+* Determine if a Rubix's Cube is solved.
+* Save the state of the Rubix's Cube using the [File](https://hexdocs.pm/elixir/File.html) system.
+* Load the previous state of the Rubix' Cube using the [File](https://hexdocs.pm/elixir/File.html) system when starting the application.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Rubix Cube exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rubix Cube">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/worker_pools.livemd">Worker Pools</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href=""></a>
+<i style="display: none;" class="ri-arrow-right-fill"></i>
+</div>
+</div>

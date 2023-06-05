@@ -1,0 +1,143 @@
+# Start Here
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Start Here">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i style="display: none;" class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href=""></a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/computer_hardware.livemd">Computer Hardware</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Welcome
+
+Welcome to DockYard Academy. We are proud to offer a fully open-source Elixir curriculum that anyone can access for free. We use this curriculum for our (paid) academy.
+
+If you would like to be considered for a future cohort, you can signup for our [Newsletter](https://academy.dockyard.com/) to receive updates.
+
+## The DockYard Academy Way
+
+At DockYard Academy, our mission is to provide high-quality training in Elixir. We strive to empower our students with the skills and knowledge they need to become professional web developers, equipped with the ability to build robust and scalable web applications using the powerful Elixir programming language and its associated frameworks.
+
+We believe in providing a hands-on, practical learning experience and dedicate ourselves to preparing our students for the real-world challenges of building web applications. We foster a community of learners who are passionate about web development and who continue to learn and grow throughout their careers.
+
+## Academy Core Values
+
+* **Practicality**: We value hands-on learning experiences directly relevant to the real-world challenges of building web applications with Elixir. Instructors will provide a broader context to the material and share relevant experiences in the industry.
+* **Engagement**: Classes focus on active, engaged learning rather than passive lectures. Students will be front and center as they learn through building projects, group discussions, and collaborative problem solving.
+* **Collaboration and Community**: DockYard Academy fosters a supportive community of learners who can learn from each other and work together to achieve their goals. We believe in the importance of teamwork and strive to provide opportunities for our students to work together and learn from each other's experiences. All community members treat each other with kindness, respect, and care.
+* **Excellence**: We strive to provide our students with the highest quality education and training and hold ourselves to the highest standards of excellence in everything we do.
+* **Humility**: We encourage our students to approach their learning journey with an open mind, being open to learning from their mistakes and their peers. Students are encouraged to feel comfortable expressing confusion and lack of understanding at all times. Saying “I don’t know” is always acceptable, especially when followed by a supportive and collaborative effort to learn and understand. Instructors and mentors will also embrace humility to create a positive and inclusive learning environment where students feel comfortable participating, learning, and providing open feedback.
+* **Student Driven**: Students drive the pace of the class. Instructors and students work together to ensure core learning outcomes are achieved by every student while simultaneously offering high-achieving students additional opportunities to go beyond the material.
+
+## Learning Outcomes
+
+DockYard Academy aims to provide students with practical, hands-on training to prepare them with the skills to find Elixir employment or start their own Elixir efforts. Graduating students should be able to demonstrate the following outcomes:
+
+1. Understand Elixir fundamentals to solve practical programming problems.
+2. Build Mix projects and manage configuration, dependencies, and tests.
+3. Understand the principles of OTP and how to build fault-tolerant concurrent systems.
+4. Use advanced Elixir syntax to write more expressive and efficient code.
+5. Build full-stack web applications with Phoenix, including routing, controllers, views, and templates.
+6. Manage Relational Databases with Ecto to model real-world data.
+7. Use LiveView to build interactive, real-time web apps with minimal JavaScript.
+8. Understand the best practices for developing robust and maintainable web applications with Elixir.
+9. Troubleshoot and solve problems that arise while building web applications and Elixir programs.
+10. Be able to find the resources needed to continue their learning journey after the course.
+
+## Lecture Schedule And Format
+
+For the full-time course, classes run Monday to Friday from 9:30 am to 3:00 pm (Pacific Time). Students will have a ten minute break at 10:30am PT and a one-hour lunch break from noon to 1:00 pm (Pacific Time).
+
+## Meet Your Instructor
+
+Hello, I'm Brooklin Myers, I'm the instructor at DockYard Academy and the content creator behind the lessons and exercises in this course. I'm also the host of the Elixir Newbie podcast and write about Elixir on the Elixir Newbie website. Since entering Elixir, I've focused on helping new developers, and DockYard Academy has been a perfect opportunity to continue that mission.
+
+As a bootcamp graduate, I empathize with the struggle to enter the programming industry without a computer science background. With that in mind, I aspire to make technical concepts approachable for beginners. In addition, having transitioned to Elixir from JavaScript, I tailor lessons to help students from an object-oriented background transition to functional programming.
+
+In my classes, I aspire to create a low-stress environment for a high-stress activity. Learning can be difficult, but it's easier when you have a supportive group of mentors and peers surrounding you.
+
+## Taking The Course
+
+Currently, there are two ways to take this course.
+
+1. **Self-Led (free)**: Anyone can work through this course and complete it at their own pace.
+2. **Academy Student (paid)**: Students can join our official academy cohort to learn with an instructor, receive a certificate upon graduation, and get career support after graduation. Paid students also get access to class recordings and the DockYard Academy Discord, where they can receive support from their peers and mentors.
+
+If you are interested in joining our next cohort, you can sign up for our [Newsletter](https://academy.dockyard.com/) or email brooklin.myers@dockyard.com to express your interest.
+
+This curriculum was designed and developed as an instructor-led course. However, a beginner should be able to go through the concepts self-led and at their own pace. We've done our absolute best to make this material approachable, and completely self-contained.
+
+That said, learning on your own can be challenging. To increase your chances of success, we recommend finding a mentor or a study group with other self-led students.
+
+## Troubleshooting And Support
+
+It's common to find yourself blocked and needing help when learning new concepts. This can be especially challenging for a self-led learner. If you need support or encounter any issues with a lesson, there is a [Report An Issue](https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=) button you can use to get support.
+
+In addition, students paying to be in a DockYard Academy cohort get direct access to a community of peers and mentors on the DockYard Academy Discord. Post on the `#questions-and-answers` channel whenever you need support.
+
+## Setup Git And GitHub
+
+If you have not already, we recommend you connect this project with Git and GitHub. After every lesson, we provide instructions in the **Commit Your Progress** section for how to commit your progress with Git and push your changes to GitHub.
+
+For example, once you are finished reading, you can follow the instructions below.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Start Here reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Start Here">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i style="display: none;" class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href=""></a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/computer_hardware.livemd">Computer Hardware</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

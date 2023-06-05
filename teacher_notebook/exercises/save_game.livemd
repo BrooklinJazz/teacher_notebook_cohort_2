@@ -1,0 +1,126 @@
+# Save Game
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Save Game">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/file_drills.livemd">File Drills</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/file_system_todo_app.livemd">File System Todo</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Save Game
+
+Many games have a Save function, which allows players to save the current state of the game.
+In some cases, the saved game is stored in a save file.
+
+You're going to implement a `Game` module which simulates saving a video game's state using the file system. You should be able to store some arbitrary Elixir term in a given file, and retrieve it.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Game do
+  def save(game_state, filename) do
+    File.write!(filename, :erlang.term_to_binary(game_state))
+  end
+
+  def load(filename) do
+    File.read!(filename) |> :erlang.binary_to_term()
+  end
+end
+```
+
+</details>
+
+Implement the `Game` module as documented below.
+
+```elixir
+defmodule Game do
+  @moduledoc """
+  Documentation for `Game`
+
+  ## Examples
+
+      game_state = %{name: "Peter Parker", level: 10, location: "New York"}
+      
+      Game.save(game_state, "save_file1")
+      :ok
+      
+      Game.load("save_file1")
+      %{name: "Peter Parker", level: 10, location: "New York"}
+  """
+
+  @doc """
+  Save an elixir term into a given file name.
+  """
+  def save(data, filename) do
+  end
+
+  @doc """
+  Retrieve an elixir term from a given file name.
+  """
+  def load(filename) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Save Game exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Save Game">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/file_drills.livemd">File Drills</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/file_system_todo_app.livemd">File System Todo</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

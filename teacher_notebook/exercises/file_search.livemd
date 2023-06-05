@@ -1,0 +1,189 @@
+# File Search
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=File Search">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/document_tools.livemd">Document Tools</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/processes.livemd">Processes</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Mastery
+
+Mastery assignments are bonus projects designed to incorporate curriculum concepts at an advanced level. You have complete freedom with how you complete mastery assignments, and may change requirements as you see fit. Each mastery assignment serves as an independent project you may choose to include on your portfolio of projects.
+
+## File Search
+
+Create a `FileSearch` module which can recursively search files in all nested folders.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule FileSearch do
+  def all(folder) do
+    File.ls!(folder)
+    |> Enum.map(fn file_or_folder ->
+      path = Path.join(folder, file_or_folder)
+
+      if File.dir?(path) do
+        all(path)
+      else
+        file_or_folder
+      end
+    end)
+    |> List.flatten()
+  end
+
+  def by_extension(folder) do
+    all(folder) |> Enum.reduce(%{}, fn file_name, acc ->
+      extension = Path.extname(file_name)
+      Map.update(acc, extension, [file_name], fn files -> [file_name | files] end)
+    end)
+  end
+end
+```
+
+</details>
+
+Implement the `FileSearch` module as documented.
+
+```elixir
+defmodule FileSearch do
+  @moduledoc """
+  Documentation for FileSearch
+  """
+
+  @doc """
+  Find all nested files.
+
+  For example, given the following folder structure
+  /main
+    /sub1
+      file1.txt
+    /sub2
+      file2.txt
+    /sub3
+      file3.txt
+    file4.txt
+
+  It would return:
+
+  ["file1.txt", "file2.txt", "file3.txt", "file4.txt"]
+  """
+  def all(folder) do
+  end
+
+  @doc """
+  Find all nested files and categorize them by their extension.
+
+  For example, given the following folder structure
+  /main
+    /sub1
+      file1.txt
+      file1.png
+    /sub2
+      file2.txt
+      file2.png
+    /sub3
+      file3.txt
+      file3.jpg
+    file4.txt
+
+  The exact order and return value are up to you as long as it finds all files 
+  and categorizes them by file extension.
+
+  For example, it might return the following:
+
+  %{
+    ".txt" => ["file1.txt", "file2.txt", "file3.txt", "file4.txt"],
+    ".png" => ["file1.png", "file2.png"],
+    ".jpg" => ["file3.jpg"]
+  }
+  """
+  def by_extension(folder) do
+  end
+end
+```
+
+### Configure Project As A Script
+
+Create a new mix project.
+
+```
+$ mix new file_search
+```
+
+Configure the project as a script. You should be able to run the following to list all files.
+
+```
+$ mix escript.build
+$ ./file_search
+```
+
+You should also be able to use a flag to list files by their extension.
+
+```
+$ ./file_search --by_type
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish File Search exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=File Search">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/document_tools.livemd">Document Tools</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/processes.livemd">Processes</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

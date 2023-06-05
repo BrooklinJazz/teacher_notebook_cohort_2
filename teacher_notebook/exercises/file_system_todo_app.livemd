@@ -1,0 +1,149 @@
+# File System Todo
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=File System Todo">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/save_game.livemd">Save Game</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/document_tools.livemd">Document Tools</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Overview
+
+You're going to create a TodoList application with persistence using a file system.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule TodoList do
+  @storage "todolist"
+
+  def list do
+    case File.read(@storage) do
+      {:ok, list} -> :erlang.binary_to_term(list)
+      # other operations will create the storage if it does not yet exist.
+      _ -> []
+    end
+  end
+
+  def add(item) do
+    new_list = [item | list()]
+    File.write(@storage, :erlang.term_to_binary(new_list))
+  end
+
+  def complete(item) do
+    new_list = list() -- [item]
+    File.write(@storage, :erlang.term_to_binary(new_list))
+  end
+end
+```
+
+</details>
+
+Implement the `TodoList` module as documented. You may choose any file for your persistence mechanism.
+
+```elixir
+defmodule TodoList do
+  @moduledoc """
+  Documentation for `TodoList`
+  """
+  @doc """
+  Retrieve the todo list.
+
+  ## Examples
+
+      iex> TodoList.list()
+      []
+  """
+  def list do
+  end
+
+  @doc """
+  Add an item to the todo list.
+
+  ## Examples
+
+      TodoList.add("task 1")
+      TodoList.add("task 2")
+      TodoList.list()
+      ["task 2", "task 1"]
+  """
+  def add(item) do
+  end
+
+  @doc """
+  Complete (remove) an item from the todo list.
+
+  ## Examples
+
+      TodoList.add("finish homework")
+      TodoList.complete("finish homework")
+      TodoList.list()
+      ["task 2", "task 1"]
+  """
+  def complete(item) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish File System Todo exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=File System Todo">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/save_game.livemd">Save Game</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/document_tools.livemd">Document Tools</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

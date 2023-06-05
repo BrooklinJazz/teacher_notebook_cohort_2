@@ -1,0 +1,150 @@
+# Games: Supervisor Setup
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Games: Supervisor Setup">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/supervised_stack.livemd">Supervised Stack</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/games_supervised_score_tracker.livemd">Games: Supervised Score Tracker</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Games: Supervisor Setup
+
+We've seen we can initialize a new mix project with a supervisor using  the `--sup` flag when we create a mix project.
+Now, you're going to add a supervisor to your existing [Games](games.livemd) project.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Configure Games.Application
+
+Supervised Mix projects include an [Application](https://hexdocs.pm/elixir/Application.html#module-the-application-callback-module) module.
+
+> ### **Application**
+> 
+> A module for working with applications and defining application callbacks.
+> Applications are the idiomatic way to package software in Erlang/OTP. To get the idea, they are similar to the "library" concept common in other programming languages, but with some additional characteristics.
+> An application is a component implementing some specific functionality, with a standardized directory structure, configuration, and life cycle. Applications are loaded, started, and stopped. Each application also has its own environment, which provides a unified API for configuring each application.
+> 
+> [HexDocs: Application](https://hexdocs.pm/elixir/Application.html)
+
+Create a `lib/games/application.ex` file with the following content. This will be the callback function that starts your application supervisor.
+
+We've included an [IO.puts/2](https://hexdocs.pm/elixir/IO.html#puts/2) statement to demonstrate that the supervisor does start. This is not strictly necessary but will allow you to test that you have configured this correctly later.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule Games.Application do
+  # See https://hexdocs.pm/elixir/Application.html
+  # for more information on OTP Applications
+  @moduledoc false
+
+  use Application
+
+  @impl true
+  def start(_type, _args) do
+    IO.puts("Starting Games.Application")
+    children = []
+
+    # See https://hexdocs.pm/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: Games.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Configure Games.MixProject
+
+In `lib/mix.exs` configure the application callback module using the `:mod` option in the `Games.MixProject.application/1` function. This tells your mix project to run the `Games.Application.start/2` function you just defined.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def application do
+  [
+    extra_applications: [:logger],
+    mod: {Games.Application, []}
+  ]
+end
+```
+
+Test your application from the command line by running `mix run`. You should see your [IO.puts/2](https://hexdocs.pm/elixir/IO.html#puts/2) message confirming the application does start the supervisor.
+
+```
+$ mix run
+Compiling 1 file (.ex)
+Starting Games.Application
+```
+
+The same will print if you start the application in the [IEx](https://hexdocs.pm/iex/IEx.html) shell.
+
+```
+$ iex -S mix
+...
+Starting Games.Application
+...
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Games: Supervisor Setup exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Games: Supervisor Setup">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/supervised_stack.livemd">Supervised Stack</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/games_supervised_score_tracker.livemd">Games: Supervised Score Tracker</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

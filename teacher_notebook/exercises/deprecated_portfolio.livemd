@@ -1,0 +1,126 @@
+# Portfolio
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Portfolio">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/tailwind_css_components.livemd">Tailwind Components</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/phoenix_1.6.livemd">Phoenix 1.6</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Mastery
+
+Mastery assignments are bonus projects designed to incorporate curriculum concepts at an advanced level. You have complete freedom with how you complete mastery assignments, and may change requirements as you see fit. Each mastery assignment serves as an independent project you may choose to include on your portfolio of projects.
+
+## Overview
+
+You're going to create a Portfolio project that you can expand upon as you learn more throughout the course.
+
+You're going to setup a portfolio project that you will expand upon throughout the course.
+For an example project, see https://www.elixirnewbie.com/.
+
+First, create a new Phoenix project.
+
+```
+$ mix phx.new portfolio
+```
+
+You can start your Phoenix server from `portfolio` folder.
+
+```
+$ mix phx.server
+```
+
+Consider using using paper/pencil or [Figma](https://www.figma.com/) to design your portfolio project before building it.
+
+## Configure Tailwind
+
+Follow the [Phoenix + Tailwind Installation Guide](https://tailwindcss.com/docs/guides/phoenix) and configure your project with Tailwind. Use Tailwind utility classes for all of your styling.
+
+## Home Page
+
+The home page should be visible when you visit http://localhost:4000/
+
+You may use the following design for inspiration.
+
+![](images/portfolio_home_page_exercise.png)
+
+Ensure you include:
+
+* Navigation with a link to your GitHub and any social media such as [Linkedin](https://linkedin.com/in/).
+* A heading saying your name.
+* A paragraph that describes who you are and what you do.
+* An image (it can be any image if you would prefer to not use a personal photo)
+
+## Projects And Accomplishments
+
+Include a list of your projects and any accomplishments you would like to highlight. Each project should have a title, description, and link to the GitHub. For example, you might include your [Games](games.livemd) project or any other projects from this course or outside of it.
+
+You can also add to this section as you build more projects.
+
+You may use the following design for inspiration.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/Portfolio%20Projects%20Mock.png)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Portfolio exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Portfolio">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/tailwind_css_components.livemd">Tailwind Components</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/phoenix_1.6.livemd">Phoenix 1.6</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

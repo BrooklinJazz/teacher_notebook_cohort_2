@@ -1,0 +1,725 @@
+# ExUnit
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=ExUnit">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/games_rock_paper_scissors.livemd">Games: Rock Paper Scissors</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/games_wordle.livemd">Games: Wordle</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do we effectively organize and name our tests?
+* How do we use assertions to write robust tests?
+
+## Testing
+
+We test to ensure our code behaves as expected.
+
+Automated tests automate the process of manually testing our code and verify our code continues to behave as expected.
+
+Without tests, it's easy to introduce breaking changes. With tests, when something breaks, the automated test suite catches issue and facilitates debugging by providing useful feedback.
+
+> We test to increase confidence that our software does what it’s
+> supposed to do. Testing gives us confidence that our code works as expected.
+> This is true for all kinds of testing, whether for automated tests performed
+> by a machine or for manual tests performed by a human.
+> 
+> * [Testing Elixir](https://pragprog.com/titles/lmelixir/testing-elixir/) by Andrea Leopardi and Jeffrey Matthias
+
+## Testing Input And Output
+
+Tests can be **brittle**, meaning that as you change your codebase, tests will fail frequently. Typically,
+tests are brittle because they test implementation rather than behavior.
+
+Think of behavior as the input and output of your function, and the implementation is the black box within it.
+
+```mermaid
+flowchart
+  subgraph Behavior
+    subgraph BB[Black Box]
+      Implementation
+    end
+    Input --> BB --> Output
+  end
+```
+
+Our tests should concern themselves with the behavior of our code, not the internal details. Easier said than done, however as a general rule if
+refactoring your code (making improvements without changing behavior) breaks your tests, then you are likely testing implementation.
+
+For now, focus on testing the **Input** of your code, and asserting on it's **Output**.
+
+For example, if we were testing a `double/1` function that doubles a number, we would test that when given a number such as `3` it would return `6`.
+
+```mermaid
+flowchart LR
+2 --> double/1 --> 4
+```
+
+## ExUnit
+
+ExUnit is a built-in test framework for Elixir.
+
+Let's look at a very minimal test.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule ExampleTest do
+  use ExUnit.Case
+
+  test "truthy" do
+    assert true
+  end
+end
+
+ExUnit.run()
+```
+
+1. First, we start [ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html). In a mix project, this step is handled in our `test_helpers.ex` file for us. In Livebook, we have to start it manually.
+2. Next we define a test module. Generally, if we're writing tests for a specific module we'll name it `ModuleNameTest`, so tests for a module called `Greeter` would be in a `GreeterTest` module.
+3. The next line, `use ExUnit.Case`, generates some code from
+   the [ExUnit.Case](https://hexdocs.pm/ex_unit/ExUnit.Case.html) module, which gives us access to the [test/3](https://hexdocs.pm/ex_unit/ExUnit.Case.html#test/3) and [assert/1](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/1) macros as well as other testing tools.
+4. [test/3](https://hexdocs.pm/ex_unit/ExUnit.Case.html#test/3) is a macro that defines a single test. [test/3](https://hexdocs.pm/ex_unit/ExUnit.Case.html#test/3) accepts the name of the test as a string, in this case `"truthy"`.
+5. [assert/1](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/1) is a macro that makes a single assertion inside of the test. The test passes if it receives a truthy value and fails if it receives any falsy value.
+
+A test can contain many assertions, and a test module can have many tests.
+
+## Assertions
+
+[ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html) provides many different assertion macros from the [ExUnit.Assertion](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#functions)
+module. We'll focus on the following common assertions.
+
+* [assert/1](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/1) check if a value is truthy.
+* [refute/1](https://hexdocs.pm/ex_unit/1.14.1/ExUnit.Assertions.html#refute/1) check if a value is falsy.
+* [assert_raise/2](https://hexdocs.pm/ex_unit/1.14.1/ExUnit.Assertions.html#assert_raise/2) check if the code raises an error.
+
+### [assert/1](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/1)
+
+We can use the [assert/1](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/1) macro provided by ExUnit to assert that a value is truthy. Any truthy value makes the test pass.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule AssertExampleTest do
+  use ExUnit.Case
+
+  test "assert examples" do
+    assert true
+    assert fn -> 2 end
+    assert []
+    assert 1
+    assert %{}
+  end
+end
+
+ExUnit.run()
+```
+
+[assert/1](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/1) fails when provided a falsy value `nil` or `false`.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule FailingTest do
+  use ExUnit.Case
+
+  test "failing test" do
+    assert false
+  end
+end
+
+ExUnit.run()
+```
+
+[assert/2](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/2) accepts a message as the second argument, which will display a message if the test fails.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule FailingTestWithMessage do
+  use ExUnit.Case
+
+  test "failing example" do
+    assert false, "This message will display for a failing test."
+  end
+end
+
+ExUnit.run()
+```
+
+### [refute/2](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#refute/2)
+
+The [refute/2](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#refute/2) macro is the opposite of the [assert/2](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/2) macro. It checks that a value is falsy (`nil` or `false`).
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule RefuteExampleTest do
+  use ExUnit.Case
+
+  test "refute examples" do
+    refute false
+    refute not true
+    refute !5
+    refute is_map(4)
+  end
+end
+
+ExUnit.run()
+```
+
+`refute/2` also displays a message if the test fails.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule RefuteTruthyValueTest do
+  use ExUnit.Case
+
+  test "failing example" do
+    refute true, "This message will display for a failing test."
+  end
+end
+
+ExUnit.run()
+```
+
+## Practical Assertions
+
+Since [assert/2](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html#assert/2) tests if a value is truthy, we can use it with operators to write assertions against the output of a function.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Comparison Operators
+
+For example, we might use comparison operators (`==`, `===`, `>=`, `>`, `<=`, `<`) to compare our received value with the expected value.
+
+Let's put this to practice with a `double/1` function.
+
+```mermaid
+flowchart LR
+2 --> d1[double/1] --> 4
+3 --> d2[double/1] --> 6
+```
+
+```elixir
+defmodule Number do
+  def double(number) do
+    number * 2
+  end
+end
+```
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule NumberTest do
+  use ExUnit.Case
+
+  test "double/1" do
+    assert Number.double(2) == 4
+    assert Number.double(3) == 6
+  end
+end
+
+ExUnit.run()
+```
+
+### Match Operator
+
+It's also common to use the match operator `=` to check if the value matches a specific pattern.
+
+```elixir
+map = %{one: 1, two: 2}
+
+%{one: _} = map
+```
+
+Here's that put to practice. Normally we shouldn't test elixir functions, but we'll use [Map.merge/2](https://hexdocs.pm/elixir/Map.html#merge/2) for the sake of example.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule MapMergeTest do
+  use ExUnit.Case
+
+  test "merge/2" do
+    assert %{one: _value} = Map.merge(%{one: 1}, %{two: 2})
+  end
+end
+
+ExUnit.run()
+```
+
+The test-based match operator `=~` can test if a string contains a value.
+
+```elixir
+string = "hello world"
+string =~ "hello"
+```
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule StringContainsTest do
+  use ExUnit.Case
+
+  test "string contains hello" do
+    string = "hello world"
+    string =~ "hello"
+  end
+end
+
+ExUnit.run()
+```
+
+There are also many built-in functions, such as `is_map`, `is_list`, `is_integer`, and more which we can use to assert some
+property of the value under test.
+
+These operators and functions can combine with `assert` to make more useful assertions.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule AssertionExampleTest do
+  use ExUnit.Case
+
+  test "practical assertions example" do
+    # comparison operators
+    assert 2 == 2.0
+    assert 2.0 === 2.0
+    assert 1 < 2
+    assert 2 > 1
+    assert 2 >= 2
+    assert 2 <= 2
+
+    # match operator
+    assert %{one: _} = %{one: 1, two: 2}
+    assert [one: _, two: _] = [one: 1, two: 2]
+    assert {_, _, _} = {1, 2, 3}
+    assert [1 | _tail] = [1, 2, 3]
+
+    # functions
+    assert is_integer(2)
+    assert is_map(%{})
+
+    # text-based match operator
+    assert "hello world" =~ "hello"
+    assert "hello world" =~ ~r/\w+/
+  end
+end
+
+ExUnit.run()
+```
+
+Assertions that use an operator provide a `:left` and `:right` value for feedback.
+Generally, `:left` should be the **received** value for the system under test, and `:right` should be the **expected** value
+for the system under test.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+  1) test left/right == example (LeftRightExampleTest)
+     reading/exunit.livemd#cell:6
+     Assertion with == failed
+     code:  assert 4 == 5
+     left:  4
+     right: 5
+     stacktrace:
+       reading/exunit.livemd#cell:7: (test)
+```
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule LeftRightExampleTest do
+  use ExUnit.Case
+
+  test "left/right == example" do
+    assert 4 == 5
+  end
+
+  test "left/right > example" do
+    assert 4 > 5
+  end
+
+  test "left/right =~ example" do
+    assert "hello world" =~ "non-matching pattern"
+  end
+end
+
+ExUnit.run()
+```
+
+## Test Driven Development
+
+Many developers follow a practice of **[TDD (Test Driven Development)](https://en.wikipedia.org/wiki/Test-driven_development)**, where
+they write the test for their feature before writing the implementation.
+
+These developers would likely claim that TDD leads to better-tested code, simpler interfaces, and other benefits. However, other developers use different approaches, and it's possible to take TDD too far or use it for the wrong situation.
+
+It's for you to make up your own mind about TDD, and this course aspires to be unbiased. However, we do believe that it's beneficial for you to understand TDD so that it can be a tool in your toolbox should you choose to use it.
+
+TDD has three main phases, often called **Red, Green, and Refactor**.
+
+* Red: Write a failing test.
+* Green: Write the code to make the test pass.
+* Refactor: Improve and optimize your code without changing the behavior.
+
+You will have the opportunity to practice TDD throughout this course. For a deeper dive on TDD and testing, you might consider watching this video by Ian Cooper. It's over an hour and completely optional.
+
+```elixir
+YouTube.new("https://www.youtube.com/watch?v=EZ05e7EMOLM")
+```
+
+## Example-Based Testing
+
+Above, we've demonstrated example-based testing, in that we provide a single example
+of input and output, and assume that the system under test continues to behave as expected.
+
+However, there are a potentially infinite number of inputs and outputs for the `Math.add/2` function.
+Is it safe to assume that a single example comprehensively tests all inputs?
+
+<!-- livebook:{"attrs":{"source":"for int1 <- 1..3, int2 <- 1..3 do\n  [input: int1, input: int2, output: int1 + int2]\nend\n|> Kino.DataTable.new()","title":"Example Based Testing"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+for int1 <- 1..3, int2 <- 1..3 do
+  [input: int1, input: int2, output: int1 + int2]
+end
+|> Kino.DataTable.new()
+```
+
+For example, we can make our `NumberTest` pass with a fake solution.
+
+```elixir
+defmodule FakeNumber do
+  def double(number) do
+    if number == 2 do
+      4
+    else
+      6
+    end
+  end
+end
+
+ExUnit.start(auto_run: false)
+
+defmodule FakeNumberTest do
+  use ExUnit.Case
+
+  test "double/1" do
+    assert FakeNumber.double(2) == 4
+    assert FakeNumber.double(3) == 6
+  end
+end
+
+ExUnit.run()
+```
+
+### Robustness
+
+A robust test ensures the code behaves correctly under many scenarios.
+To improve the robustness of our tests, we could write more example-based tests or more assertions in the same test.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule RobustNumberTest do
+  use ExUnit.Case
+
+  test "double/1" do
+    # now we catch that `FakeNumber` fails many test cases.
+    assert FakeNumber.double(2) == 4
+    assert FakeNumber.double(3) == 6
+    assert FakeNumber.double(4) == 8
+    assert FakeNumber.double(5) == 10
+  end
+end
+
+ExUnit.run()
+```
+
+This is more comprehensive. However, it's still possible to fake the solution. In addition, if we continue
+this pattern, we will write more tests than necessary, which makes our test suite longer
+and potentially harder to maintain.
+
+## Types Of Test
+
+There are three primary types of tests.
+
+* **Unit Test**: tests that cover a single unit in isolation.
+* **Integration Tests** tests that cover the integration of multiple components.
+* **End to End (E2E)** tests that cover the whole system from start to finish.
+
+So far, we have only seen examples of Unit Tests. In addition, the definition of a unit is
+often hotly debated in the programming community, so the lines between integration and unit tests can be blurry.
+
+We'll have the opportunity to see various types of tests. For now, it's sufficient to be aware that there are multiple types.
+
+For more on integration tests, consider reading [Integration Tests](https://martinfowler.com/bliki/IntegrationTest.html), a blog post by Martin Fowler.
+
+For end-to-end testing, you can take a look at the [Wallaby](https://github.com/elixir-wallaby/wallaby) project, which can test web applications
+by simulating realistic user interactions.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Test Suite Structure
+
+We want to have confidence in our test suite so that as we add features, refactor, and otherwise change your codebase,
+we are not at risk of making breaking changes.
+
+There are several schools of thought on how you should comprehensively test applications.
+
+Many developers believe the [Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)
+creates a fast and comprehensive test suite with many unit tests, some integration tests, and fewer end-to-end tests.
+
+Alternatively, you might consider the [Test Trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications), which prioritizes integration tests.
+
+Rather than recommend a specific pattern, we hope to introduce you to them so that you can develop
+your own opinions and do further research.
+
+## Test Naming
+
+Naming tests is important, but also highly subjective. There are some common patterns such
+as [Given, When, Then](https://www.agilealliance.org/glossary/gwt/#q=~(infinite~false~filters~(postType~(~'page~'post~'aa_book~'aa_event_session~'aa_experience_report~'aa_glossary~'aa_research_paper~'aa_video)~tags~(~'given*20when*20then))~searchTerm~'~sort~false~sortDirection~'asc~page~1)).
+
+In general, a good test name should capture:
+
+1. the system under test
+2. the state under test
+3. the desired behavior
+
+All of the following would capture the desired information.
+
+In our `Number` module example that translates to:
+
+1. The Number Module
+2. The input value (`2`)
+3. The expected output value (`4`)
+
+<!-- livebook:{"break_markdown":true} -->
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+test "double/1 with 2 returns 4"
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+We might omit the desired behavior from the test name, as it is also implicitly stated by the assertions in the test. By omitting the desired behavior, we prevent the test name from becoming outdated when the desired behavior changes, at the cost of possibly reducing the immediate clarity of our test.
+
+So the following test name could be appropriate:
+
+<!-- livebook:{"break_markdown":true} -->
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+test "double/1 with 2"
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+Rather than dogmatically recommend a pattern, we'll say that a good test name makes it easier to understand
+the goal of the test. How you do this is up to you, and many development teams develop different patterns.
+
+## Test Organization
+
+We can group tests into a [describe/2](https://hexdocs.pm/ex_unit/1.14.1/ExUnit.Case.html#describe/2) block. A [describe/2](https://hexdocs.pm/ex_unit/1.14.1/ExUnit.Case.html#describe/2) block organizes tests by some commonality. For example, it's common to group tests for a single function in the module under test together.
+
+```elixir
+defmodule OrganizedNumber do
+  def double(number), do: number * 2
+  def triple(number), do: number * 3
+end
+
+ExUnit.start(auto_run: false)
+
+defmodule OrganizedNumberTest do
+  use ExUnit.Case
+
+  describe "double/1" do
+    test "1 -> 2" do
+      assert OrganizedNumber.double(1) == 2
+    end
+
+    test "2 -> 4" do
+      assert OrganizedNumber.double(2) == 4
+    end
+  end
+
+  describe "triple/1" do
+    test "1 -> 3" do
+      assert OrganizedNumber.triple(1) == 3
+    end
+
+    test "2 -> 6" do
+      assert OrganizedNumber.triple(2) == 6
+    end
+  end
+end
+
+ExUnit.run()
+```
+
+## ExUnit With Mix
+
+Mix projects provide some conveniences when working with [ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html).
+
+Tests in a mix project are in the `test/` folder. Generally there is an equivalent file in the `test/` folder for each tested file in the `lib` folder.
+
+ExUnit is started for us in the `test/test_helper.exs` file, and files in the `test/` folder automatically compile, evaluate, and execute when we run tests.
+
+We strongly recommend the [Elixir Test](https://marketplace.visualstudio.com/items?itemName=samuel-pordeus.elixir-test) extension for Visual Studio Code as it provides a number of useful commands for running tests in Elixir.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Run Tests
+
+We can execute all tests by running the following from the command line in the project folder.
+
+```
+$ mix test
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Run Tests In A File
+
+We can run a single test file by providing its path.
+
+```
+$ mix test path/to/test/file.exs
+```
+
+For example, we can run the `math_test.exs` file.
+
+```
+$ mix test test/math_test.exs
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Run Tests By Line Number
+
+We can execute a specific test or several tests under a `describe` block by providing the line number.
+
+```
+$ mix test test/math_test.exs:5
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Test Tags
+
+We can use `@moduletag`, `@describetag`, and `@tag` module attributes to tag our tests.
+Once tagged, we can configure ExUnit to exclude, include, or only run tests with specific tags using [ExUnit.configure/1](https://hexdocs.pm/ex_unit/ExUnit.html#configure/1).
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@tag :my_tag
+test "example test" do
+  assert false
+end
+```
+
+Once tagged, we can use the flags `--only`, `--exclude`, and `--include` to run specific tests.
+
+```
+$ mix test --exclude my_tag
+```
+
+Alternatively, we can place the [ExUnit.configure/1](https://hexdocs.pm/ex_unit/ExUnit.html#configure/1) function in `test_helpers.exs`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+ExUnit.start()
+ExUnit.configure(exclude: :my_tag)
+```
+
+The `:skip` tag is excluded by default. This is useful for skipping tests.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@tag :skip
+test "example test" do
+  assert false
+end
+```
+
+## Further Reading
+
+For more on testing, consider using the following resources.
+
+* [Mix Test](https://hexdocs.pm/mix/Mix.Tasks.Test.html), for more on how you can use the `mix test` command.
+* [ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html), for documentation on ExUnit.
+* [ElixirSchools: Documentation](https://elixirschool.com/en/lessons/basics/documentation), an lesson by Elixir schools on documentation and doc-testing.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish ExUnit reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=ExUnit">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/games_rock_paper_scissors.livemd">Games: Rock Paper Scissors</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/games_wordle.livemd">Games: Wordle</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

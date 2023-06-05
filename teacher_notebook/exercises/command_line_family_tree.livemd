@@ -1,0 +1,114 @@
+# Command Line Family Tree
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Command Line Family Tree">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/iex.livemd">IEx</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/github_engineering_journal.livemd">Github Engineering Journal</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Command Line Family Folders
+
+Use the command line to create a `family` folder with the following folder and file structure.
+
+```
+/family
+  /Saida
+    /Aelia
+      /Urbano
+      /Petal
+    /Hagir
+      /Leandro
+      /Helen
+```
+
+Next, create a file for each folder that represents that person's family status. It's better that you do
+this **after** creating the folder structure above to get more practice moving between folders.
+
+```
+/family
+  /Saida
+    child.txt
+    /Aelia
+      parent.txt
+      /Urbano
+        grandparent.txt
+      /Petal
+        grandparent.txt
+    /Hagir
+      parent.txt
+      /Leandro
+        grandparent.txt
+      /Helen
+        grandparent.txt
+```
+
+> Names were generated using [behindthename.com](https://www.behindthename.com/random/random.php?number=1&sets=1&gender=both&surname=&all=yes.)
+
+<!-- livebook:{"attrs":{},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Command Line Family Tree exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Command Line Family Tree">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/iex.livemd">IEx</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/github_engineering_journal.livemd">Github Engineering Journal</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

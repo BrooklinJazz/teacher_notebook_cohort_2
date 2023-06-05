@@ -1,0 +1,156 @@
+# Time Converting
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Time Converting">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/datetime.livemd">Dates And Times</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/itinerary.livemd">Itinerary</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Time Converting
+
+Often we have to convert seconds, minutes, hours, and days. You're going to create a `TimeConverter` module which can handle all of this for us.
+
+We'll use the atoms `:days`, `:hours`, `:minutes`, or `:seconds` to represent days, hours, minutes, and seconds.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule TimeConverter do
+  def to_seconds(amount, unit) do
+    case unit do
+      :seconds -> amount
+      :minutes -> amount * 60
+      :hours -> amount * 60 * 60
+      :days -> amount * 60 * 60 * 24
+    end
+  end
+
+  def from_seconds(amount, unit) do
+    case unit do
+      :seconds -> amount * 1.0
+      :minutes -> amount / 60
+      :hours -> amount / 60 / 60
+      :days -> amount / 60 / 60 / 24
+    end
+  end
+end
+```
+
+</details>
+
+Implement the `TimeConverter.to_seconds/2` and `TimeConverter.from_seconds/2` functions as documented.
+
+```elixir
+defmodule TimeConverter do
+  @moduledoc """
+  Documentation for `TimeConverter`
+  """
+
+  @doc """
+  Convert a unit of time to a number of seconds.
+
+  ## Examples
+
+    iex> TimeConverter.to_seconds(1, :seconds)
+    1
+
+    iex> TimeConverter.to_seconds(1, :minutes)
+    60
+    
+    iex> TimeConverter.to_seconds(1, :hours)
+    3600
+
+    iex> TimeConverter.to_seconds(1, :days)
+    86400
+
+  """
+  def to_seconds(amount, unit) do
+  end
+
+  @doc """
+  Convert a number of seconds to a unit of time.
+  Return a float, as these values will require division using `/`.
+
+  ## Examples
+
+    iex> TimeConverter.from_seconds(1, :seconds)
+    1.0
+
+    iex> TimeConverter.from_seconds(60, :minutes)
+    1.0
+    
+    iex> TimeConverter.from_seconds(3600, :hours)
+    1.0
+
+    iex> TimeConverter.from_seconds(86400, :days)
+    1.0
+
+  """
+  def from_seconds(amount, unit) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Time Converting exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Time Converting">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/datetime.livemd">Dates And Times</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/itinerary.livemd">Itinerary</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

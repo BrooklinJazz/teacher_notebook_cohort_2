@@ -1,0 +1,285 @@
+# Pokemon API
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"},
+  {:finch, "~> 0.16.0"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Pokemon API">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/apis.livemd">APIs</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/rdbms.livemd">Relational Database Management Systems</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Pokemon API
+
+When we rely on an external API, it's possible for them to change the format of a response, and have that cause issues for our application.
+
+That's why it's often important to translate information from an API into a struct when we retrieve it. This way if the format of the API response changes then we can fix the issue in a single spot where we convert the API response into a struct. We can also keep only the information we want, rather than all of the data returned.
+
+Often, certain APIs will have a language-specific implementation that makes it easier to interact with the API.
+
+You're going to create a `Pokelixir` project which uses the [Pokemon API](https://pokeapi.co/) to return Elixir-friendly `Pokemon` structs.
+
+## Initialize The Mix Project
+
+Create a new `Pokelixir` mix project.
+
+```
+mix new pokelixir
+```
+
+Add [Finch](https://github.com/sneako/finch) and [Jason](https://github.com/michalmuskala/jason) as dependencies. Ensure you add Finch to your application's supervision tree as documented on the Finch GitHub.
+
+## Define A Pokemon Struct
+
+A `Pokemon` struct should have the following (required) keys. We've included the types for clarity, you do not need to implement data validation.
+
+```mermaid
+classDiagram
+  class Pokemon {
+    id: integer
+    name: string
+    hp: integer
+    attack: integer
+    defense: integer
+    special_attack: integer
+    special_defense: integer
+    speed: integer
+    weight: integer
+    height: integer
+    types: list of strings
+  }
+```
+
+Here's that data represented as a `Pokemon` struct.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%Pokemon{
+  id: 6,
+  name: "charizard",
+  hp: 78,
+  attack: 84,
+  defense: 78,
+  special_attack: 109,
+  special_defense: 85,
+  speed: 100,
+  height: 17,
+  weight: 905,
+  types: ["fire", "flying"]
+}
+```
+
+## Get A Pokemon
+
+Using the [Pokemon API](https://pokeapi.co/), you can retrieve information about a pokemon using the following URL where `name` is the name of the pokemon.
+
+```
+https://pokeapi.co/api/v2/pokemon/name
+```
+
+For example, you can retrieve the stats for `charizard` by making an HTTP GET request to the following URL.
+
+```
+https://pokeapi.co/api/v2/pokemon/charizard
+```
+
+You should be able to retrieve the data for a pokemon and return it as a `Pokemon` struct.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Pokelixir.get("charizard")
+```
+
+## Get All Pokemon
+
+You can retrieve a list of pokemon using the following URL.
+
+```
+https://pokeapi.co/api/v2/pokemon
+```
+
+By default, this URL only shows the the first `20` pokemon, and provides a `"next"` URL to retrieve the next `20` pokemon. This is a common [pagination](https://en.wikipedia.org/wiki/Pagination) strategy to avoid loading too much data at once.
+
+<details style="background-color: lightgrey; padding: 1rem; margin: 1rem 0;">
+<summary>Response Example</summary>
+
+```javascript
+{
+  "count": 1154,
+  "next": "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20",
+  "previous": null,
+  "results": [
+    {
+    "name": "bulbasaur",
+    "url": "https://pokeapi.co/api/v2/pokemon/1/"
+    },
+    {
+    "name": "ivysaur",
+    "url": "https://pokeapi.co/api/v2/pokemon/2/"
+    },
+    {
+    "name": "venusaur",
+    "url": "https://pokeapi.co/api/v2/pokemon/3/"
+    },
+    {
+    "name": "charmander",
+    "url": "https://pokeapi.co/api/v2/pokemon/4/"
+    },
+    {
+    "name": "charmeleon",
+    "url": "https://pokeapi.co/api/v2/pokemon/5/"
+    },
+    {
+    "name": "charizard",
+    "url": "https://pokeapi.co/api/v2/pokemon/6/"
+    },
+    {
+    "name": "squirtle",
+    "url": "https://pokeapi.co/api/v2/pokemon/7/"
+    },
+    {
+    "name": "wartortle",
+    "url": "https://pokeapi.co/api/v2/pokemon/8/"
+    },
+    {
+    "name": "blastoise",
+    "url": "https://pokeapi.co/api/v2/pokemon/9/"
+    },
+    {
+    "name": "caterpie",
+    "url": "https://pokeapi.co/api/v2/pokemon/10/"
+    },
+    {
+    "name": "metapod",
+    "url": "https://pokeapi.co/api/v2/pokemon/11/"
+    },
+    {
+    "name": "butterfree",
+    "url": "https://pokeapi.co/api/v2/pokemon/12/"
+    },
+    {
+    "name": "weedle",
+    "url": "https://pokeapi.co/api/v2/pokemon/13/"
+    },
+    {
+    "name": "kakuna",
+    "url": "https://pokeapi.co/api/v2/pokemon/14/"
+    },
+    {
+    "name": "beedrill",
+    "url": "https://pokeapi.co/api/v2/pokemon/15/"
+    },
+    {
+    "name": "pidgey",
+    "url": "https://pokeapi.co/api/v2/pokemon/16/"
+    },
+    {
+    "name": "pidgeotto",
+    "url": "https://pokeapi.co/api/v2/pokemon/17/"
+    },
+    {
+    "name": "pidgeot",
+    "url": "https://pokeapi.co/api/v2/pokemon/18/"
+    },
+    {
+    "name": "rattata",
+    "url": "https://pokeapi.co/api/v2/pokemon/19/"
+    },
+    {
+    "name": "raticate",
+    "url": "https://pokeapi.co/api/v2/pokemon/20/"
+    }
+  ]
+}
+```
+
+</details>
+
+Each pokemon in the results list also has a URL you can use to get information about each pokemon.
+
+https://pokeapi.co/api/v2/pokemon/6/
+
+You should be able to return a list of `Pokemon` structs for every pokemon.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Pokemon.all()
+```
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+You can either recursively retrieve the next `20` pokemon using the `"next"` url, or
+you can make a request using the `limit` query parameter with a larger value than the number of pokemon.
+
+</details>
+
+## GitHub Repository
+
+Connect your `Pokelixir` project to a GitHub repository and create a README to describe the purpose of the project and what you learned building it.
+
+Consider refactoring, adding documentation, and testing if you have not already to make this an even better resume project.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Pokemon API exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Pokemon API">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/apis.livemd">APIs</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/rdbms.livemd">Relational Database Management Systems</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

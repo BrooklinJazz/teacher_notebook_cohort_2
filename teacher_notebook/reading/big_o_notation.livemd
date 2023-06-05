@@ -1,0 +1,595 @@
+# Performance
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:vega_lite, "~> 0.1.6"},
+  {:kino_vega_lite, "~> 0.1.8"},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+
+defmodule Factorial do
+  def of(0), do: 1
+
+  def of(n) when n > 0 do
+    Enum.reduce(1..n, &*/2)
+  end
+end
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Performance">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/fibonacci_challenge.livemd">Fibonacci Sequence</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/benchmarking.livemd">Benchmarking</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How does Big O Notation ($O(n), O(n^2), etc$) describe the performance of our application as data $n$ grows?
+* Why is Big O Notation useful, how do you think you'll use it to describe your programs in the future?
+
+## Big O Notation
+
+As programmers, we are generally more concerned with how performance grows in our
+program as data becomes larger.
+
+We use **Big $$O$$ Notation** to communicate about how performance changes based on the size
+of the data.
+
+* **$$O(1)$$**: Constant Time
+* **$$O(log (n))$$**: Logarithmic Time
+* **$$O(n)$$**: Linear Time
+* **$$O(n^2)$$**: Quadratic Time (Polynomial Time)
+* **$$O(2^n)$$**: Exponential Time
+* **$$O(n!)$$**: Factorial Time
+
+Here's a video by Tom Scott for an introductory overview.
+
+<!-- livebook:{"attrs":{"source":"YouTube.new(\"https://www.youtube.com/watch?v=RGuJga2Gl_k\")","title":"Big O Complexity"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+YouTube.new("https://www.youtube.com/watch?v=RGuJga2Gl_k")
+```
+
+As you work with larger amounts of data, different big $O$ complexities grow faster than others.
+See the graph below for a general ranking.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![Big O Notation](images/big_o_notation_graph.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+We should try to be aware of the performance costs and memory costs of both the
+code that your write, and the built-in functionality you use, especially when working with large
+amounts of data.
+
+This will inspire both how you write code, and which data structures you choose for particular situations.
+
+## Constant Complexity
+
+Did you know that a [carrier pigeon can be faster than the internet](https://www.bbc.com/news/technology-11325452)?
+It's true, and it's related to the nature of constant growth.
+
+Some operations take the same amount of time to execute no matter how much data is involved.
+For example, a pigeon will travel some distance of kilometers in approximately the same time
+every attempt. If you strap a USB stick to the pigeon, it can carry (within reason) any
+amount of data to it's destination in a constant amount of time.
+
+So a while it makes a great headline about slow internet speed, it's actually a
+mathematical guarantee that for some size of data, a pigeon will be faster than the internet.
+
+We can see the nature of how a constant travel time for some amount of data always intersects with the
+expected internet speed in the graph below.
+
+<!-- livebook:{"attrs":{"source":"size = 600\n\nwidget =\n  VegaLite.new(width: size, height: size)\n  |> VegaLite.mark(:line)\n  |> VegaLite.encode_field(:x, \"data\", type: :quantitative)\n  |> VegaLite.encode_field(:y, \"time\", type: :quantitative)\n  |> VegaLite.encode_field(:color, \"type\", title: \"Linear Growth\", type: :nominal)\n  |> Kino.VegaLite.new()\n\ninit = 1\nmax = 200\n\ninternet = for n <- init..max, do: %{data: n, time: n, type: \"Internet\"}\npigeon = for n <- init..max, do: %{data: n, time: 100, type: \"Pigeon\"}\n\nKino.VegaLite.push_many(widget, internet)\nKino.VegaLite.push_many(widget, pigeon)\nwidget","title":"Pigeon Beats The Internet Graph"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+size = 600
+
+widget =
+  VegaLite.new(width: size, height: size)
+  |> VegaLite.mark(:line)
+  |> VegaLite.encode_field(:x, "data", type: :quantitative)
+  |> VegaLite.encode_field(:y, "time", type: :quantitative)
+  |> VegaLite.encode_field(:color, "type", title: "Linear Growth", type: :nominal)
+  |> Kino.VegaLite.new()
+
+init = 1
+max = 200
+
+internet = for n <- init..max, do: %{data: n, time: n, type: "Internet"}
+pigeon = for n <- init..max, do: %{data: n, time: 100, type: "Pigeon"}
+
+Kino.VegaLite.push_many(widget, internet)
+Kino.VegaLite.push_many(widget, pigeon)
+widget
+```
+
+## Linear Complexity
+
+Linear growth adds the same number of calculations for each element in the collection.
+For example, reading a book would (assuming a consistent reading speed) be linear complexity.
+If you take two minutes to read every page, you add an additional two minute for every page.
+
+* With 1 page it takes 2 minute
+* With 2 pages it takes 4 minutes
+* With 3 pages it takes 6 minutes
+* With 4 pages it takes 8 minutes
+
+In programming terms, for each additional item added to the collection, the computer needs to
+perform approximately the same number of additional calculations.
+
+Plotted onto a graph you would expect that as we increase the number of elements, time grows in a constant line upward.
+
+<!-- livebook:{"attrs":{"source":"size = 600\n\nwidget =\n  VegaLite.new(width: size, height: size)\n  |> VegaLite.mark(:line)\n  |> VegaLite.encode_field(:x, \"number of elements\", type: :quantitative)\n  |> VegaLite.encode_field(:y, \"time\", type: :quantitative)\n  |> VegaLite.encode_field(:color, \"type\", title: \"Linear Growth\", type: :nominal)\n  |> Kino.VegaLite.new()\n\nlinear = for n <- 1..100, do: %{\"number of elements\": n, time: n, type: \"O(n)\"}\n\nKino.VegaLite.push_many(widget, linear)\nwidget","title":"Linear Complexity Graph"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+size = 600
+
+widget =
+  VegaLite.new(width: size, height: size)
+  |> VegaLite.mark(:line)
+  |> VegaLite.encode_field(:x, "number of elements", type: :quantitative)
+  |> VegaLite.encode_field(:y, "time", type: :quantitative)
+  |> VegaLite.encode_field(:color, "type", title: "Linear Growth", type: :nominal)
+  |> Kino.VegaLite.new()
+
+linear = for n <- 1..100, do: %{"number of elements": n, time: n, type: "O(n)"}
+
+Kino.VegaLite.push_many(widget, linear)
+widget
+```
+
+## Polynomial Complexity
+
+Rather than grow linearly, polynomial complexity grows to some power.
+For example, nested loops typically result in polynomial complexity.
+
+That's because for every element in the first enumerable, we enumerate through every element in
+the second enumerable.
+
+```mermaid
+flowchart
+A[1] --> B[1]
+A[1] --> C[2]
+A[1] --> D[3]
+
+A1[2] --> B1[1]
+A1[2] --> C1[2]
+A1[2] --> D1[3]
+
+A2[3] --> B2[1]
+A2[3] --> C2[2]
+A2[3] --> D2[3]
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Try changing `number` to `2`, `3`, and `4`. Notice how it creates more lists, with more
+elements for each increase in number.
+
+```elixir
+number = 1
+
+Enum.map(1..number, fn _ ->
+  Enum.to_list(1..number)
+end)
+```
+
+* With 1 element it creates 1 element
+* With 2 elements it creates 4 elements
+* With 3 elements it creates 9 elements
+* With 4 elements it creates 16 elements
+
+In other words, it creates $n^2$ elements. We can see how this grows in the following table.
+
+<!-- livebook:{"attrs":{"source":"Enum.map(1..1000, fn each ->\n  %{\n    \"# of elements\": each,\n    result: each ** 2,\n    notation: \"#{each}**2\",\n    equation: \"#{each} * #{each}\"\n  }\nend) |> Kino.DataTable.new()","title":"n<sup>2</sup> Complexity"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+Enum.map(1..1000, fn each ->
+  %{
+    "# of elements": each,
+    result: each ** 2,
+    notation: "#{each}**2",
+    equation: "#{each} * #{each}"
+  }
+end)
+|> Kino.DataTable.new()
+```
+
+If you nest a third enumeration it becomes $n^3$.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+A1[1]
+
+A11[1]
+A12[2]
+A13[3]
+
+A1 --> A11
+A1 --> A12
+A1 --> A13
+
+A111[1]
+A112[2]
+A113[3]
+
+A11 --> A111
+A11 --> A112
+A11 --> A113
+
+A121[1]
+A122[2]
+A123[3]
+
+A12 --> A121
+A12 --> A122
+A12 --> A123
+
+A131[1]
+A132[2]
+A133[3]
+
+A13 --> A131
+A13 --> A132
+A13 --> A133
+
+B1[1]
+
+B11[1]
+B12[2]
+B13[3]
+
+B1 --> B11
+B1 --> B12
+B1 --> B13
+
+B111[1]
+B112[2]
+B113[3]
+
+B11 --> B111
+B11 --> B112
+B11 --> B113
+
+B121[1]
+B122[2]
+B123[3]
+
+B12 --> B121
+B12 --> B122
+B12 --> B123
+
+B131[1]
+B132[2]
+B133[3]
+
+B13 --> B131
+B13 --> B132
+B13 --> B133
+
+C1[1]
+
+C11[1]
+C12[2]
+C13[3]
+
+C1 --> C11
+C1 --> C12
+C1 --> C13
+
+C111[1]
+C112[2]
+C113[3]
+
+C11 --> C111
+C11 --> C112
+C11 --> C113
+
+C121[1]
+C122[2]
+C123[3]
+
+C12 --> C121
+C12 --> C122
+C12 --> C123
+
+C131[1]
+C132[2]
+C133[3]
+
+C13 --> C131
+C13 --> C132
+C13 --> C133
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Try changing `number` to `2`, `3`, and `4`. Notice how it creates $n^3$ elements.
+
+```elixir
+number = 3
+
+Enum.map(1..number, fn _ ->
+  Enum.map(1..number, fn _ ->
+    Enum.to_list(1..number)
+  end)
+end)
+```
+
+We can see how $n^3$ grows in the following table.
+
+<!-- livebook:{"attrs":{"source":"Enum.map(1..1000, fn each ->\n  %{\n    \"# of elements\": each,\n    result: each ** 3,\n    notation: \"#{each}**3\",\n    equation: \"#{each} * #{each} * #{each}\"\n  }\nend) |> Kino.DataTable.new()","title":"n<sup>3</sup> Complexity"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+Enum.map(1..1000, fn each ->
+  %{
+    "# of elements": each,
+    result: each ** 3,
+    notation: "#{each}**3",
+    equation: "#{each} * #{each} * #{each}"
+  }
+end)
+|> Kino.DataTable.new()
+```
+
+Plotted onto a graph, we can see that polynomial complexity results in an upward curve, and
+the size of the power significantly increases the growth.
+
+<!-- livebook:{"attrs":{"source":"size = 600\n\nwidget =\n  VegaLite.new(width: size, height: size)\n  |> VegaLite.mark(:line)\n  |> VegaLite.encode_field(:x, \"number of elements\", type: :quantitative)\n  |> VegaLite.encode_field(:y, \"time\", type: :quantitative)\n  |> VegaLite.transform(groupby: [\"color\"], extent: [2500, 6500])\n  |> VegaLite.encode_field(:color, \"type\", title: \"Polonomial Growth\", type: :nominal)\n  |> Kino.VegaLite.new()\n\ninit = 1\nmax = 5\n\nn2 = for n <- init..max, do: %{\"number of elements\": n, time: n ** 2, type: \"n^2\"}\nn3 = for n <- init..max, do: %{\"number of elements\": n, time: n ** 3, type: \"n^3\"}\nn4 = for n <- init..max, do: %{\"number of elements\": n, time: n ** 4, type: \"n^4\"}\n\nKino.VegaLite.push_many(widget, n2)\nKino.VegaLite.push_many(widget, n3)\nKino.VegaLite.push_many(widget, n4)\nwidget","title":"Polynomial Complexity Graph"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+size = 600
+
+widget =
+  VegaLite.new(width: size, height: size)
+  |> VegaLite.mark(:line)
+  |> VegaLite.encode_field(:x, "number of elements", type: :quantitative)
+  |> VegaLite.encode_field(:y, "time", type: :quantitative)
+  |> VegaLite.transform(groupby: ["color"], extent: [2500, 6500])
+  |> VegaLite.encode_field(:color, "type", title: "Polonomial Growth", type: :nominal)
+  |> Kino.VegaLite.new()
+
+init = 1
+max = 5
+
+n2 = for n <- init..max, do: %{"number of elements": n, time: n ** 2, type: "n^2"}
+n3 = for n <- init..max, do: %{"number of elements": n, time: n ** 3, type: "n^3"}
+n4 = for n <- init..max, do: %{"number of elements": n, time: n ** 4, type: "n^4"}
+
+Kino.VegaLite.push_many(widget, n2)
+Kino.VegaLite.push_many(widget, n3)
+Kino.VegaLite.push_many(widget, n4)
+widget
+```
+
+## Exponential Complexity
+
+In exponential growth, some constant grows by an additional power for each element added to the collection.
+
+Let's take cracking a password as an example. We can assume a password can only be made from
+integers `0` to `9`.
+
+```mermaid
+flowchart LR
+0---1---2---3---4---5---6---7---8---9
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+As the number of digits in the password increases, the number of combinations grows by a power
+of `2`.
+
+* With 1 digit it makes 10 attempts
+* With 2 digits it makes 100 attempts
+* With 3 digits it makes 1000 attempts
+* With 4 digits it makes 10000 attempts
+
+In other words, it executes $$10^n$$ attempts. Now often you'll see exponential complexity
+represented as $2^n$  or $C^n$ where `2` or `C` represents some constant value. In the case of a password cracker, it would
+be `10`.
+
+<!-- livebook:{"attrs":{"source":"Enum.map(1..100, fn each ->\n  %{\n    \"# of elements\": each,\n    result: 10 ** each,\n    equation: \"100 ** #{each}\"\n  }\nend) |> Kino.DataTable.new()","title":"Exponential Growth Table"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+Enum.map(1..100, fn each ->
+  %{
+    "# of elements": each,
+    result: 10 ** each,
+    equation: "100 ** #{each}"
+  }
+end)
+|> Kino.DataTable.new()
+```
+
+<!-- livebook:{"attrs":{"source":"size = 600\n\nwidget =\n  VegaLite.new(width: size, height: size)\n  |> VegaLite.mark(:line)\n  |> VegaLite.encode_field(:x, \"x\", type: :quantitative)\n  |> VegaLite.encode_field(:y, \"y\", type: :quantitative)\n  |> VegaLite.transform(groupby: [\"color\"], extent: [2500, 6500])\n  |> VegaLite.encode_field(:color, \"type\", title: \"Exponential Growth\", type: :nominal)\n  |> Kino.VegaLite.new()\n\ninit = 1\nmax = 10\n\nexponential = for n <- init..max, do: %{x: n, y: 10 ** n, type: \"2^n\"}\n\nKino.VegaLite.push_many(widget, exponential)\nwidget","title":"Exponential Complexity Graph"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+size = 600
+
+widget =
+  VegaLite.new(width: size, height: size)
+  |> VegaLite.mark(:line)
+  |> VegaLite.encode_field(:x, "x", type: :quantitative)
+  |> VegaLite.encode_field(:y, "y", type: :quantitative)
+  |> VegaLite.transform(groupby: ["color"], extent: [2500, 6500])
+  |> VegaLite.encode_field(:color, "type", title: "Exponential Growth", type: :nominal)
+  |> Kino.VegaLite.new()
+
+init = 1
+max = 10
+
+exponential = for n <- init..max, do: %{x: n, y: 10 ** n, type: "2^n"}
+
+Kino.VegaLite.push_many(widget, exponential)
+widget
+```
+
+## Factorial Complexity
+
+Certain functions enumerate through every possible permutation of the input. As
+you can imagine this is computationally expensive. For each element, the
+function needs to enumerate through every remaining element.
+
+For example, if you needed to calculate every permutation of a number, that would require
+a factorial function.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+  a[123]
+  a --> b[1]
+  a --> c[2]
+  a --> d[3]
+  b --> b1[2] --> 123
+  b --> b2[3] --> 132
+  c --> c1[1] --> 213
+  c --> c2[3] --> 231
+  d --> d1[1] --> 312
+  d --> d2[2] --> 321
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Try adding elements to the `list` and notice how it creates $n!$ permutations of the list.
+
+```elixir
+defmodule Permutations do
+  def of([]) do
+    [[]]
+  end
+
+  def of(list) do
+    for h <- list, t <- of(list -- [h]), do: [h | t]
+  end
+end
+
+list = [1, 2, 3]
+Permutations.of(list)
+```
+
+* With 1 element it creates 1 permutation
+* With 2 elements it creates 2 permutations
+* With 3 elements it creates 6 permutations
+* With 4 elements it creates 24 permutations
+* With 5 elements it creates 120 permutations
+
+In other words, it creates $$n!$$ permutations. where $n!$ is a shorthand for
+
+$n! = n * (n-1) * (n-2) * ... * 1$
+
+For example $5!$ is $5 * 4 * 3 * 2 * 1$.
+
+<!-- livebook:{"break_markdown":true} -->
+
+Factorial complexity grows incredibly fast, as you can see according to this graph and corresponding
+data table.
+
+<!-- livebook:{"attrs":{"source":"size = 600\n\nwidget =\n  VegaLite.new(width: size, height: size)\n  |> VegaLite.mark(:line)\n  |> VegaLite.encode_field(:x, \"x\", type: :quantitative)\n  |> VegaLite.encode_field(:y, \"y\", type: :quantitative)\n  |> VegaLite.transform(groupby: [\"color\"], extent: [2500, 6500])\n  |> VegaLite.encode_field(:color, \"type\", title: \"Factorial Growth\", type: :nominal)\n  |> Kino.VegaLite.new()\n\nfactorial = for n <- 1..5, do: %{x: n, y: Factorial.of(n), type: \"n!\"}\n\nKino.VegaLite.push_many(widget, factorial)\nwidget","title":"Factorial Complexity Graph"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+size = 600
+
+widget =
+  VegaLite.new(width: size, height: size)
+  |> VegaLite.mark(:line)
+  |> VegaLite.encode_field(:x, "x", type: :quantitative)
+  |> VegaLite.encode_field(:y, "y", type: :quantitative)
+  |> VegaLite.transform(groupby: ["color"], extent: [2500, 6500])
+  |> VegaLite.encode_field(:color, "type", title: "Factorial Growth", type: :nominal)
+  |> Kino.VegaLite.new()
+
+factorial = for n <- 1..5, do: %{x: n, y: Factorial.of(n), type: "n!"}
+
+Kino.VegaLite.push_many(widget, factorial)
+widget
+```
+
+<!-- livebook:{"attrs":{"source":"defmodule Calculate do\n  def factorial(1), do: 1\n  def factorial(n), do: n * factorial(n - 1)\nend\n\nEnum.map(1..10, fn each ->\n  equation =\n    Enum.map_join(each..1, fn\n      ^each -> \"#{each}\"\n      n -> \" * #{n}\"\n    end)\n\n  %{\"# of elements\": each, result: Calculate.factorial(each), equation: equation}\nend)  |> Kino.DataTable.new()","title":"Factorial Complexity Table"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+defmodule Calculate do
+  def factorial(1), do: 1
+  def factorial(n), do: n * factorial(n - 1)
+end
+
+Enum.map(1..10, fn each ->
+  equation =
+    Enum.map_join(each..1, fn
+      ^each -> "#{each}"
+      n -> " * #{n}"
+    end)
+
+  %{"# of elements": each, result: Calculate.factorial(each), equation: equation}
+end)
+|> Kino.DataTable.new()
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Performance reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Performance">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/fibonacci_challenge.livemd">Fibonacci Sequence</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/benchmarking.livemd">Benchmarking</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

@@ -1,0 +1,224 @@
+# Naming Numbers
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Naming Numbers">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/control_flow.livemd">Control Flow</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/rock_paper_scissors.livemd">Rock Paper Scissors</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Naming Numbers
+
+In the Elixir cell below, create a function `naming_numbers` which accepts a
+single digit integer and returns its string representation. So `1` would become `"one"`.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+   0 --> zero
+   1 --> one
+   2 --> two
+   3 --> three
+   4 --> four
+   5 --> five
+   6 --> six
+   7 --> seven
+   8 --> eight
+   9 --> nine
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+naming_numbers.(1)
+"one"
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Solution Example</summary>
+
+  ```elixir
+  naming_numbers = fn integer ->
+    case integer do
+      0 -> "zero"
+      1 -> "one"
+      2 -> "two"
+      3 -> "three"
+      4 -> "four"
+      5 -> "five"
+      6 -> "six"
+      7 -> "seven"
+      8 -> "eight"
+      9 -> "nine"
+    end
+  end
+  ```
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Numbering Names
+
+In the Elixir cell below, create a function `numbering_names` which accepts a
+number's name and returns its string representation. So `"one"` would become `1`.
+
+In addition to accepting lowercase name, also accept uppercase names so `"One"` would become `1`.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+  zero --> 0
+  one --> 1
+  two --> 2
+  three --> 3
+  four --> 4
+  five --> 5
+  six --> 6
+  seven --> 7
+  eight --> 8
+  nine --> 9
+```
+
+```mermaid
+flowchart
+  Zero --> 0
+  One --> 1
+  Two --> 2
+  Three --> 3
+  Four --> 4
+  Five --> 5
+  Six --> 6
+  Seven --> 7
+  Eight --> 8
+  Nine --> 9
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Solution Example</summary>
+
+
+  We can brute force the solutione using case.
+
+  ```elixir
+  numbering_names = fn int_str ->
+    case int_str do
+      "zero" -> 0
+      "one" -> 1
+      "two" -> 2
+      "three" -> 3
+      "four" -> 4
+      "five" -> 5
+      "six" -> 6
+      "seven" -> 7
+      "eight" -> 8
+      "nine" -> 9
+      "Zero" -> 0
+      "One" -> 1
+      "Two" -> 2
+      "Three" -> 3
+      "Four" -> 4
+      "Five" -> 5
+      "Six" -> 6
+      "Seven" -> 7
+      "Eight" -> 8
+      "Nine" -> 9
+    end
+  end
+  ```
+
+  Or use [String.downcase/2](https://hexdocs.pm/elixir/String.html#downcase/2) to make the solutione more concise.
+  This has the added benefit of handling mixed case such as `"ZeRO"`.
+
+  ```elixir
+  numbering_names = fn int_str ->
+    case String.downcase(int_str) do
+      "zero" -> 0
+      "one" -> 1
+      "two" -> 2
+      "three" -> 3
+      "four" -> 4
+      "five" -> 5
+      "six" -> 6
+      "seven" -> 7
+      "eight" -> 8
+      "nine" -> 9
+    end
+  end
+  ```
+</details>
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Naming Numbers exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Naming Numbers">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/control_flow.livemd">Control Flow</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/rock_paper_scissors.livemd">Rock Paper Scissors</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

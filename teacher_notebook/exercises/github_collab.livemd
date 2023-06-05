@@ -1,0 +1,121 @@
+# Github Collab
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Github Collab">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/github_engineering_journal.livemd">Github Engineering Journal</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/comments.livemd">Comments</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Collab
+
+With a partner, you're going to create a collaborative GitHub project.
+
+One partner will be the **CREATOR** and the other partner(s) will be the **CONTRIBUTORS**.
+Decide on your role and complete the exercise.
+
+* **CREATOR**: Setup a git project called `collab`.
+* **CREATOR**: Connect the git project to a public github repository.
+* **CREATOR**: [Add your partner as a contributor](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository)
+  to the GitHub project.
+* **CONTRIBUTORS**: Clone the github project onto your local machine.
+* **CONTRIBUTORS**: Create a new branch `bug-fix`
+* **CONTRIBUTORS**: Stage, commit, and push a new file `your_name.txt` (where your_name is your name).
+* **CONTRIBUTORS**: Create a pull request for the bug-fix branch.
+* **CREATOR**: Review the pull request and accept the changes.
+* **CREATOR**: pull the main branch and see the changes on your local git project.
+
+## Merge Conflicts
+
+Sometimes when you create a pull request, other pull requests may be accepted which creates
+merge conflicts.
+
+You and your partner(s) are going to walk through the flow of resolving a merge conflict.
+
+Using your existing `collab` project:
+
+* **CONTRIBUTORS**: Create a new branch `conflict-your_name` where `your_name` is the **CONTRIBUTOR**'s name.
+* **CREATOR**: Create a new branch `conflict-your_name` where `your_name` is the **CREATOR**'s name.
+* **CONTRIBUTORS**: Stage, commit, and push a new file `conflict.txt`. Enter the **CONTRIBUTORS**'s name as the file's contents.
+* **CREATOR**: Stage, commit, and push a new file `conflict.txt`. Enter the **CREATOR**'s name as the file's contents.
+* **CONTRIBUTORS**: Create a pull request for the `conflict-your_name` branch.
+* **CREATOR**: Create a pull request for the `conflict-your_name` branch.
+* **CREATOR**: Review the **CONTRIBUTOR**'s pull request and accept the changes.
+* **CREATOR**: Notice that your `conflict-your_name` branch now has merge conflicts and cannot be merged.
+* **CREATOR**: Resolve the conflicts and merge your pull request
+
+## Open Source
+
+Sometimes you want a project to be open to changes from other developers, not just the allowed contributors. We'll use your existing `collab` project to walk through the flow for contributing to an open source project.
+
+The creator of the `collab` project will remain the **CREATOR**, and the **CONTRIBUTORS** on your current project will each find a different group to be an **OSS CONTRIBUTOR** to.
+
+* **OSS CONTRIBUTOR**: Create a fork of the **CREATOR**'s project.
+* **OSS CONTRIBUTOR**: Clone the fork onto your local machine.
+* **OSS CONTRIBUTOR**: Create a new branch.
+* **OSS CONTRIBUTOR**: Stage, commit, and push a new file `your_name.txt` (where `your_name` is your name.)
+* **OSS CONTRIBUTOR**: Create a pull request from your fork to the **CREATOR**'s project.
+* **CREATOR**: Review and accept the pull request.
+* **OSS CONTRIBUTOR**: pull the main branch and see the changes on your local git project.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Github Collab exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Github Collab">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/github_engineering_journal.livemd">Github Engineering Journal</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/comments.livemd">Comments</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

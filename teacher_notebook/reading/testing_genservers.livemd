@@ -1,0 +1,294 @@
+# Testing GenServers
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Testing GenServers">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/timer.livemd">Timer</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/stack.livemd">Tested Stack</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How can we test the behavior rather than the implementation of a [GenServer](https://hexdocs.pm/elixir/GenServer.html)?
+
+## Testing GenServers
+
+We've seen how to perform tests on a module and function, but how do you test something stateful like a process? Let's consider how we could test a simple `CounterServer` process that should store an integer in it's state and increment the value.
+
+```elixir
+defmodule CounterServer do
+  use GenServer
+
+  @impl true
+  def init(state) do
+    {:ok, state}
+  end
+
+  @impl true
+  def handle_call(:increment, _from, state) do
+    {:reply, state + 1, state + 1}
+  end
+
+  @impl true
+  def handle_call(:get_count, _from, state) do
+    {:reply, state, state}
+  end
+end
+```
+
+Generally, we don't want to test the implementation of the counter, so we don't
+want to specifically send it messages using the [GenServer](https://hexdocs.pm/elixir/GenServer.html) module, nor do we want
+to test on the state of the process.
+
+For example, the following test is coupled to implementation.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule CounterServerTest do
+  use ExUnit.Case
+
+  test "Counter receives :increment call" do
+    {:ok, pid} = GenServer.start_link(CounterServer, 0)
+    GenServer.call(pid, :increment)
+    assert :sys.get_state(pid) == 1
+  end
+end
+
+ExUnit.run()
+```
+
+So if any of the internals change, these tests could break, even though the behavior of the counter module doesn't. Instead, we generally want to test on the [client interface](https://hexdocs.pm/elixir/GenServer.html#module-client-server-apis) of the [GenServer](https://hexdocs.pm/elixir/GenServer.html).
+
+Here's a `CounterClient` module which contains the client interface for the `CounterServer` module.
+
+```elixir
+defmodule CounterClient do
+  def start_link(_opts) do
+    GenServer.start_link(CounterServer, 0)
+  end
+
+  def increment(pid) do
+    GenServer.call(pid, :increment)
+  end
+
+  def get_count(pid) do
+    GenServer.call(pid, :get_count)
+  end
+end
+```
+
+Now we can use these functions in our test.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule CounterClientTest do
+  use ExUnit.Case
+
+  test "increment/1" do
+    {:ok, pid} = CounterClient.start_link([])
+    CounterClient.increment(pid)
+    assert CounterClient.get_count(pid) == 1
+  end
+end
+
+ExUnit.run()
+```
+
+This makes our tests more robust to implementation changes of the `CounterServer`. So long as the client interface remains the same, then tests will not break.
+
+For example, let's say we decide to change how we store state in the counter. Instead of an integer, we'll use a `%{count: value}` map. We've co-located the Client and the Server functions for the sake of example.
+
+```elixir
+defmodule CounterMapExample do
+  use GenServer
+
+  # Client
+
+  def start_link(_opts) do
+    GenServer.start_link(__MODULE__, %{count: 0})
+  end
+
+  def increment(pid) do
+    GenServer.call(pid, :increment)
+  end
+
+  def get_count(pid) do
+    GenServer.call(pid, :get_count)
+  end
+
+  # Server
+
+  @impl true
+  def init(state) do
+    {:ok, state}
+  end
+
+  @impl true
+  def handle_call(:get_count, _from, state) do
+    {:reply, state.count, state}
+  end
+
+  @impl true
+  def handle_call(:increment, _from, state) do
+    {:reply, state.count + 1, %{state | count: state.count + 1}}
+  end
+end
+```
+
+Our tests still pass, because the behavior and interface has not changed.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule CounterMapTest do
+  use ExUnit.Case
+
+  test "increment/1" do
+    {:ok, pid} = CounterMapExample.start_link([])
+    CounterMapExample.increment(pid)
+    assert CounterMapExample.get_count(pid) == 1
+  end
+end
+
+ExUnit.run()
+```
+
+However, the old test suite breaks, because it was coupled to the underlying implementation.
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule CounterMapExampleTest do
+  use ExUnit.Case
+
+  test "handle_call :increment" do
+    {:ok, pid} = GenServer.start_link(CounterMapExample, 0)
+    GenServer.call(pid, :increment)
+    assert :sys.get_state(pid) == 1
+  end
+end
+
+ExUnit.run()
+```
+
+For more on testing [GenServer](https://hexdocs.pm/elixir/GenServer.html)s, there is an excellent talk by Tyler Young.
+
+<!-- livebook:{"attrs":{"source":"YouTube.new(\"https://www.youtube.com/watch?v=EZFLPG7V7RM\")","title":"Testing GenServers"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+YouTube.new("https://www.youtube.com/watch?v=EZFLPG7V7RM")
+```
+
+### Your Turn
+
+Implement and test a `decrement/1` function on the `CountDown` module.
+
+```elixir
+defmodule CountDown do
+  use GenServer
+
+  # Client
+
+  def start_link(_opts) do
+    # Implementation
+  end
+
+  def decrement(pid) do
+    # Implementation
+  end
+
+  # Server
+
+  @impl true
+  def init(state) do
+    {:ok, state}
+  end
+
+  @impl true
+  def handle_call(:get_count, _from, state) do
+    # Implementation
+  end
+
+  @impl true
+  def handle_call(:decrement, _from, state) do
+    # Implementation
+  end
+end
+
+ExUnit.start(auto_run: false)
+
+defmodule CounterTest do
+  use ExUnit.Case
+
+  # implement your test
+  test "decrement/1"
+end
+
+ExUnit.run()
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Testing GenServers reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Testing GenServers">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/timer.livemd">Timer</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/stack.livemd">Tested Stack</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

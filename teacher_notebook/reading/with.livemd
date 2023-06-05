@@ -1,0 +1,172 @@
+# With
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=With">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/guards.livemd">Guards</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/message_validation.livemd">Message Validation</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## With
+
+In Elixir, `with` is a control structure that provides a convenient way to handle multiple expressions and pattern match on their results. It allows you to chain together a sequence of expressions and evaluate them one by one, stopping if any of them return an error or a pattern match fails.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+with {:ok, v1} <- check1(),
+     {:ok, v2} <- check2(v1),
+     {:ok, v3} <- check3(v2),
+     {:ok, v4} <- check4(v3),
+     {:ok, _} <- check5(v4) do
+  # code that requires successful results above
+end
+```
+
+The `with` construct simplifies error handling and makes code more readable by avoiding nested `case` statements or lengthy `if` conditions. It provides a concise way to handle a series of expressions while gracefully handling potential errors or failed pattern matches.
+
+Here's a version of the above code written using nested `case` statements to demonstrate how much more concise `with` statements can be.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+case action1() do
+  {:ok, v1} ->
+  case action2(v1) do
+    {:ok, v2} ->
+      case action3(v2) do
+        {:ok, v3} -> 
+          case action4(v3) do
+            {:ok, v4} -> 
+              case check5(v4) do
+                {:ok, _} -> 
+                  # code that requires successful results above.
+              end
+          end
+      end
+  end
+end
+```
+
+We've use `{:ok, value}` tuples above, but `with` statements can pattern match on any Elixir term.
+
+```elixir
+student = %{name: "Einar", is_admin: true}
+
+with %{name: name, is_admin: true} <- student do
+  IO.puts("admin #{name} is authorized.")
+end
+```
+
+### Your Turn
+
+`with` statements can include an `else` clause for handling errors. The `else` clause can match on many different patterns.
+
+Change the value of `user` below to hit every case in the `else` clause (one at a time.)
+
+```elixir
+user = %{name: "Jon", is_admin: false}
+
+with %{name: name, is_admin: true} <- user do
+  IO.puts("admin #{name} is authorized.")
+else
+  %{is_admin: false, name: name} ->
+    IO.puts("#{name} is not an admin")
+
+  %{is_admin: false} ->
+    IO.puts("Unknown user is not an admin")
+
+  _ ->
+    IO.puts("Something went wrong!")
+end
+```
+
+## Handling Errors
+
+Some projects use tuples to annotate which statement in a `with` expression failed.
+
+Some members of the community argue it's preferable to use custom error types instead of using `with` statements. See [Chris Keathley: Good and Bad Elixir](https://keathley.io/blog/good-and-bad-elixir.html) for more information.
+
+However, we want you to be aware of this pattern so that you are familiar with it if a future team you're on uses it.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Change `value` to trigger every else clause.
+
+```elixir
+value = "example"
+
+with {:not_binary, true} <- {:not_binary, is_binary(value)},
+     {:too_long, true} <- {:too_long, String.length(value) <= 10},
+     {:too_short, true} <- {:too_short, 2 <= String.length(value)} do
+  IO.puts("success")
+else
+  {:not_binary, _} -> IO.puts("value is not binary")
+  {:too_long, _} -> IO.puts("value is too long")
+  {:too_short, _} -> IO.puts("value is too short")
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish With reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=With">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/guards.livemd">Guards</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/message_validation.livemd">Message Validation</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

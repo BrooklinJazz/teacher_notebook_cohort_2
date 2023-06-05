@@ -1,0 +1,464 @@
+# Dates And Times
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:timex, "~> 3.7.11"},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Dates And Times">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/data_traversal.livemd">Data Traversal</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/time_converting.livemd">Time Converting</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do we represent dates and times using [Date](https://hexdocs.pm/elixir/Date.html), [Time](https://hexdocs.pm/elixir/Time.html), and [DateTime](https://hexdocs.pm/elixir/DateTime.html) structs?
+* How do we manipulate dates and times using [Date](https://hexdocs.pm/elixir/Date.html), [Time](https://hexdocs.pm/elixir/Time.html), and [DateTime](https://hexdocs.pm/elixir/DateTime.html) module functions?
+* How can we format a date/time for display purposes?
+* How do we get the current time in a particular timezone?
+
+## Overview
+
+### UTC
+
+UTC (Coordinated Universal Time) is a standardized timezone. Typically we store times in UTC and then convert UTC to a desired timezone when necessary. This ensures consistency.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Date
+
+The [Date](https://hexdocs.pm/elixir/Date.html) module contains functionality related to calendar dates. [Date](https://hexdocs.pm/elixir/Date.html) structs store the `year`, `month`, and `day` and some other related fields.
+
+```elixir
+{:ok, date} = Date.new(2000, 10, 1)
+
+IO.inspect(date.year, label: "year")
+IO.inspect(date.month, label: "month")
+IO.inspect(date.day, label: "day")
+```
+
+### Time
+
+The [Time](https://hexdocs.pm/elixir/Time.html) module contains functionality related to times. Time structs store `hour`, `minute`, `second`.
+
+```elixir
+{:ok, time} = Time.new(12, 30, 10)
+
+IO.inspect(time.hour, label: "hour")
+IO.inspect(time.minute, label: "minute")
+IO.inspect(time.second, label: "second")
+```
+
+### DateTime
+
+[DateTime](https://hexdocs.pm/elixir/DateTime.html) is a hybrid of [Date](https://hexdocs.pm/elixir/Date.html) and [Time](https://hexdocs.pm/elixir/Time.html), so it can represent both a calendar day, and a time of day. The [DateTime](https://hexdocs.pm/elixir/DateTime.html) module contains functionality related to datetimes. The [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct stores fields to represent both date values, and time values.
+
+```elixir
+{:ok, datetime} = DateTime.new(date, time)
+
+IO.inspect(datetime.year, label: "year")
+IO.inspect(datetime.month, label: "month")
+IO.inspect(datetime.day, label: "day")
+IO.inspect(datetime.hour, label: "hour")
+IO.inspect(datetime.minute, label: "minute")
+IO.inspect(datetime.second, label: "second")
+```
+
+### [Timex](https://github.com/bitwalker/timex)
+
+Timex is a library that makes it easier to manipulate dates/times. It also has timezone support, which Elixir does not provide out of the box.
+
+If you're planning on frequently manipulating dates and times, or need to use multiple timezones, then Timex might be a useful library to include in future projects.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Sigils
+
+We can create the [Date](https://hexdocs.pm/elixir/Date.html), [Time](https://hexdocs.pm/elixir/Time.html), and [DateTime](https://hexdocs.pm/elixir/DateTime.html) structs through an alternative [sigil](https://elixir-lang.org/getting-started/sigils.html) syntax using `~D[]`, `~T[]`, and `~U`.
+
+```elixir
+date = ~D[2000-10-01]
+time = ~T[12:30:10]
+# The Z Offset Specifies The Timezone Offset. Z Is Zero For UTC.
+datetime = ~U[2000-10-01 12:30:10Z]
+```
+
+## Timezones
+
+Time and timezones can get very complicated. It's not within the scope of this course to delve
+deeply into that complexity.
+
+This reading is intended as a primer to working with dates, times, and timezones. You will
+need to consult the documentation and do your own research to go deeper.
+
+<!-- livebook:{"attrs":{"source":"YouTube.new(\"https://www.youtube.com/watch?v=-5wpm-gesOY\")","title":"Time and Timezones"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+YouTube.new("https://www.youtube.com/watch?v=-5wpm-gesOY")
+```
+
+Generally, we deal with UTC (Coordinated Universal Time) which is a standardized timezone,
+and then convert UTC time to the client's timezone only when necessary.
+
+If you work the other way around, constantly dealing with many different timezones, it's easy to make
+mistakes converting them from one to another.
+
+There are many built-in modules for dealing with time, in addition to common external libraries such
+as [Timex](https://github.com/bitwalker/timex).
+
+Generally, you will most commonly work with the [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct.
+
+A [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct is a snapshot of a date and time in a given timezone.
+
+You can retrieve the current [DateTime](https://hexdocs.pm/elixir/DateTime.html) with `DateTime.utc_now/0`.
+
+```elixir
+DateTime.utc_now()
+```
+
+You'll notice a string output similar to `~U[2022-04-27 02:13:29.306614Z]`. This is a sigil.
+
+Sigils are a textual representation of data. You can find a full
+explanation of sigils on the [Elixir Lang Sigil Getting Started Guide](https://elixir-lang.org/getting-started/sigils.html)
+
+Sigils use a tilda `~` and a character for the type of data they represent. For example,
+the date above uses the `~U` sigil to represent a UTC datetime.
+
+Under the hood, [DateTime](https://hexdocs.pm/elixir/DateTime.html) is a struct, we can see the full data contained in the struct below.
+
+[DateTime](https://hexdocs.pm/elixir/DateTime.html) contains date information such as `:day`, `:month`, and `:year`. [DateTime](https://hexdocs.pm/elixir/DateTime.html) also contains time information such as `:hour`, `:minute`, `:second`
+and even `:microsecond`.
+
+```elixir
+Map.from_struct(DateTime.utc_now())
+```
+
+## DateTime
+
+In order to understand [DateTime](https://hexdocs.pm/elixir/DateTime.html), we also need to consider two other structs
+[Date](https://hexdocs.pm/elixir/Date.html) and [Time](https://hexdocs.pm/elixir/Time.html).
+
+A [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct is built using a both a [Date](https://hexdocs.pm/elixir/Date.html) and a [Time](https://hexdocs.pm/elixir/Time.html) struct. [Date](https://hexdocs.pm/elixir/Date.html) represents the calendar
+date with `:year`, `:month`, and `:day`. [Time](https://hexdocs.pm/elixir/Time.html) represents the time of day with `:hour`, `:minute`, and `:second`.
+
+```elixir
+{:ok, date} = Date.new(2022, 6, 24)
+```
+
+```elixir
+{:ok, time} = Time.new(12, 30, 0)
+```
+
+```elixir
+{:ok, datetime} = DateTime.new(date, time)
+```
+
+Here we can see the [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct contains all of the information from the `time` and `date` we created above, as
+well as utc timezone information.
+
+```elixir
+Map.from_struct(datetime)
+```
+
+[DateTime](https://hexdocs.pm/elixir/DateTime.html) is also timezone aware unlike it's counterpart [NaiveDateTime](https://hexdocs.pm/elixir/NaiveDateTime.html). You can
+see that [NaiveDateTime](https://hexdocs.pm/elixir/NaiveDateTime.html) is missing timezone information such as `:time_zone` and `:zone_abbr`.
+
+```elixir
+{:ok, naive_datetime} = NaiveDateTime.new(date, time)
+```
+
+```elixir
+Map.from_struct(naive_datetime)
+```
+
+As a shorter syntax, it's common to use the `~T` sigil for the [Time](https://hexdocs.pm/elixir/Time.html) struct and the `~D` sigil for the [Date](https://hexdocs.pm/elixir/Date.html) struct.
+
+```elixir
+{:ok, datetime} = DateTime.new(~D[2022-06-24], ~T[12:30:00])
+```
+
+You could also create the [DateTime](https://hexdocs.pm/elixir/DateTime.html) directly using the `~U` sigil.
+
+```elixir
+datetime = ~U[2022-06-24 12:30:00Z]
+```
+
+Under the hood, this is still the same [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct.
+
+```elixir
+Map.from_struct(datetime)
+```
+
+Like any struct or map, you can access all of these properties directly using dot notation.
+
+```elixir
+datetime.year
+```
+
+## Display The Current Date
+
+When you want to display time information you can use the [Calendar](https://hexdocs.pm/elixir/Calendar.html) module's `strftime/3` function.
+
+```elixir
+Calendar.strftime(DateTime.utc_now(), "%y-%m-%d %I:%M:%S %p")
+```
+
+The `strftime/3` function accepts a [Date](https://hexdocs.pm/elixir/Date.html), [Time](https://hexdocs.pm/elixir/Time.html), [DateTime](https://hexdocs.pm/elixir/DateTime.html), or [NaiveDateTime](https://hexdocs.pm/elixir/NaiveDateTime.html) and uses the
+information in the struct to display a formatted string.
+
+You can use a percent `%` symbol and then one of the [accepted format options](https://hexdocs.pm/elixir/Calendar.html#strftime/3-accepted-formats)
+to display information from the given struct.
+
+For example, you could display the current month with `%B`.
+
+```elixir
+Calendar.strftime(DateTime.utc_now(), "%B")
+```
+
+By default, Elixir does not have any timezone data. You'll notice that the current DateTime is
+for utc, not your local timezone, so the time displayed likely doesn't match your own.
+
+```elixir
+Calendar.strftime(DateTime.utc_now(), "%c")
+```
+
+Elixir can be configured with timezone data, however it is beyond the scope of this current lesson.
+
+For more information, you can check out the publicly available Elixir School's lesson on [Working with timezones](https://elixirschool.com/en/lessons/basics/date_time#working-with-timezones-4).
+
+## DateTime Module Functions
+
+The [DateTime](https://hexdocs.pm/elixir/DateTime.html) module contains functions for timezone aware dates and times.
+
+Here are a few common functions to get you started.
+
+* `add/4` add time to an existing [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct.
+* `compare/2` compare two [DateTime](https://hexdocs.pm/elixir/DateTime.html) structs to see if one is before, after, or the same as another.
+* `diff/3` determine the time between two [DateTime](https://hexdocs.pm/elixir/DateTime.html) structs.
+* `new/4` create a new [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct and return an `{:ok, datetime}` tuple.
+* `new!/4` create a new [DateTime](https://hexdocs.pm/elixir/DateTime.html) struct or raise an error.
+* `utc_now/2` get the current utc [DateTime](https://hexdocs.pm/elixir/DateTime.html).
+
+Versions of these functions also exist for the [Date](https://hexdocs.pm/elixir/Date.html) module if you do not need to consider the time, but
+are only concerned about the calendar date.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+<!-- livebook:{"break_markdown":true} -->
+
+Create a [DateTime](https://hexdocs.pm/elixir/DateTime.html) for April 19, 1938 at noon (12pm).
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+Using sigils.
+
+```elixir
+~U[1938-04-19 12:00:00Z]
+```
+
+Using functions.
+
+```elixir
+DateTime.new!(Date.new!(1938, 4, 19), Time.new!(12, 0, 0))
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+If you solved the challenge above using sigils, complete it again using functions. If you solved the challenge using functions, then complete it again using sigils.
+
+Enter your new solution below.
+
+```elixir
+DateTime.new!(~D[1938-04-18])
+```
+
+Create a [DateTime](https://hexdocs.pm/elixir/DateTime.html) for today at the current time in universal time.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+DateTime.utc_now()
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+Use [DateTime.add/4](https://hexdocs.pm/elixir/DateTime.html#add/4) to add one day to the current [DateTime](https://hexdocs.pm/elixir/DateTime.html). This creates a new [DateTime](https://hexdocs.pm/elixir/DateTime.html) for tomorrow at the current time.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+day_in_seconds = 60 * 60 * 24
+DateTime.add(DateTime.utc_now(), day_in_seconds)
+```
+
+</details>
+
+Enter your solution below
+
+```elixir
+
+```
+
+Use [DateTime.compare/2](https://hexdocs.pm/elixir/DateTime.html#compare/2) to compare the [DateTime](https://hexdocs.pm/elixir/DateTime.html) below with the current [DateTime](https://hexdocs.pm/elixir/DateTime.html). The `date` below should be `:lt` (less than) the current [DateTime](https://hexdocs.pm/elixir/DateTime.html).
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+date = DateTime.new!(~D[2020-01-01], ~T[12:00:00])
+DateTime.compare(date, DateTime.utc_now())
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+date = DateTime.new!(~D[2020-01-01], ~T[12:00:00])
+```
+
+Use [DateTime.diff/3](https://hexdocs.pm/elixir/DateTime.html#diff/3) to determine how many seconds are between `2000-01-01` and `2010-01-01`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+start = DateTime.new!(~D[2000-01-01], ~T[12:00:00])
+finish = DateTime.new!(~D[2010-01-01], ~T[12:00:00])
+
+DateTime.diff(finish, start)
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Timex
+
+The [Timex](https://hexdocs.pm/timex/Timex.html) external library provides a number of useful features
+for working with dates in Elixir. It is not built-in to Elixir and needs to be installed in a project.
+
+[Timex](https://hexdocs.pm/timex/Timex.html) is not currently within the scope of this course, however we have installed [Timex](https://hexdocs.pm/timex/Timex.html) specifically
+in this livebook file only. You will not normally have access to [Timex](https://hexdocs.pm/timex/Timex.html) as the purpose of this section is to build familiarity
+with [DateTime](https://hexdocs.pm/elixir/DateTime.html).
+
+[Timex](https://hexdocs.pm/timex/Timex.html) uses the [tzdata](https://github.com/lau/tzdata) timezone database for Elixir.
+You can create a timezone aware [DateTime](https://hexdocs.pm/elixir/DateTime.html) using [Timex.now/1](https://hexdocs.pm/timex/Timex.html#now/1) and the name of a timezone.
+
+```elixir
+Timex.now("Asia/Kabul")
+```
+
+You can find the full list of available timezones using `Tzdata.zone_list/0`.
+
+```elixir
+Tzdata.zone_list()
+```
+
+Many websites host the full list of timezones such as [timezonedb.com](https://timezonedb.com/time-zones)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Use [Timex.now/1](https://hexdocs.pm/timex/Timex.html#now/1) to create a datetime for your current timezone. Compare it with your local time
+to ensure it is correct.
+
+```elixir
+
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [DateTime](https://hexdocs.pm/elixir/DateTime.html)
+* [Date](https://hexdocs.pm/elixir/Date.html)
+* [Time](https://hexdocs.pm/elixir/Time.html)
+* [Calendar](https://hexdocs.pm/elixir/Calendar.html)
+* [Elixir Schools: Dates and Time](https://elixirschool.com/en/lessons/basics/date_time)
+* [Timex](https://github.com/bitwalker/timex)
+* [Elixir-lang: Calendar Sigils](https://elixir-lang.org/getting-started/sigils.html#calendar-sigils)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Dates And Times reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Dates And Times">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/data_traversal.livemd">Data Traversal</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/time_converting.livemd">Time Converting</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

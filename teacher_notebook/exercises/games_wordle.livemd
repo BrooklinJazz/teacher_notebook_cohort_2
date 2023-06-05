@@ -1,0 +1,192 @@
+# Games: Wordle
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Games: Wordle">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/exunit.livemd">ExUnit</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/documentation_and_static_analysis.livemd">Documentation And Static Analysis</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Games: Wordle
+
+### Requirements
+
+In your existing [Games](./games.livemd) project, you're going to create a Wordle game.
+
+Wordle is a popular game where players get six attempts to guess a word.
+They are given feedback clues to guess the word.
+
+* **Green** if the letter is in the word and in the correct spot.
+* **Yellow** if the letter is in the word but in the incorrect spot.
+* **Gray** if the letter is not in the word.
+
+For example for the word "TOAST" the guess "TARTS" would be
+
+```mermaid
+flowchart LR
+style 1 fill:green
+style 2 fill:yellow
+style 3 fill:gray
+style 4 fill:yellow
+style 5 fill:yellow
+
+1[T] --- 2[A] --- 3[R] --- 4[T] --- 5[S]
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Tests
+
+You're going to create a full test suite for the wordle game. Write (at least) the following test cases
+
+* All green
+* All yellow
+* All grey
+* some green, yellow, and grey
+
+> **Bonus: Edge Case**: same letter is all 3 colors
+> 
+> ```elixir
+> Games.Wordle.feedback("XXXAA", "AAAAY") == [:yellow, :grey, :grey, :green, :grey]
+> ```
+> 
+> Handle greens first, then fill out yellows in order. The remaining characters are grey.
+> 
+> Be warned, this is a **hard** bonus challenge that significantly increases the complexity of the solution. Consider solving the exercise without this edge-case first.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Feedback/0
+
+You should be able to start your project by running the following from the `game` folder in
+the command line.
+
+```
+iex -S mix
+```
+
+Given an answer and a guess, your `Games.Wordle` module will provide feedback as a list of color atoms `:green`, `:yellow`, and `:grey`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+                         #answer   #guess
+iex> Games.Wordle.feedback("aaaaa", "aaaaa")
+[:green, :green, :green, :green, :green]
+
+iex> Games.Wordle.feedback("aaaaa", "aaaab")
+[:green, :green, :green, :green, :grey]
+
+iex> Games.Wordle.feedback("abdce", "edcba")
+[:yellow, :yellow, :yellow, :yellow, :yellow]
+
+# If There Are Duplicate Characters In The Guess Prioritize Exact Matches.
+iex> Games.Wordle.feedback("aaabb", "xaaaa")
+[:grey, :green, :green, :yellow, :grey]
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Play
+
+Use the IEx shell to start a game of Wordle. This should prompt the user to guess a five letter word.
+
+```
+iex> Games.Wordle.play()
+Enter a five letter word:  
+```
+
+Randomly generate a word for the wordle game. You might randomly retrieve a word from a list of words such as `["toast", "tarts", "hello", "beats"]`.
+
+Retrieve user input and provide feedback based on their guess. For example, this would be the output if the word `toast` were randomly generated.
+
+```
+Enter a give letter word: tarts
+[:green, :yellow, :grey, :yellow, :yellow]
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Bonus: Six Guesses
+
+After six guesses, the player should lose the game if they do not get the correct answer.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Bonus: Color Feedback
+
+Use [IO.ANSI](https://hexdocs.pm/elixir/IO.ANSI.html) to provide actual colored feedback.
+
+```elixir
+IO.puts(IO.ANSI.green() <> "green")
+IO.puts(IO.ANSI.yellow() <> "yellow")
+IO.puts(IO.ANSI.light_black() <> "grey")
+```
+
+Make sure you reset the color.
+
+```elixir
+IO.puts(IO.ANSI.green() <> "green" <> IO.ANSI.reset() <> " reset color")
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Games: Wordle exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Games: Wordle">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/exunit.livemd">ExUnit</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/documentation_and_static_analysis.livemd">Documentation And Static Analysis</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

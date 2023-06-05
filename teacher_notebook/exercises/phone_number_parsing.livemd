@@ -1,0 +1,173 @@
+# Phone Number Parsing
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phone Number Parsing">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/rollable_expressions.livemd">Rollable Expressions</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/recursion.livemd">Recursion</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Phone Number Parsing
+
+You have been provided a large string of phone numbers. The problem is, each phone number does
+not follow a standard format.
+
+You have been asked to convert them from the non standardized format into a standard format.
+
+Phone numbers will be given in the following formats:
+
+* `1231231234`
+* `123 123 1234`
+* `(123)-123-1234`
+* `(123) 123 1234`
+* `(123)123-1234`
+
+You need to convert them into the format `123-123-1234`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+text = """
+1231231234
+123 123 1234
+(123)-123-1234
+(123) 123 1234
+(123)123-1234
+"""
+PhoneNumber.parse(text)
+"""
+123-123-1234
+123-123-1234
+123-123-1234
+123-123-1234
+123-123-1234
+"""
+```
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+Consider using regular expressions with digits and capture groups to replace
+phone number expressions in the string.
+
+You can replace expressions one at a time, rather than all at once.
+
+</details>
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule PhoneNumber
+  def parse(string) do
+    replacement = "\\1-\\2-\\3"
+
+    string
+    |> String.replace(~r/(\d{3})(\d{3})(\d{4})/, replacement)
+    |> String.replace(~r/(\d{3}) (\d{3}) (\d{4})/, replacement)
+    |> String.replace(~r/\((\d{3})\)-(\d{3})-(\d{4})/, replacement)
+    |> String.replace(~r/\((\d{3})\) (\d{3}) (\d{4})/, replacement)
+    |> String.replace(~r/\((\d{3})\)(\d{3})-(\d{4})/, replacement)
+  end
+end
+```
+
+</details>
+
+Implement the `PhoneNumber` module as documented below.
+
+```elixir
+defmodule PhoneNumber do
+  @moduledoc """
+  Documentation for `PhoneNumber`
+  """
+
+  @doc """
+  Parse phone numbers and convert them to XXX-XXX-XXXX format.
+
+  ## Examples
+
+    iex> PhoneNumber.parse("1231231234")
+    "123-123-1234"
+
+    iex> PhoneNumber.parse("123 123 1234")
+    "123-123-1234"
+
+    iex> PhoneNumber.parse("(123)-123-1234")
+    "123-123-1234"
+
+    iex> PhoneNumber.parse("(123) 123 1234")
+    "123-123-1234"
+
+    iex> PhoneNumber.parse("(123)123-1234")
+    "123-123-1234"
+
+    iex> PhoneNumber.parse("1231231234 4564564567")
+    "123-123-1234 456-456-4567"
+  """
+  def parse(string) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Phone Number Parsing exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phone Number Parsing">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/rollable_expressions.livemd">Rollable Expressions</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/recursion.livemd">Recursion</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

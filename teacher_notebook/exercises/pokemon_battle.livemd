@@ -1,0 +1,229 @@
+# Pokemon Battle
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Pokemon Battle">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/rpg_dialogue.livemd">RPG Dialogue</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/ranges.livemd">Ranges</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Overview
+
+You're going to create a pokemon battle game. If you're not familiar with pokemon, it's a game where elemental creatures battle.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Define The Pokemon Struct
+
+You're going to represent pokemon using a `Pokemon` struct with the following keys.
+
+* `:name` will be a string.
+* `:type` will be an atom of either `:grass`, `:water`, or `:fire`
+* `:health` will be a float with a default value of `20.0`
+* `:attack` will be an integer with a default value of `5`
+* `:speed` will be an integer
+
+<div style="padding: 1rem; margin: 1rem 0; background-color: lightgreen; font-weight: bold;">
+You do not need to validate the data types for the keys above.
+These are simply the expected data types for each `Pokemon` struct instance.
+</div>
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%Pokemon{name: "Bulbasaur", type: :grass, health: 20, attack: 5, speed: 20}
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Pokemon.attack/2
+
+Create a Pokemon.attack/2 function to make one pokemon attack another.
+
+The pokemon will apply their `:attack` value multiplied by a **type advantage** modified according to the following list. **strong** attacks are multiplied by `2` and **weak** attacks are multiplied by `0.5`.
+
+* `:fire` is strong against `:grass`
+* `:grass` is strong against `:water`
+* `:water` is strong against `:fire`
+* `:fire` is weak against `:water`
+* `:grass` is weak against `:fire`
+* `:water` is weak against `:grass`
+* the same type should deal normal damage.
+
+For example:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+attacker = %Pokemon{name: "Charmander", type: :fire, health: 20.0, attack: 5, speed: 20}
+defender = %Pokemon{name: "Bulbasaur", type: :grass, health: 20.0, attack: 5, speed: 20}
+
+# Applies 5 * 2 Damage. Original Health: 20.0, New Health: 10.0.
+Pokemon.attack(attacker, defender)
+%Pokemon{name: "Bulbasaur", type: :grass, health: 10.0, attack: 5, speed: 20}
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+defmodule Pokemon do
+  defstruct [:name, :type, :health, :attack, :speed]
+
+  def attack(attacker, defender) do
+    damage = attacker.attack * modifier(attacker.type, defender.type)
+    %__MODULE__{defender | health: defender.health - damage}
+  end
+
+  defp modifier(attacker_type, defender_type) do
+    cond do
+      super_effective?(attacker_type, defender_type) -> 2
+      super_effective?(defender_type, attacker_type) -> 0.5
+      true -> 1
+    end
+  end
+
+  defp super_effective?(attacker_type, defender_type) do
+    {attacker_type, defender_type} in [{:fire, :grass}, {:grass, :water}, {:water, :fire}]
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule Pokemon do
+  @moduledoc """
+  Pokemon
+
+  ## Examples
+      iex> attacker = %Pokemon{name: "Charmander", type: :fire, health: 20.0, attack: 5, speed: 20}
+      iex> defender = %Pokemon{name: "Bulbasaur", type: :grass, health: 20.0, attack: 5, speed: 20}
+      iex> Pokemon.attack(attacker, defender)
+      %Pokemon{name: "Bulbasaur", type: :grass, health: 10.0, attack: 5, speed: 20}
+  """
+  defstruct []
+
+  def attack(attacker, defender) do
+  end
+end
+```
+
+Consider using the following Elixir cell to test your solution.
+
+```elixir
+
+```
+
+### Pokemon Instances
+
+Bind three variables `charmander`, `bulbasaur`, and `squirtle` to an instance of a `Pokemon` struct with the following information.
+
+```mermaid
+classDiagram
+  class charmander {
+    name: "Charmander"
+    type: :fire
+    health: 20.0
+    attack: 5
+    speed: 20
+  }
+  class bulbasaur {
+    name: "Bulbasar"
+    type: :grass
+    health: 20.0
+    attack: 5
+    speed: 20
+  }
+  class squirtle {
+    name: "Squirtle"
+    type: :water
+    health: 20.0
+    attack: 5
+    speed: 20
+  }
+```
+
+You may use these three structs to test your `Pokemon.attack/2` function.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+charmander = %Pokemon{name: "Charmander", type: :fire, health: 20, attack: 5, speed: 20}
+bulbasaur = %Pokemon{name: "Bulbasaur", type: :grass, health: 20, attack: 5, speed: 20}
+squirtle = %Pokemon{name: "Squirtle", type: :water, health: 20, attack: 5, speed: 20}
+
+# Testing Example
+Pokemon.attack(charmander, bulbasaur)
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Pokemon Battle exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Pokemon Battle">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/rpg_dialogue.livemd">RPG Dialogue</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/ranges.livemd">Ranges</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

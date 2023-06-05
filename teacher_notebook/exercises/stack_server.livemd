@@ -1,0 +1,125 @@
+# Stack Server
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Stack Server">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/score_tracker.livemd">Score Tracker</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/timer.livemd">Timer</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Stack
+
+You're going to create a `Stack` [GenServer](https://hexdocs.pm/elixir/GenServer.html).
+
+A stack is a common data structure similar to a list, however a stack can only **push** elements onto the top of the stack, and **pop** elements from the top of the stack.
+
+### Requirements
+
+* The initial stack state starts as an empty list `[]`.
+* Create the `push/2`, `pop/1`, and `start_link/1` functions as documented below.
+* Define the necessary server callbacks that update the stack's state.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+{:ok, pid} = Stack.start_link([])
+
+# Asynchronous
+:ok = Stack.push(pid, 1)
+:ok = Stack.push(pid, 2)
+:ok = Stack.push(pid, 3)
+
+# Synchronous
+3 = Stack.pop(pid)
+2 = Stack.pop(pid)
+1 = Stack.pop(pid)
+nil = Stack.pop(pid)
+```
+
+```elixir
+defmodule Stack do
+  @moduledoc """
+  iex> {:ok, pid} = Stack.start_link([])
+  iex> :ok = Stack.push(pid, 1)
+  iex> Stack.pop(pid)
+  1
+  iex> Stack.pop(pid)
+  nil
+  """
+
+  use GenServer
+
+  def start_link(_opts) do
+  end
+
+  def push(stack_pid, element) do
+  end
+
+  def pop(stack_pid) do
+  end
+
+  # Define the necessary Server callback functions:
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Stack Server exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Stack Server">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/score_tracker.livemd">Score Tracker</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/timer.livemd">Timer</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

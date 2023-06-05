@@ -1,0 +1,590 @@
+# Course Outline
+
+## Overview
+
+Use the following index to find reading material and exercises for this course.
+
+For new students, we recommend that you [start here](reading/start_here.livemd).
+
+## Elixir Fundamentals
+
+### Prerequisites
+
+* Install [Elixir](https://elixir-lang.org/install.html)
+* Install [Livebook](https://github.com/livebook-dev/livebook)
+* Install [Postgres](https://www.postgresql.org/download/) (optional to get started)
+* Install [Phoenix](https://hexdocs.pm/phoenix/installation.html) (optional to get started)
+* Setup [WSL with Visual Studio Code](https://code.visualstudio.com/docs/remote/wsl) (Windows Users Only)
+* Optionally Install [asdf](https://asdf-vm.com/guide/getting-started.html) to manage Elixir and Erlang versions.
+* Basic understanding of [Computer Hardware](reading/computer_hardware.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Course Tools
+
+* Reading
+  * [Command Line](reading/command_line.livemd)
+  * [Git](reading/git.livemd)
+  * [Livebook](reading/livebook.livemd)
+  * [Code Editors](reading/code_editors.livemd)
+  * [IEx](reading/iex.livemd)
+* Exercises
+  * [Command Line Family Tree](exercises/command_line_family_tree.livemd)
+  * [GitHub Engineering Journal](exercises/github_engineering_journal.livemd)
+  * Bonus: [GitHub Collab](exercises/github_collab.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Basics
+
+* Reading
+  * [Comments](reading/comments.livemd)
+  * [Arithmetic](reading/arithmetic.livemd)
+  * [Strings](reading/strings.livemd)
+  * [IO](reading/io.livemd)
+  * [Booleans](reading/booleans.livemd)
+  * [Comparison Operators](reading/comparison_operators.livemd)
+  * [Match Operator](reading/match_operator.livemd)
+* Exercises
+  * [Fun Formulas](exercises/fun_formulas.livemd)
+  * [Card Counting](exercises/card_counting.livemd)
+  * [Habit Tracker](exercises/habit_tracker.livemd)
+  * [Mad Libs](exercises/mad_libs.livemd)
+  * Bonus: [Guessing Games](exercises/guessing_games.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Data Structures And Intro To Pattern Matching
+
+* Reading
+  * [Atoms](reading/atoms.livemd)
+  * [Tuples](reading/tuples.livemd)
+  * [Lists](reading/lists.livemd)
+  * [Keyword Lists](reading/keyword_lists.livemd)
+  * [Maps](reading/maps.livemd)
+* Exercises
+  * [Shopping List](exercises/shopping_list.livemd)
+  * [Family Tree](exercises/family_tree.livemd)
+  * [Mazes](exercises/mazes.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Control Flow And Abstraction
+
+* Reading
+  * [Functions](reading/functions.livemd)
+  * [Control Flow](reading/control_flow.livemd)
+* Exercises
+  * [Naming Numbers](exercises/naming_numbers.livemd)
+  * [Rock Paper Scissors](exercises/rock_paper_scissors.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Modules And Structs
+
+* Reading
+  * [Modules](reading/modules.livemd)
+  * [Structs](reading/structs.livemd)
+* Exercises
+  * [Rock Paper Scissors Lizard Spock](exercises/rock_paper_scissors_lizard_spock.livemd)
+  * [RPG Dialogue](exercises/rpg_dialogue.livemd)
+  * Bonus: [Pokemon Battle](exercises/pokemon_battle.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Enumeration
+
+* Reading
+  * [Ranges](reading/ranges.livemd)
+  * [Enum](reading/enum.livemd)
+* Exercises
+  * [FizzBuzz](exercises/fizzbuzz.livemd)
+  * [Named Number Lists](exercises/named_number_lists.livemd)
+  * [Measurements](exercises/measurements.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Built-in Modules
+
+* Reading
+  * [Built-In Modules](reading/built-in_modules.livemd)
+* Exercises
+  * [Filter Values By Type](exercises/filter_values_by_type.livemd)
+  * [Tic-tac-toe](exercises/tic-tac-toe.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Comprehensions And Non-Enumerable Data Types
+
+* Reading
+  * [Enumerating on Non-Enumerables](reading/non_enumerables.livemd)
+  * [Comprehensions](reading/comprehensions.livemd)
+* Exercises
+  * [Palindrome](exercises/palindrome.livemd)
+  * [Anagram](exercises/anagram.livemd)
+  * [Comprehension Search](exercises/comprehension_search.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Reduce
+
+* Reading
+  * [Reduce](reading/reduce.livemd)
+* Exercises
+  * [Number Finder](exercises/number_finder.livemd)
+  * [Custom Enum With Reduce](exercises/custom_enum_with_reduce.livemd)
+  * Bonus: [Data Traversal](exercises/data_traversal.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Dates And Time
+
+* Reading
+  * [Dates and Times](reading/datetime.livemd)
+* Exercises
+  * [Time Converting](exercises/time_converting.livemd)
+  * [Itinerary](exercises/itinerary.livemd)
+  * Bonus: [Timeline](exercises/timeline.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### String Manipulation
+
+* Reading
+  * [Strings and Binaries](reading/strings_and_binaries.livemd)
+  * [Regex](reading/regex.livemd)
+* Exercises
+  * [Email Validation](exercises/email_validation.livemd)
+  * [Caesar Cypher](exercises/caesar_cypher.livemd)
+  * Bonus: [Rollable Expressions](exercises/rollable_expressions.livemd)
+  * Bonus: [Phone Number Parsing](exercises/phone_number_parsing.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Recursion
+
+* Reading
+  * [Recursion](reading/recursion.livemd)
+* Exercises
+  * [Fibonacci](exercises/fibonacci.livemd)
+  * [Lucas Numbers](exercises/lucas_numbers.livemd)
+  * Bonus: [Factorial](exercises/factorial.livemd)
+  * Bonus: [Pascals Triangle](exercises/pascals_triangle.livemd)
+
+## Mix Projects
+
+### Elixir Build Tooling
+
+* Reading
+  * [Mix](reading/mix.livemd)
+* Exercises
+  * [Games: Setup](exercises/games.livemd)
+  * [Games: Guessing Game](exercises/games_guessing_game.livemd)
+  * [Games: Rock Paper Scissors](exercises/games_rock_paper_scissors.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Testing With ExUnit
+
+* Reading
+  * [ExUnit](reading/exunit.livemd)
+* Exercises
+  * [Games: Wordle Application](exercises/games_wordle.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Documentation And Static Analysis
+
+* Reading
+  * [Documentation](reading/documentation_and_static_analysis.livemd)
+* Exercises
+  * Drills: [Typespecs](exercises/typespec_drills.livemd)
+  * [Games: Documentation and Static Analysis](exercises/games_documentation_and_static_analysis.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Executables
+
+* Reading
+  * [Executables](reading/executables.livemd)
+* Exercises
+  * [Games: Menu](exercises/games_menu.livemd)
+
+## Advanced Syntax
+
+### Advanced Pattern Matching
+
+* Reading
+  * [Advanced Pattern Matching](reading/advanced_pattern_matching.livemd)
+* Exercises
+  * [Drills: Pattern Matching](exercises/treasure_matching.livemd)
+  * [Replacing nils](exercises/drill-patternmatching-replace-nils.livemd)
+  * Bonus: [Metric Conversion](exercises/metric_conversion.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Guarding
+
+* Reading
+  * [Guards](reading/guards.livemd)
+  * [with](reading/with.livemd)
+* Exercises
+  * [Message Validation](exercises/message_validation.livemd)
+  * [User Validation](exercises/user_validation.livemd)
+  * [Math With Guards](exercises/math_with_guards.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Protocols
+
+* Reading
+  * [Protocols](reading/protocols.livemd)
+* Exercises
+  * [Math With Protocols](exercises/math_with_protocols.livemd)
+  * Bonus: [Battle Map](exercises/battle_map.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Persistence Using The File System
+
+* Reading
+  * [Streams](reading/streams.livemd)
+  * [File](reading/file.livemd)
+* Exercises
+  * Drills: [Streams](exercises/stream_drills.livemd)
+  * Drills: [File](exercises/file_drills.livemd)
+  * [Save Game](exercises/save_game.livemd)
+  * Bonus: [File System Todo App](exercises/file_system_todo_app.livemd)
+  * Bonus: [Document Tools](exercises/document_tools.livemd)
+  * Mastery: [File Search](exercises/file_search.livemd)
+
+## OTP
+
+### Processes
+
+* Reading
+  * [Processes](reading/processes.livemd)
+* Exercises
+  * Drills: [Process](exercises/process_drills.livemd)
+  * [Process Mailbox](exercises/process_mailbox.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### GenServers
+
+* Reading
+  * [GenServers](reading/genservers.livemd)
+* Exercises
+  * [Drills: GenServers](exercises/genserver_drills.livemd)
+  * [Score Tracker](exercises/score_tracker.livemd)
+  * [Stack Server](exercises/stack_server.livemd)
+  * [Timer](exercises/timer.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Testing GenServers
+
+* Reading
+  * [Testing GenServers](reading/testing_genservers.livemd)
+* Exercises
+  * [Stack GenServer Testing](exercises/stack.livemd)
+  * Bonus: [Traffic Light Server](exercises/traffic_light_server.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Supervisor Basics And Fault Tolerance
+
+* Reading
+  * [Supervisors](reading/supervisors.livemd)
+* Exercises
+  * Drills: [Supervisors](exercises/supervisor_drills.livemd)
+  * [Supervised Stack](exercises/supervised_stack.livemd)
+  * [Games: Supervised Score Tracker](exercises/games_supervised_score_tracker.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Concurrency With Tasks
+
+* Reading
+  * [Task](reading/task.livemd)
+  * [Task Supervisor](reading/task_supervisor.livemd)
+* Exercises
+  * Drills: [Tasks](exercises/task_drills.livemd)
+  * [Concurrent Word Count](exercises/concurrent_word_count.livemd)
+
+## Phoenix
+
+### HTML And CSS
+
+* Reading
+  * [HTML + CSS](reading/html_css.livemd)
+* Exercises
+  * [Common Components](exercises/common_components.livemd)
+  * Bonus: Play [FlexBox Froggy](https://flexboxfroggy.com/)
+  * Bonus: Play [Grid Garden](https://cssgridgarden.com/)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### APIs
+
+* Reading
+  * [APIs](reading/apis.livemd)
+* Exercises
+  * [Pokemon API](exercises/pokemon_api.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Relational Databases
+
+* Reading
+  * [Relational Database Management Systems](reading/rdbms.livemd)
+* Exercises
+  * [Drills: SQL Queries](exercises/sql_drills.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix
+
+* Reading
+  * [Phoenix 1.7](reading/phoenix_1.7.livemd)
+  * Bonus: [Web Servers](reading/web_servers.livemd)
+* Exercises
+  * Follow Along: [Phoenix Counter App](exercises/phoenix_follow_along_counter_app.livemd)
+  * Drills: [Phoenix](exercises/phoenix_drills.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Group Project Blog
+
+* [Group Project: Blog](exercises/group_project_blog.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix And Ecto
+
+* Reading
+  * [Phoenix and Ecto](reading/phoenix_and_ecto.livemd)
+* Exercises
+  * [Blog: Posts](exercises/blog_posts.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Testing Phoenix
+
+* Reading
+  * [Testing Phoenix](reading/testing_phoenix.livemd)
+* Exercises
+  * [Blog: Search](exercises/blog_search.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix Forms And Components
+
+* Reading
+  * [Phoenix Components](reading/phoenix_components.livemd)
+* Exercises
+  * [Blog: Visibility Migration](exercises/blog_migration.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix And Ecto One-to-Many Associations
+
+* Reading
+  * [One to Many Associations](reading/phoenix_one_to_many_associations.livemd)
+* Exercises
+  * [Blog: Comments](exercises/blog_comments.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix Authentication
+
+* Reading
+  * [Phoenix Authentication](reading/phoenix_authentication.livemd)
+* Exercises
+  * [Blog: Authentication](exercises/blog_authentication.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix And Ecto Many-to-Many Relationships
+
+* Reading
+  * [Many-to-Many Relationships](reading/phoenix_many_to_many_relationships.livemd)
+* Exercises
+  * [Blog: Tags](exercises/blog_tags.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Phoenix And Ecto One-to-One Relationships
+
+* Reading
+  * [One-to-One Relationships](reading/phoenix_one_to_one_relationships.livemd)
+* Exercise
+  * [Blog: Cover Image](exercises/blog_cover_image.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Tailwind
+
+* Reading
+  * [Tailwind](reading/tailwind.livemd)
+* Exercises
+  * [Blog: Home Page](exercises/blog_home_page.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Deployment
+
+* Reading
+  * [Deployment](reading/phoenix_deployment.livemd)
+* Exercise
+  * [Blog: Deployment](exercises/blog_deployment.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Custom Feature
+
+* [Blog: Custom Feature](exercises/blog_custom_feature.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Group Project Presentation
+
+* [Group Project: Presentation](exercises/group_project_blog_presentation.livemd)
+
+## Capstone Project Preparation
+
+### Capstone Project
+
+* Reading
+  * [Capstone Project: Guide](reading/capstone_project_guide.livemd)
+* Exercises
+  * [Capstone Project: GitHub Project](exercises/capstone_github_project.livemd)
+  * [Capstone Project: Entity-Relationship Diagram](exercises/capstone_entity_relationship_diagram.livemd)
+  * [Capstone Project: Design Mock](exercises/capstone_mock.livemd)
+
+## LiveView
+
+### LiveView
+
+* Reading
+  * [LiveView](reading/liveview.livemd)
+* Exercises
+  * [Follow Along: LiveView Counter](exercises/liveview_follow_along_counter.livemd)
+  * Bonus: [Math Game](exercises/math_game.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### LiveView And Ecto
+
+* Instruction
+  * [PicChat: Messages](reading/pic_chat_messages.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### LiveView Authentication
+
+* Instruction
+  * [PicChat: Authentication](reading/pic_chat_authentication.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### LiveView Image Uploads
+
+* Instruction
+  * [PicChat: Image Upload](reading/pic_chat_image_upload.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### PubSub
+
+* Instruction
+  * [PicChat: PubSub](reading/pic_chat_pub_sub.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### LiveView JS Interoperability And Pagination
+
+* Instruction
+  * [PicChat: Pagination and Infinite Scroll](reading/pic_chat_infinite_scroll.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Scheduling And Emailing With Swoosh And Oban
+
+* Instruction
+  * [PicChat: Emails](reading/picchat_emails.livemd)
+
+## Bonus Topics
+
+The following topics are not part of the DockYard Academy core curriculum, but serve as a bonus section for those interested in delving deeper into programming and Elixir.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Performance Optimization
+
+* Reading
+  * [Lists and Tuples](reading/lists_vs_tuples.livemd)
+  * [Maps, MapSets, and Keyword Lists](reading/maps_mapsets_keyword_lists.livemd)
+* Exercises
+  * [Drills: MapSets](exercises/mapset_drills.livemd)
+  * [Fibonacci Challenge](exercises/fibonacci_challenge.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Benchmarking And Performance
+
+* Reading
+  * [Big O Notation](reading/big_o_notation.livemd)
+  * [Benchmarking](reading/benchmarking.livemd)
+* Exercises
+  * [Custom Enum](exercises/custom_enum_with_recursion.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Ecto Changesets
+
+* Reading
+  * [Ecto Changeset](reading/ecto_changeset.livemd)
+* Exercises
+  * [Sign Up Form](exercises/sign_up_form.livemd)
+  * Bonus: [Book Changeset](exercises/book_changeset.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### State Management With Agents And ETS
+
+* Reading
+  * [State: Agent and ETS](reading/agents_and_ets.livemd)
+* Exercises
+  * [Agent Journal](exercises/agent_journal.livemd)
+  * [ETS Warehouse](exercises/inventory_management.livemd)
+  * Mastery: [Advanced Score Tracker](exercises/advanced_score_tracker.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Metaprogramming
+
+* Reading
+  * [Metaprogramming](reading/metaprogramming.livemd)
+* Exercises
+  * [Meta Math](exercises/meta_math.livemd)
+  * [Custom Assertions](exercises/custom_assertions.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Queues
+
+* Reading
+  * [Queues](reading/queues.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Worker Pools
+
+* [Worker Pools](reading/worker_pools.livemd)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Rubix Cube Project
+
+* [Rubix Cube](exercises/rubix_cube.livemd)

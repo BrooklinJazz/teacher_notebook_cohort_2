@@ -1,0 +1,182 @@
+# Rock Paper Scissors Lizard Spock
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rock Paper Scissors Lizard Spock">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/structs.livemd">Structs</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/rpg_dialogue.livemd">RPG Dialogue</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Rock Paper Scissors Lizard Spock
+
+<!-- livebook:{"attrs":{"source":"YouTube.new(\"https://www.youtube.com/watch?v=_PUEoDYpUyQ\")","title":"Rock Paper Scissors Lizard Spock. A Brief Introduction."},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+YouTube.new("https://www.youtube.com/watch?v=_PUEoDYpUyQ")
+```
+
+You're going to create a Rock Paper Scissors Lizard Spock game. Rock Paper Scissors Lizard Spock is a more complex adaptation of Rock Paper Scissors.
+
+The rules start the same as normal rock paper scissors.
+
+* Rock beats Scissors.
+* Paper beats Rock.
+* Scissors beats Paper.
+
+Then we add the following extra rules
+
+* Rock beats Lizard.
+* Lizard beats Spock.
+* Spock beats Scissors.
+* Scissors beats Lizard.
+* Lizard beats Paper.
+* Paper beats Spock.
+* Spock beats Rock.
+
+We'll represent these choices as atoms `:rock, :paper, :scissors, :lizard, :spock`.
+
+* Create a `beats?/2` function which determines if once choice beats another.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+RockPaperScissorsLizardSpock.beats?(:rock, :lizard) # true
+```
+
+* Create a `play/2` function which determines if player 1 or player 2 won the game.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+RockPaperScissorsLizardSpock.play(:rock, :lizard) # "Player 1 Wins!"
+RockPaperScissorsLizardSpock.play(:lizard, :rock) # "Player 1 Wins!"
+RockPaperScissorsLizardSpock.play(:lizard, :lizard) # "Draw!"
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+  def beats?(guess1, guess2) do
+    case {guess1, guess2} do
+      {:rock, :scissors} -> true
+      {:rock, :lizard} -> true
+      {:paper, :rock} -> true
+      {:paper, :spock} -> true
+      {:scissors, :paper} -> true
+      {:scissors, :lizard} -> true
+      {:lizard, :spock} -> true
+      {:lizard, :paper} -> true
+      {:spock, :scissors} -> true
+      {:spock, :rock} -> true
+      _answer -> false
+    end
+  end
+
+  def play(player1, player2) do
+    cond do
+      beats?(player1, player2) -> "Player 1 Wins!"
+      beats?(player2, player1) -> "Player 2 Wins!"
+      true -> "Draw"
+    end
+  end
+```
+
+</details>
+
+Implement the `RockPaperScissorsLizardSpock` module below.
+
+> `@doc` syntax runs tests on your code to provide feedback. However, be aware that for the sake of conciseness we do not always write fully comprehensive tests. You solution may pass tests, but be incomplete. You may press the dropdown button to hide the `@doc` documentation/tests.
+
+```elixir
+defmodule RockPaperScissorsLizardSpock do
+  @doc """
+  ## Examples
+
+      iex> RockPaperScissorsLizardSpock.beats?(:lizard, :spock)
+      true
+      iex> RockPaperScissorsLizardSpock.beats?(:lizard, :paper)
+      true
+      iex> RockPaperScissorsLizardSpock.beats?(:spock, :scissors)
+      true
+      iex> RockPaperScissorsLizardSpock.beats?(:spock, :rock)
+      true
+      iex> RockPaperScissorsLizardSpock.beats?(:spock, :paper)
+      false
+  """
+  def beats?(guess1, guess2) do
+  end
+
+  @doc """
+  ## Examples
+      
+      iex> "Player 1 Wins!" = RockPaperScissorsLizardSpock.play(:rock, :lizard)
+      iex> "Player 2 Wins!" = RockPaperScissorsLizardSpock.play(:lizard, :rock)
+      iex> "Draw!" = RockPaperScissorsLizardSpock.play(:lizard, :lizard)
+  """
+  def play(player1, player2) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Rock Paper Scissors Lizard Spock exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rock Paper Scissors Lizard Spock">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/structs.livemd">Structs</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/rpg_dialogue.livemd">RPG Dialogue</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

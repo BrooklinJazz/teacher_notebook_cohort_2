@@ -1,0 +1,337 @@
+# Keyword Lists
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Keyword Lists">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/lists.livemd">Lists</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/maps.livemd">Maps</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* What are keyword lists, and why might we want to store data in a key-value data structure?
+* How do we access a value in a keyword list?
+* How do we use list operators with keyword lists?
+* What is the internal representation of a keyword list in Elixir?
+
+## Keyword Lists
+
+Keyword lists are lists with keys. Each key associates with a value.
+
+```mermaid
+flowchart
+  key1: --> Value1
+  key2: --> Value2
+  key3: --> Value3
+```
+
+Keyword lists belong to a family of data types known as **associative data structures**.
+you'll also often hear it referred to as a **key-value data structure**.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Why Use A Keyword List?
+
+Keyword lists guarantee order, and are more performant to create than maps. They are performant for small amounts of data, but less performant for large amounts of data than maps.
+
+Therefore, we want to use a keyword lists for smaller amounts of data, or when our data should be ordered.
+
+For example, we might have a "top five playlist" of our favourite songs stored in a keyword list. The name could represent the song, and the value could represent the song for the artist.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+[artist1: "song 1", artist2: "song 2", artist3: "song 3", artist4: "song 4", artist5: "song 5"]
+```
+
+However, for a large playlist we might choose to use a [Map](./maps.livemd) since order doesn't matter, and we need the playlist to be performant for a large amount of data. We'll cover maps in the next lesson.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Map Example
+%{
+  artist1: "song 1"
+  artist2: "song 1"
+  artist3: "song 1"
+  artist4: "song 1"
+  artist5: "song 1"
+  artist6: "song 1"
+  ...
+}
+```
+
+Most commonly, keyword lists are used to provide a list of key-value options.
+
+For example, when we want to label some data, `IO.inspect` accepts a keyword lists of options. The `:label` option labels the data.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+IO.inspect("data", [label: "label for my data"])
+```
+
+When a keyword list is inside of a function, Elixir removes the square brackets so the above becomes the following when we format it.
+
+```elixir
+IO.inspect("data", label: "label for my data")
+```
+
+For a full list of options for `IO.inspect`, see: [Inspect.Opts](https://hexdocs.pm/elixir/Inspect.Opts.html)
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Breakdown Of Keyword Lists
+
+In Elixir, the key is an atom, and the value can be any data structure, even another keyword list.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+[key: "value"]
+[atom: "anything!"]
+["You can use quotes for the atom key!": ""]
+[snake_case_is_convention: ""]
+[ButThatIsNotEnforced: ""]
+```
+
+Keys in a keyword list do not have to be unique.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+[my_key: "value", my_key: "value"]
+```
+
+Elixir allows you to work with keyword lists in this nice `[key: "value"]` syntax. However,
+keyword lists are actually just a list of tuples where the first element is an atom.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+[{:key, "value"}]
+```
+
+In the Elixir cell below, you can see how Elixir converts lists of tuples matching the `{:atom, value}` syntax
+into a keyword list.
+
+```elixir
+[{:key, "value"}, {:key, "value"}]
+```
+
+If you break the convention in the keyword list, Elixir reverts to displaying
+the keyword list as a list of tuples.
+
+```elixir
+[{}, key: "value"]
+```
+
+The keyword list syntax must come at the end of a list, or we'll cause a [SyntaxError](https://hexdocs.pm/elixir/SyntaxError.html).
+
+```elixir
+[key: "value", ""]
+```
+
+List order is guaranteed, so the same is true for keyword lists.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+In the Elixir cell below, create a keyword list of your favourite super hero. Include their `:name` and `:secret_identity`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+[name: "Spiderman", secret_identity: "Peter Parker"]
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Accessing A Key
+
+We can access values in a keyword list by their associated key using square bracket `[key]` syntax where `key` is the atom key.
+
+```elixir
+keyword_list = [key: "value"]
+
+keyword_list[:key]
+```
+
+### Your Turn
+
+Access the `:hello` key in the following keyword list.
+
+```elixir
+keyword_list = [hello: "world"]
+```
+
+## Keyword List Operators
+
+We can also use `--` and `++` list operators with keyword lists.
+
+```elixir
+[one: 1, two: 2] -- [one: 1]
+```
+
+If you add a list to a keyword list, you'll notice that the keyword list element will
+evaluate as a tuple again. Remember that keyword lists are simply lists of tuples with an atom and a value.
+
+```elixir
+[one: 1] ++ [1]
+```
+
+### Your Turn
+
+In the Elixir cell below, use `++` to add `[one: 1]` to `[two: 2]` to make `[one: 1, two: 2]`.
+
+```elixir
+
+```
+
+Remove `[two: 2]` from `[one: 1, two: 2]` to make `[one: 1]`.
+
+```elixir
+
+```
+
+## Pattern Matching
+
+Much like with lists, we can use pattern matching to bind values in a keyword list to variables.
+
+```elixir
+[hello: my_variable] = [hello: "world"]
+
+my_variable
+```
+
+Much like a list, we must match on the entire keyword list, otherwise we'll cause a [MatchError](https://hexdocs.pm/elixir/MatchError.html).
+
+```elixir
+[one: one] = [one: 1, two: 2]
+```
+
+So long as we have a match for every element in the keyword list, we can use pattern matching.
+
+```elixir
+[one: one, two: two] = [one: 1, two: 2]
+```
+
+We can use the `[head | tail]` syntax to pattern match on the tail of the keyword list to avoid this issue.
+
+```elixir
+[head | _tail] = [one: 1, two: 2]
+
+head
+```
+
+If we want to pattern match on the keys in the list, we need to use the tuple syntax on the left hand side of the `=` match operator.
+
+```elixir
+[{key, value}] = [key: "value"]
+```
+
+```elixir
+key
+```
+
+```elixir
+value
+```
+
+### Your Turn
+
+Bind `1` in the following keyword list to a variable `one`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+[{_, one} | _tail] = [one: 1, two: 2, three: 3, four: 4]
+```
+</details>
+
+Enter your solution below.
+
+```elixir
+[one: 1, two: 2, three: 3, four: 4]
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [Elixir Lang: Keyword Lists](https://elixir-lang.org/getting-started/keywords-and-maps.html#keyword-lists)
+* [Elixir Schools: Keyword Lists](https://elixirschool.com/en/lessons/basics/collections#keyword-lists-5)
+* [HexDocs: Keyword](https://hexdocs.pm/elixir/Keyword.html)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Keyword Lists reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Keyword Lists">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/lists.livemd">Lists</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/maps.livemd">Maps</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

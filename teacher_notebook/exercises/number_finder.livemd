@@ -1,0 +1,139 @@
+# Number Finder
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Number Finder">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/reduce.livemd">Reduce</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/custom_enum_with_reduce.livemd">Custom Enum With Reduce</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Number Finder
+
+Create a `NumberFinder` module which can find the `smallest/1` number in a list, and the `largest/1` number in a list.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+NumberFinder.smallest([2, 3, 1])
+1
+
+NumberFinder.largest([2, 3, 1])
+3
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule NumberFinder do
+  def smallest(number_list) do
+    Enum.reduce(number_list, fn each, acc ->
+      min(each, acc)
+    end)
+  end
+
+  def largest(number_list) do
+    Enum.reduce(number_list, fn each, acc ->
+      max(each, acc)
+    end)
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule NumberFinder do
+  @doc """
+  Find the smallest number in a list
+
+  ## Examples
+
+    iex> NumberFinder.smallest([2, 3, 1])
+    1
+    iex> NumberFinder.smallest([2, 2, 3, 4])
+    2
+    iex> NumberFinder.smallest([2, 2, 3, 4, 10, 20, -3])
+    -3
+  """
+  def smallest(number_list) do
+  end
+
+  @doc """
+  Find the largest number in a list
+
+  ## Examples
+
+    iex> NumberFinder.largest([2, 3, 1])
+    3
+    iex> NumberFinder.largest([2, 2, 3, 4, 4])
+    4
+    iex> NumberFinder.largest([2, 2, 3, 4, 10, 20, -3])
+    20
+  """
+  def largest(number_list) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Number Finder exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Number Finder">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/reduce.livemd">Reduce</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/custom_enum_with_reduce.livemd">Custom Enum With Reduce</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

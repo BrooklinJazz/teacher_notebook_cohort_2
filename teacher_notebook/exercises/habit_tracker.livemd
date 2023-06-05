@@ -1,0 +1,224 @@
+# Habit Tracker
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Habit Tracker">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/card_counting.livemd">Card Counting</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/mad_libs.livemd">Mad Libs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Habit Tracker
+
+You are going to build some logic for a habit tracking app. Habit tracking apps such as [Habitica](https://habitica.com/) help users develop healthy habits.
+
+Each habit is assigned a size such as small, medium, or large. Each size is assigned a different point value. Users earn points based on the habits they complete.
+
+* A large habit is worth 30 points
+* A medium habit is worth 20 points
+* A small habit is worth 5 points.
+
+```mermaid
+flowchart
+  A["Large (30 points)"]
+  B["Medium (20 points)"]
+  C["Small (5 points)"]
+```
+
+## Bind Habit Variables
+
+Bind a variable `small`, `medium`, and `large` to represent the point value as an integer (see above) for each habit. You will use these variables in further solutions.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+large = 30
+medium = 20
+small = 5
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Small, Medium, Large
+
+Given a user has completed one small habit, one medium habit, and one large habit, use arithmetic operators and your previously bound variables `small`, `medium`, and `large` to determine how many points they have in total.
+
+```mermaid
+flowchart LR
+  A["Large (30 points)"]
+  B["Medium (20 points)"]
+  C["Small (5 points)"]
+  T[total?]
+  A --+--> B
+  B --+--> C
+  C --+--> T
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+small + medium + large
+```
+
+</details>
+
+Enter your answer in the code cell below.
+
+```elixir
+
+```
+
+## Multiples
+
+Given a user has completed **ten small** habits, **five medium** habits, and **three large** habits, use arithmetic operators to determine how many points they have in total.
+
+<details style="background-color: lightgreen; padding: 1rem;">
+<summary>Example solution</summary>
+
+```elixir
+small * 10 + medium * 5 + large * 3
+```
+
+</details>
+
+Enter your answer below.
+
+```elixir
+
+```
+
+## Progress Bar
+
+Users define a a `goal` number of points to earn each day. Determine what percentage progress have they made if they would like to earn `40` points and have completed a `small` and a `medium` habit.
+
+Remember that you can calculate percentage with $\frac{points}{goal} * 100$
+
+<details style="background-color: lightgreen; padding: 1rem;">
+<summary>Example solution</summary>
+
+```elixir
+goal = 40
+((small + medium) / goal) * 100
+```
+
+Or you might consider binding `points` as a variable.
+
+
+```elixir
+goal = 40
+points = small + medium 
+(points / goal) * 100
+```
+
+</details>
+
+Enter your answer below.
+
+```elixir
+
+```
+
+## Penalties And Rewards
+
+To motivate users to complete their habits quickly, we add a time-limit feature where users will receive a `60%` point bonus if they complete their habit early, and a `50%` point penalty if they complete their habit late.
+
+Determine the users total point score when they complete:
+
+* three early small habits
+* two normal medium habits
+* two late large habits
+
+<details style="background-color: lightgreen; padding: 1rem;">
+<summary>Example solution</summary>
+
+```elixir
+goal = 40
+
+small * 1.6 * 3 + medium * 2 + large * 2 * 0.5
+```
+
+</details>
+
+Enter your answer below.
+
+```elixir
+
+```
+
+## Bonus: Add Your Own Feature
+
+Add your own feature to the habit tracking app. Use comments to describe your feature and show
+how it would affect calculating the total score and/or the total percentage of completed habits.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Habit Tracker exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Habit Tracker">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/card_counting.livemd">Card Counting</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/mad_libs.livemd">Mad Libs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

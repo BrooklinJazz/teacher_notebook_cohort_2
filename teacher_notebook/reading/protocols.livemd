@@ -1,0 +1,336 @@
+# Protocols
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Protocols">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/math_with_guards.livemd">Math With Guards</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/math_with_protocols.livemd">Math With Protocols</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do you achieve data-based polymorphism using protocols?
+* Why might you use protocols instead of some control flow structure or some alternative means of achieving data-based polymorphism?
+
+## Protocols
+
+In English, a protocol means a set of rules or procedures. In Elixir, a protocol allows us to
+create a common functionality, with different implementations.
+
+Specifically, protocols enable polymorphic behavior based off of data.
+
+```mermaid
+flowchart
+  A -- data --> B
+  B --> C
+  B --> D
+  B --> E
+  B --> F
+
+  A[Caller]
+  B[Protocol]
+  C[Implementation]
+  D[Implementation]
+  E[Implementation]
+  F[Implementation]
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+For example, the [Enum](https://hexdocs.pm/elixir/Enum.html) module works with any collection data type. Under the hood, it uses the
+[Enumerable](https://hexdocs.pm/elixir/Enumerable.html) protocol.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+  E[Enum]
+  EN[Enumerable]
+  E --> EN
+  EN --> Map
+  EN --> List
+  EN --> k[Keyword List]
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+It then executes the appropriate instructions depending on which data type the [Enum](https://hexdocs.pm/elixir/Enum.html) function
+is called with.
+
+```elixir
+Enum.random(%{one: 1, two: 2})
+```
+
+```elixir
+Enum.random(1..20)
+```
+
+```elixir
+Enum.random(one: 1, two: 2)
+```
+
+## Protocols On Simple Data Types
+
+Anytime you need a common function for multiple data types or structs, you
+can consider a protocol.
+
+For example, let's create an `Adder` protocol
+that's going to add two values together. It will accept integers, strings, and lists
+and hide the specifics of which operator is necessary to add different types.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Adder.add(1, 2)
+3
+
+Adder.add("hello, ", "world")
+"hello, world"
+
+Adder.add([1], [2])
+[1, 2]
+```
+
+So if we give the protocol an integer, it will use the implementation for [Integer](https://hexdocs.pm/elixir/Integer.html).
+If we provide the protocol a string, it will use the implementation for `BitString`, and
+if we provide the protocol a list, it will use the implementation for [List](https://hexdocs.pm/elixir/List.html).
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+  A -- Integer --> B
+  B -- Integer --> C
+  B -- BitString --> D
+  B -- List --> E
+  style C color:green
+  style D color:red
+  style E color:red
+  A[Caller]
+  B[Adder Protocol]
+  C[Integer Implementation]
+  D[String Implementation]
+  E[List Implementation]
+```
+
+[List](https://hexdocs.pm/elixir/List.html), [Integer](https://hexdocs.pm/elixir/Integer.html), and `BitString` are all built-in Elixir modules used to define
+which data type the protocol implementation is for.
+
+We define a protocol using `defprotocol` and define a function clause. We only need the function
+head, not the function body.
+
+```elixir
+defprotocol Adder do
+  def add(value, value)
+end
+```
+
+We've defined a protocol above, but we haven't implemented it for any data type yet.
+
+Notice the error for `Adder.add/2` called with two integers says
+`protocol Adder not implemented for 1 of type Integer`
+
+```elixir
+Adder.add(1, 2)
+```
+
+To define an implementation for a protocol, we use `defimpl` and provide it the name of the protocol.
+We also declare what struct or data type the protocol is `for:`
+
+```elixir
+defimpl Adder, for: Integer do
+  def add(int1, int2) do
+    int1 + int2
+  end
+end
+
+Adder.add(1, 2)
+```
+
+We also want the `Adder` protocol to handle strings and lists. That means we need to create
+an implementation for List and String. In Elixir, the underlying type for strings is `BitString`.
+
+Why `BitString`? In Elixir, strings are stored as [bitstrings](https://elixir-lang.org/getting-started/binaries-strings-and-char-lists.html#bitstrings).
+
+```elixir
+defimpl Adder, for: BitString do
+  def add(string1, string2) do
+    string1 <> string2
+  end
+end
+
+Adder.add("hello, ", "world")
+```
+
+### Your Turn
+
+In the Elixir cell below, create an implementation of `Adder` for lists.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defimpl Adder, for: List do
+  def add(list1, list2) do
+    list1 ++ list2
+  end
+end
+```
+
+</details>
+
+```elixir
+
+```
+
+## Protocols With Structs
+
+We can create implementations for a protocol based on simple data types such as `integer` and `string`.
+In addition to those simple data types, we can also create an implementation for specific structs.
+
+For example, let's say we're making an old school kids toy that says different animal noises.
+
+we'll create a `Sound` protocol that prints different sounds depending on
+the struct given to it.
+
+```elixir
+defprotocol Sound do
+  def say(struct)
+end
+```
+
+We'll create a `Cat` struct.
+
+```elixir
+defmodule Cat do
+  defstruct [:mood]
+end
+```
+
+Then a `Cat` implementation for the `Sound` protocol.
+
+```elixir
+defimpl Sound, for: Cat do
+  def say(cat) do
+    case cat.mood do
+      :happy -> "Purr"
+      :angry -> "Hiss!"
+    end
+  end
+end
+```
+
+```elixir
+Sound.say(%Cat{mood: :happy})
+```
+
+```elixir
+Sound.say(%Cat{mood: :angry})
+```
+
+### Your Turn
+
+```elixir
+defmodule Dog do
+  defstruct []
+end
+```
+
+Define a `Sound` implementation for the `Dog` struct above.
+When `Sound.say/1` is called with a `Dog` struct it should return `"Woof!"`
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Sound.say(%Dog{})
+"Woof!"
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defimpl Sound, for: Dog do
+  def say(dog) do
+    "woof!"
+  end
+end
+```
+
+</details>
+
+```elixir
+
+```
+
+For more information, there is a talk by Kevin Rockwood.
+
+<!-- livebook:{"attrs":{"source":"YouTube.new(\"https://www.youtube.com/watch?v=sJvfCE6PFxY\")","title":"Kevin Rockwood | A Practical Guide to Elixir Protocols"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
+
+```elixir
+YouTube.new("https://www.youtube.com/watch?v=sJvfCE6PFxY")
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Protocols reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Protocols">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/math_with_guards.livemd">Math With Guards</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/math_with_protocols.livemd">Math With Protocols</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

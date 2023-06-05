@@ -1,0 +1,527 @@
+# Phoenix And Ecto
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phoenix And Ecto">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/group_project_blog.livemd">Group Project: Blog</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/blog_posts.livemd">Blog: Posts</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do we generate a resource in a Phoenix application?
+* Explain Contexts, Schemas, Migrations, and Repo.
+
+## Overview
+
+This is a companion reading for the [Blog: Posts](../exercises/blog_posts.livemd) exercise. This lesson is an overview of how to work with a database using Ecto in a Phoenix application.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Ecto
+
+[Ecto](https://hexdocs.pm/ecto/Ecto.html) provides a standard API layer for communicating with the database of an Elixir application.
+
+By default, [Ecto](https://hexdocs.pm/ecto/Ecto.html) uses a [PostgreSQL](https://www.postgresql.org/) Database. Ensure you already have [PostgreSQL](https://www.postgresql.org/) installed on your computer.
+
+[Ecto](https://hexdocs.pm/ecto/Ecto.html) splits into four main modules.
+
+* [Ecto.Repo](https://hexdocs.pm/ecto/Ecto.Repo.html) handles all communication between the application and the database. `Ecto.Repo` reads and writes from the underlying PostgreSQL database.
+* [Ecto.Query](https://hexdocs.pm/ecto/Ecto.Query.html) built queries to retrieve and manipulate data with the `Ecto.Repo` repository.
+* [Ecto.Schema](https://hexdocs.pm/ecto/Ecto.Schema.html) maps the application struct data representation to the underlying PostgreSQL database representation.
+* [Ecto.Changeset](https://hexdocs.pm/ecto/Ecto.Changeset.html) creates changesets for validating and applying constraints to structs.
+
+[Phoenix](https://hexdocs.pm/phoenix/Phoenix.html) uses [Ecto](https://hexdocs.pm/ecto/Ecto.html) to handle the data layer of a web application.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Domain
+
+In a Phoenix application, by default, there are four main modules responsible for managing business logic and the domain of our application. They are:
+
+* **Contexts**: They encapsulate specific domain areas, define the business logic and data access functions, and provide an API to expose functionality to other parts of the application.
+
+* **Schemas**: They define the structure of the data entities in the domain, including fields, types, and constraints.
+
+* **Repo**: It provides an abstraction layer for interacting with the database, encapsulating queries, and providing a clean interface to perform CRUD operations on the entities defined in **Schema** modules.
+
+* **Migrations**: They define changes to the database schema over time, such as creating or updating tables and columns.
+
+Together, these modules provide a way to model the business logic and data entities in the application and work with a database. Note that we are not limited to these modules, but this is how Phoenix organizes an application by default.
+
+## Generators
+
+We can define all of the necessary modules and boilerplate for part of our domain using the phoenix generators.
+
+For example, we could generate posts in a blog project with the following command.
+
+```
+mix phx.gen.html Posts Post posts title:string body:text
+```
+
+The command above would to the following:
+
+* Create a **Posts** context.
+* Create a **Post** schema
+* Creates a **posts** table in the database with the `title:string` and `body:text` fields. See the [Attributes](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Schema.html#module-attributes) documentation for a complete list of attribute types.
+
+It also generates boilerplate for the web layer of our application including the controller, component, and template. It does not generate routes for our router though, as these have to be manually inserted.
+
+See [mix phx.gen](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.html) for a complete list of phoenix generators.
+
+## Context
+
+Phoenix contexts are a way of organizing related functionality in a Phoenix application. Each context represents a coherent set of operations that relate to a specific domain or aspect of the application's functionality.
+
+For example, we might have a `Blog` application with a `Posts` context that manages all operations for creating, editing, and deleting blog posts.
+
+Here's an example context module for a `Posts` context. We can see functions work with the `Post` context and the `Repo` module to retrieve, create, edit, and delete posts in the database.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule Blog.Posts do
+  import Ecto.Query, warn: false
+  alias Blog.Repo
+
+  alias Blog.Posts.Post
+
+  def list_posts do
+    Repo.all(Post)
+  end
+
+  def get_post!(id), do: Repo.get!(Post, id)
+
+  def create_post(attrs \\ %{}) do
+    %Post{}
+    |> Post.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_post(%Post{} = post, attrs) do
+    post
+    |> Post.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_post(%Post{} = post) do
+    Repo.delete(post)
+  end
+
+  def change_post(%Post{} = post, attrs \\ %{}) do
+    Post.changeset(post, attrs)
+  end
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Ecto.Query
+
+`Ecto.Query` is imported in the example above. Contexts often work with `Ecto.Query` when writing queries for retrieving and manipulating data in a database.
+
+Here's an example query that allows us to filter a list of posts query by a case insensitive and partially matching `title` field.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def list_posts(title) do
+  search = "%#{title}%"
+  query = from p in Post, where: ilike(p.title, ^search)
+
+  Repo.all(query)
+end
+```
+
+[ilike](https://hexdocs.pm/ecto/Ecto.Query.API.html#ilike/2) allows us to search a case insensitive string. The `%` symbol acts as a wildcard to find partially matching searches.
+
+[from/2](https://hexdocs.pm/ecto/Ecto.Query.html#from/2) selects the table to query, and [where/3](https://hexdocs.pm/ecto/Ecto.Query.html#where/3) filters the list of results.
+
+Ecto allows for a pipeable syntax that some developers prefer. For example, the above could also be written as:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+  def list_posts(title) do
+    search = "%#{title}%"
+    Post
+    |> where([p], ilike(p.title, ^search))
+    |> Repo.all()
+  end
+```
+
+## Schema
+
+In Ecto, a schema is a module that defines the structure and properties of a database table. The schema maps the fields of the table to the fields of the struct in the module, and it also defines any constraints or validations on those fields.
+
+Here's an example of a `Post` schema that defines a post with `title`, `subtitle`, and `content` fields. We also see the `changeset/2` function used to define a `Post` changeset used with the `Repo` module earlier in the `Posts` context when creating or updating data.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule Blog.Posts.Post do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "posts" do
+    field :content, :string
+    field :subtitle, :string
+    field :title, :string
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(post, attrs) do
+    post
+    |> cast(attrs, [:title, :subtitle, :content])
+    |> validate_required([:title, :subtitle, :content])
+  end
+end
+```
+
+The [Ecto.schema/2](https://hexdocs.pm/ecto/Ecto.Schema.html#schema/2) and [field/3](https://hexdocs.pm/ecto/Ecto.Schema.html#field/3) macros define the fields and the data types of those fields. The Schema maps the fields of the PostgreSQL table into valid Elixir terms in a `Post` struct to make records in the database elixir-friendly when we work with them. You can find the full list of valid field types at [Ecto.Schema: Types and casting](https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-casting).
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Validations And Constraints
+
+Validations ensure data is valid before entering the database. Constraints are rules enforced by the database.
+
+For example, the [validate_required/3](https://hexdocs.pm/ecto/Ecto.Changeset.html#validate_required/3) validates that a field exists before inserting it into the database.
+
+However, we might add a [unique_constraint](https://hexdocs.pm/ecto/Ecto.Changeset.html#unique_constraint/3) that ensures a title is unique when compared with other posts in the database. This requires querying the database under the hood.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def changeset(post, attrs) do
+    post
+    |> cast(attrs, [:title, :subtitle, :content])
+    |> validate_required([:title, :subtitle, :content])
+    |> unique_constraint(:title)
+  end
+```
+
+## Migration
+
+Migrations are used to make changes to a database schema over time, as the requirements of an application evolve. Here's an example of a `CreatePosts` migration that would create a `posts` table in the database.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule Blog.Repo.Migrations.CreatePosts do
+  use Ecto.Migration
+
+  def change do
+    create table(:posts) do
+      add :title, :string
+      add :subtitle, :string
+      add :content, :text
+
+      timestamps()
+    end
+    create unique_index(:posts, [:title])
+  end
+end
+```
+
+The [Ecto.Migration](https://hexdocs.pm/ecto_sql/Ecto.Migration.html) module provides functions for manipulating tables and fields in a table. The [create/2](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#create/2) macro creates a new table in the database and the [add/3](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#add/3) adds a new column to the table.
+
+You can use any of the [Elixir Primitive Types](https://hexdocs.pm/ecto/Ecto.Schema.html#module-primitive-types) and they will be converted to the appropriate [Field Type](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#module-field-types) for your database.
+
+Some database field types which are not Elixir primitive types such as `:text` can be given directly.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Generating Migrations
+
+Migrations should always be generated rather than manually created to add a timestamp to the migration file. For example, the example above might be in a file `priv/repo/migrations/20230508221034_create_posts.ex`
+
+Migrations can be created individually using the [mix ecto.gen.migration](https://hexdocs.pm/ecto_sql/Mix.Tasks.Ecto.Gen.Migration.html) command with the name of the migration.
+
+Here's an example where `create_posts` is the name of the migration.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+$ mix ecto.gen.migration create_posts
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Running Migrations
+
+Migrations are run in chronological order based on the timestamp, so they can be run or reset anytime using the following commands:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Run Migrations
+$ mix ecto.migrate
+
+# Reset The Database And Re-run Migrations
+$ mix ecto.reset
+```
+
+You can also rollback migrations with [mix ecto.rollback](https://hexdocs.pm/ecto_sql/Mix.Tasks.Ecto.Rollback.html). There are options that allow you to rollback specific migrations.
+
+```
+$ mix ecto.rollback
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Manipulating Tables
+
+Ecto provides functions for manipulating tables in a database. Here are a few common functions:
+
+* [create/2](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#create/2): creates a new table in the database
+* [alter/2](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#alter/2): modifies an existing table in the database
+* [rename/2](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#rename/2): renames an existing table in the database
+* [drop/2](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#drop/2): removes an existing table from the database
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Manipulating Fields
+
+[Ecto.Migration](https://hexdocs.pm/ecto_sql/Ecto.Migration.html) provides functions for manipulating fields in a table. Here are a few to get you started.
+
+* [add/3](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#add/3) adds a new field to the table.
+* [modify/2](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#modify/3) modifies an existing field in the table.
+* [remove/2](https://hexdocs.pm/ecto/Ecto.Migration.html#remove/1) removes an existing field from the table.
+
+Here is an example migration that uses some of these Ecto functions to manipulate fields on a table:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule MyApp.Repo.Migrations.AlterUsersTable do
+  use Ecto.Migration
+
+  def change do
+    alter table(:users) do
+      add :phone, :string
+
+      modify :email, :string, unique: true
+      modify :name, :string, null: false
+
+      remove :age
+    end
+  end
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Schemas Reflect Migrations
+
+The schema maps the fields of our database table into Elixir data. A migration may involve changing the data type or structure of an existing column, which would in turn require updating the schema to reflect these changes. Always ensure the schema reflects the latest version of a table in the database.
+
+## Query
+
+The [Ecto.Query](https://hexdocs.pm/ecto/Ecto.Query.html) module defines functions for creating database queries. Queries themselves do not manipulate data in the database, but are instead a set of instructions to perform some operation in the database typically provided the [Ecto.Repo](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert/2) that performs the actual work on the Database.
+
+Here are some common functions:
+
+* [from/2](https://hexdocs.pm/ecto/Ecto.Query.html#from/2): Defines the table or tables to query
+* [where/3](https://hexdocs.pm/ecto/Ecto.Query.html#where/3): Specifies a condition that records must meet to be included in the query results.
+* [order_by/3](https://hexdocs.pm/ecto/Ecto.Query.html#order_by/3): Sorts the query results by one or more fields.
+* [select/3](https://hexdocs.pm/ecto/Ecto.Query.html#select/3): Specifies which fields to include in the query results.
+* [type](https://hexdocs.pm/ecto/Ecto.Query.API.html#type/2): Returns a new query object with a specific type. Often useful when providing Elixir terms in queries to convert them into a database type.
+
+Here's an example query using keyword list syntax. The `^` symbol is used to inject Elixir terms into a database query. Elixir terms must be bound to a variable to inject them.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+search = "%#{title}%"
+
+today = DateTime.utc_now()
+
+query =
+  from(p in Post,
+    where: ilike(p.title, ^search),
+    where: p.visible,
+    where: p.published_on <= type(^today, :utc_datetime),
+    order_by: [desc: p.published_on]
+  )
+```
+
+The same query could be written using an alternative [pipe-based syntax](https://hexdocs.pm/ecto/Ecto.Query.html#module-macro-api) like so:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+query =
+  Post
+  |> where([p], ilike(p.title, ^search))
+  |> where([p], p.visible)
+  |> where([p], p.published_on <= type(^today, :utc_datetime))
+  |> order_by([p], desc: p.published_on)
+```
+
+## Repo
+
+The [Ecto.Repo](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert/2) module defines functions for working with the database. Anytime we need to manipulate records in the database we work with the `Repo` module.
+
+Here are some common functions:
+
+* [Repo.all](https://hexdocs.pm/ecto/Ecto.Repo.html#c:all/2): get all records.
+* [Repo.get!](https://hexdocs.pm/ecto/Ecto.Repo.html#c:get!/3): get one record.
+* [Repo.insert/2](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert/2): insert a record.
+* [Repo.update](https://hexdocs.pm/ecto/Ecto.Repo.html#c:update/2): update existing record.
+* [Repo.delete](https://hexdocs.pm/ecto/Ecto.Repo.html#c:delete/2): delete record.
+
+These cover the full range of CRUD (create, read, update, delete) actions. Typically these functions will work in combination with the Schema module that defines a struct and a schema.
+
+For example, here's an example of how we use a `Post` struct to create a changeset that is then passed to the `Repo.insert/2` function to insert a new post into the database.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%Post{}
+|> Post.changeset(%{title: "some title", subtitle: "some subtitle" content: "some content"})
+|> Repo.insert()
+```
+
+## Entity Relationship Diagrams
+
+Projects often use Entity Relationship Diagrams or UML (Unified Modelling Language) diagrams of some kind to represent the data layer of the application.
+
+Livebook let's us write Entity Relationship Diagrams directly. See [Mermaid: Entity Relationship Diagrams](https://mermaid.js.org/syntax/entityRelationshipDiagram.html) for an overview of the syntax.
+
+It's important to be able to read these diagrams. Here's an example:
+
+```mermaid
+erDiagram
+
+Comment {
+  id post_id
+  text content
+}
+
+Post {
+  string title
+  text content
+  date published_on
+  boolean visibility
+}
+
+Post ||--O{ Comment : "has many"
+```
+
+The above diagram describes both the fields and types of the data, as well as the associations between data.
+
+The pipe `||` in the line between `Post` and `Comment` represents **one** and the triple-lined-arrow with a circle represents **zero or more**. This describes the **one to many** relationship between posts and comments.
+
+The `post_id` field isn't strictly necessary given the diagram arrow implies the child contains a foreign key id but we've included it for sake of clarity.
+
+## Seeding
+
+Phoenix projects include a `priv/repo/seeds.exs` file for creating data (seeding) the database.
+
+The `seed.exs` file can be run with the following command from the project folder:
+
+```
+mix run priv/repo/seeds.exs
+```
+
+Typically seed files work with the `Repo` module or functions in contexts to create data for manual testing purposes.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Blog.Repo.insert!(%Blog.Posts.Post{
+  title: "Some Title",
+  subtitle: "Some Subtitle",
+  content: "Some Content",
+})
+
+Blog.Posts.create_post(%{
+  title: "Some Title",
+  subtitle: "Some Subtitle",
+  content: "Some Content",
+})
+```
+
+Seed files should not be run in the test environment, as they can interfere with test assertions.
+
+Seeds files are automatically run when resetting the database.
+
+```
+mix ecto.reset
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [Phoenix Generators: mix phx.gen](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.html#content)
+* [Phoenix HTML Generator: mix phx.gen.html](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.html#content)
+* [Phoenix Schema Generator Types](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Schema.html#module-attributes)
+* [Pragmatic Bookshelf: Programming Ecto](https://pragprog.com/titles/wmecto/programming-ecto/)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Phoenix And Ecto reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Phoenix And Ecto">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/group_project_blog.livemd">Group Project: Blog</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/blog_posts.livemd">Blog: Posts</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

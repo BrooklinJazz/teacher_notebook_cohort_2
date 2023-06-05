@@ -1,0 +1,111 @@
+# Blog: Seeding
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Blog: Seeding">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/book_search_seeding.livemd">BookSearch: Seeding</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/book_search_book_form.livemd">Book Search: Book Form</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Blog: Seeding
+
+You're going to create a seed file for your existing [Blog](./group_project_blog.livemd) project. This seed file will make it easier to manually test your blog application.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Blog: Seeding
+
+Use the `priv/repo/seeds.exs` file to seed your database with:
+
+1. A blog post without any comments.
+2. A blog post with an associated comment.
+
+Once complete, use your seed file to seed the database.
+
+```
+$ mix ecto.reset
+```
+
+Then display comments on your `Post` show page.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Bonus: Faker
+
+Add [Faker](https://hexdocs.pm/faker/readme.html) as a dependency in your project.
+
+Then use Faker to create a post with a large amount of text and a comment with a large amount of text.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Bonus: Create 100 Posts
+
+Create a new seed file that will generate 100 posts.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Bonus: Create A Post With 100 Comments
+
+Create a new seed file that will generate a post with 100 comments.
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Blog: Seeding exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Blog: Seeding">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/book_search_seeding.livemd">BookSearch: Seeding</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/book_search_book_form.livemd">Book Search: Book Form</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

@@ -1,0 +1,615 @@
+# LiveView
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=LiveView">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/capstone_mock.livemd">Capstone Project: Mock</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/liveview_follow_along_counter.livemd">Follow Along: LiveView Counter</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do we mount a LiveView on a given route in the router?
+* What is the lifecycle of a LiveView?
+* How is information stored and set in the socket?
+* How do we send messages to a LiveView and handle them?
+* How do we test a LiveView?
+
+## Overview
+
+### Phoenix LiveView
+
+[Phoenix.LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html) is an alternative to the [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern (sometimes called deadviews).
+
+LiveViews deviate from the typical request/response pattern where the client is responsible for initiating all interactions with a server.
+
+Instead, the establish a two-way [network socket](https://en.wikipedia.org/wiki/Network_socket) connection that allow the client and server to exchange information back and forth. This enables real-time "live" communication between the client and server and enables features that would be difficult to accomplish with the traditional request/response pattern.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+C1[Client]
+C2[Client]
+S1[Server]
+S2[Server]
+
+subgraph LiveView
+  C2 <--socket--> S2
+end
+
+subgraph Request/Response
+  C1 --request--> S1
+  S1 --response--> C1
+end
+```
+
+## LiveView Processes
+
+LiveViews are processes implemented with [GenServer](https://hexdocs.pm/elixir/GenServer.html). For every client, the server spawns a LiveView process which maintains state and can send and receive messages. The LiveView stores the state in a [socket assigns](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Socket.html) struct.
+
+Phoenix starts each LiveView Process under the application's `Superisor`. The [Supervisor](https://hexdocs.pm/elixir/Supervisor.html) restarts the LiveView in the event of a crash.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart
+Supervisor
+C1[Client]
+C2[Client]
+C3[Client]
+L1[LiveView]
+L2[LiveView]
+L3[LiveView]
+
+Supervisor --> L1
+Supervisor --> L2
+Supervisor --> L3
+L1 --socket.assigns--> C1
+L2 --socket.assigns--> C2
+L3 --socket.assigns--> C3
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+By using OTP processes/supervisors, LiveViews are excellent for stateful interactions and real-time fault-taulerant systems.
+
+## LiveView Life-Cycle
+
+There are five main steps to a LiveView connection life-cycle.
+
+1. a client makes an HTTP GET request to our server.
+2. The LiveView mounts and starts under our application's supervision tree.
+3. The LiveView sends the initial HTML response to the client.
+4. The client connects to the LiveView through a two-way socket connection.
+5. The LiveView establishes a stateful connection and re-mounts.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+sequenceDiagram
+    Client->>LiveView: GET /page_url
+    LiveView-->>LiveView: mount/3
+    LiveView->>Client: render HTML
+    Client-->>LiveView: connect to socket
+    LiveView-->>LiveView: mount/3
+    LiveView-->>Client: establish stateful connection
+```
+
+## Live Route
+
+The [live/4](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Router.html#live/4) macro defines a live view route.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+scope "/", AppWeb do
+  pipe_through :browser
+
+  live "/", ExampleLive
+end
+```
+
+Unlike Controller actions which often correspond to a single URL, A single LiveView might handle many different urls with different live_actions that alter how the LiveView renders UI in some meaningfully way.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+live "/new", ExampleLive.Index, :new
+live "/:id/edit", ExampleLive.Index, :edit
+```
+
+## Creating A LiveView
+
+Phoenix LiveViews define a [mount/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:mount/3)  callback that initializes the LiveView.
+
+The [mount/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:mount/3) callback accepts three parameters
+
+1. `params` contains public information that can be set by the user such as query params and router path parameters.
+2. `session` contains session information specific to the current client. For example, this contains the [cross-site request forgery token](https://en.wikipedia.org/wiki/Cross-site_request_forgery).
+3. `socket` A [Phoenix.LiveView.Socket](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Socket.html) that contains the state of the LiveView and other socket information.
+
+Phoenix LiveViews also define a [render/1](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:render/1) callback that renders a template. The [render/1](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:render/1) callback is invoked whenever the LiveView detects new content to render and send to the client.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.MountLiveExample do
+  use AppWeb, :live_view
+
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok, socket}
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    Hello World!
+    """
+  end
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### [Cross-site Request Forgery (CSRF) Token](https://en.wikipedia.org/wiki/Cross-site_request_forgery)
+
+Cross-Site Request Forgery (CSRF) is an attack where a user is tricked into performing unwanted actions on a web application they are authenticated on. CSRF tokens protect web applications from CSRF attacks. These tokens are random, unique strings that are generated by the server and included in the HTML of web pages served to users. When a user submits a request to the server, the server checks for the presence of a CSRF token in the request. If the token is not present or is invalid, the request is rejected.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%{"_csrf_token" => "cOO0xNX3-Ifc34aicN7UqAc5"}
+```
+
+In Phoenix, the Cross-site Request Forgery Token is set in `root.html.heex`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+<meta name="csrf-token" content={csrf_token_value()}>
+```
+
+The token is then retrieved and stored in the LiveSocket in `assets/app.js`.
+
+```javascript
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+```
+
+## Connected Vs Disconnected Mount
+
+The LiveView performs a **disconnected mount** to send the initial HTML response, and then performs a **connected mount** to establish the live socket.
+
+We can use the [connected?/1](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#connected?/1) function to check if the socket is connected to avoid performing actions twice. This is often useful for things like animations or loading data that we don't want to perform twice.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.MountLiveExample do
+  use AppWeb, :live_view
+
+  @impl true
+  def mount(_params, _session, socket) do
+    if connected?(socket) do
+      IO.puts("CONNECTED")
+    else
+      IO.puts("DISCONNECTED")
+    end
+    {:ok, socket}
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    Hello World!
+    """
+  end
+end
+```
+
+## Events
+
+The client sends messages to the LiveView typically through `phx-` bindings on HTML elements such as `phx-click` that sends a message to the LiveView when an element is clicked.
+
+These events are handled by a [handle_event/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:handle_event/3) callback function.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.EventExampleLive do
+  use AppWeb, :live_view
+
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok, socket}
+  end
+  
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <button phx-click="event_name">click me!</button>
+    """
+  end
+
+  @impl true
+  def handle_event("event_name", _params, socket) do
+    # handle
+    {:noreply, socket}
+  end
+end
+```
+
+See [Bindings](https://hexdocs.pm/phoenix_live_view/bindings.html) And [Form Bindings](https://hexdocs.pm/phoenix_live_view/form-bindings.html) for a full list of events.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Event Callbacks
+
+LiveViews are built with [GenServer](https://hexdocs.pm/elixir/GenServer.html) under the hood, so they can receive messages and handle them with the usual GenServer callback functions. See [Event Callbacks](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#callbacks) for more information.
+
+## Updating State
+
+The using the [assign/2](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#assign/2) or [assign/3](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#assign/3) function take a socket and update the socket's state.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+assign(socket, :field, "value")
+# Assign/2 Makes It Easier To Update Multiple Fields In State.
+assign(socket, field1: "value", field2: "value)
+```
+
+The [mount/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:mount/3) callback defines a LiveView's initial state.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@impl true
+def mount(_params, _session, socket) do
+  {:ok, assign(socket, :some_field, "initial value")}
+end
+```
+
+Event handlers can update a LiveViews state.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@impl true
+def handle_event("event_name", _params, socket) do
+  {:noreply, assign(socket, :some_field, "some value")}
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Re-rendering Diffs
+
+When a LiveView's state changes, LiveView updates the page in real-time by only changing the parts that need to be changed. These changes are called **diffs** (differences) and significantly improve LiveView's performance.
+
+This means we don't need to re-render the entire page as we often do with typical controller views.
+
+## Live Navigation
+
+### Live Action
+
+LiveView routes can be defined with a `live_action` atom. Multiple routes can be handled by the same LiveView, typically with different live actions.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+live "/new", ExampleLive, :new
+live "/edit", ExampleLive, :edit
+```
+
+This live action will be bound to `socket.assigns.live_action` in the LiveView. It's often used to display different UIs in the same LiveView.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.ExampleLive do
+  use AppWeb, :live_view
+
+  def mount(_params, _session, socket) do
+    {:ok, socket}
+  end
+
+  def render(assigns) do
+    ~L"""
+    <%= if @live_action == :new do %>
+      <h1>New</h1>
+    <% end %>
+    <%= if @live_action == :edit do %>
+      <h1>Edit</h1>
+    <% end %>
+    """
+  end
+
+  def handle_event("increment", _, socket) do
+    {:noreply, assign(socket, count: socket.assigns.count + 1)}
+  end
+end
+
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Live Navigation
+
+LiveView allows for page navigation without fully reloading the page.
+
+You can trigger live navigation in two ways:
+
+1. From the client: By using [Phoenix.Component.link/1](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#link/1) and passing either `patch={url}` or `navigate={url}`.
+
+2. From the server: By using [Phoenix.LiveView.push_patch/2](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#push_patch/2) or [Phoenix.LiveView.push_navigate/2](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#push_navigate/2).
+
+patch and redirect/navigate serve different purposes.
+
+* **patch**: re-render the current LiveView with different parameters. This triggers the [handle_params/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:handle_params/3) callback but does not re-mount the LiveView.
+* **navigate**: redirects to a different LiveView. This will dismount the current LiveView and [mount/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:mount/3) the new LiveView.
+
+See [HexDocs: LiveNavigation](https://hexdocs.pm/phoenix_live_view/live-navigation.html) for a full explanation.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Handle Params
+
+The [handle_params/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html#c:handle_params/3) callback is invoked after mount whenever a patch event occurs.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def handle_params(_params, _url, socket) do
+  {:noreply, socket}
+end
+```
+
+It's often used to update the socket's state based on url parameters or the `live_action` provided by the router, which alters what the LiveView renders.
+
+## Forms
+
+Phoenix LiveView 18 introduced the [to_form/2](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#to_form/2) function to create a [Phoenix.HTML.Form](https://hexdocs.pm/phoenix_html/3.3.0/Phoenix.HTML.Form.html) struct that defines a form's fields.
+
+The [to_form/2](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#to_form/2) function accepts a string-key map or a changeset for the form.
+
+Forms typically send a `phx-change` event that triggers every time a field changes, and a `phx-submit` event every time the form is submitted. Typically we trigger validation on change, and create or update data in the database upon submission.
+
+Here's an example of defining a form with a `phx-submit` and a `phx-change` binding and event handler.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule AppWeb.FormExampleLive do
+  use AppWeb, :live_view
+
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, form: to_form(%{"name" => "initial value"}))}
+  end
+
+  def render(assigns) do
+    ~H"""
+    <.simple_form for={@form} phx-change="validate" phx-submit="submit">
+      <.input field={@form[:name]} label="Name"/>
+      <:actions>
+        <.button>Submit</.button>
+      </:actions>
+    </.simple_form>
+    """
+  end
+
+  def handle_event("validate", params, socket) do
+    # typically the phx-change event is used for live validation of form data
+    {:noreply, socket}
+  end
+
+  def handle_event("submit", params, socket) do
+    # socket.assigns.form preserves the form values in state
+    # this avoids clearing the form
+    {:noreply, assign(socket, form: to_form(params))}
+  end
+end
+```
+
+`params` will match the shape of the form data.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%{"name" => "some name"}
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Validating Data
+
+Forms that use a changeset will rely on the changeset for error handling. Forms that use a `map` can provide an optional `:errors` list to the `to_form/2` function.
+
+Here's an example of providing errors to a `params` map.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+assign(socket, form: to_form(params, errors: [name: {"Must be less than 20 characters", []}]))
+```
+
+## LiveView Testing
+
+### Mounting A LiveView In A Test
+
+[LiveView Testing](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#content)
+
+We can mount a LiveView in a test using the [live/2](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#live/2) macro. This mounts the LiveView process and returns the `html` and the LiveView process (`view`) in a tuple for use in the test.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+{:ok, _view, html} = live(conn, "/hello")
+```
+
+The rendered html used in assertions.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+assert html =~ "Hello, World!"
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Testing A LiveView
+
+As with all tests, test modules are typically defined in a corresponding file in the `tests` folder of a phoenix application. For example a module in `lib/app_web/live/example_live.ex` would be tested in `test/app_web/live/example_live.ex`.
+
+Phoenix provides the [LiveViewTest](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html) module for testing LiveViews. Broadly speaking, these functions select elements, trigger events, and return the HTML response for assertion purposes.
+
+Here are a few commonly used functions:
+
+* [element/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#element/3) select an element.
+* [form/3](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#form/3) select a form element.
+* [render/1](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#render/1) render the HTML of an element or the entire view.
+* [render_click/2](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#render_click/2) return the HTML response of a LiveView after clicking an element.
+* [render_submit/2](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#render_submit/2) submit a form and return the HTML response of a LiveView after submission.
+
+We can use these functions to simulate user interaction with a LiveView.
+
+Here's an example test for a click event, and for a form submission.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule LiveViewCounterWeb.CounterLiveTest do
+  use LiveViewCounterWeb.ConnCase, async: true
+  import Phoenix.LiveViewTest
+
+  test "increment count", %{conn: conn} do
+    {:ok, view, html} = live(conn, "/")
+    assert html =~ "Count: 0"
+
+    assert view
+           |> element("#increment-button", "Increment")
+           |> render_click() =~ "Count: 1"
+  end
+
+  test "increment count by form value", %{conn: conn} do
+    {:ok, view, html} = live(conn, "/")
+    assert html =~ "Count: 0"
+
+    assert view
+           |> form("#increment-form")
+           |> render_submit(%{increment_by: "3"}) =~ "Count: 3"
+  end
+end
+```
+
+`#increment-form` and `#increment` would be `id` attributes provided to HTML elements rendered by the LiveView.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+def render(assigns) do
+  ~H"""
+  <h1>Counter</h1>
+  <p>Count: <%= @count %></p>
+  <.button id="increment-button" phx-click="increment">Increment</.button>
+  <.simple_form id="increment-form" for={@form} phx-change="change" phx-submit="increment_by">
+    <.input type="number" field={@form[:increment_by]} label="Increment Count"/>
+    <:actions>
+      <.button>Increment</.button>
+    </:actions>
+  </.simple_form>
+  """
+end
+```
+
+See [HexDocs: Phoenix.LiveViewTesting](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveViewTest.html#content) for more.
+
+## Phoenix.LiveView.JS
+
+[Phoenix.LiveView.JS](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html) provides functions for executing common JavaScript commands.
+
+Here's an example of using [JS.toggle/1](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html#toggle/1) to hide and show some element on the page.
+
+```html
+<button phx-click={JS.toggle(to: "#toggleable-element")}>Hide/Show</button>
+<p id="toggleable-element">This will hide and show</p>
+```
+
+While mostly beyond the scope of this course, JavaScript is another programming language used in web development that we sometimes rely on as Elixir/Phoenix Developers. LiveView is largely replacing the need to work with JavaScript, but there will likely always be times that we need to rely upon it.
+
+See [MDN: JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) to learn more about JavaScript.
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [HexDocs: LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html)
+* [Elixir Schools: LiveView](https://elixirschool.com/blog/phoenix-live-view/)
+* [HexDocs: Phoenix.HTML](https://hexdocs.pm/phoenix_html/Phoenix.HTML.html)
+* [PragProg: Programming Phoenix LiveView](https://pragprog.com/titles/liveview/programming-phoenix-liveview/)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish LiveView reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=LiveView">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/capstone_mock.livemd">Capstone Project: Mock</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/liveview_follow_along_counter.livemd">Follow Along: LiveView Counter</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

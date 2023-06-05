@@ -1,0 +1,209 @@
+# Filter Values By Type
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Filter Values By Type">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/built-in_modules.livemd">Built-In Elixir Modules</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/tic-tac-toe.livemd">Tic-tac-toe</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Filter Values By Type
+
+Given a list of random items that could be any type, you are going to find all of the items that match a particular type.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Filter.floats([1, 2, 3, 4.0])
+[4.0]
+
+Filter.integers([1, 2, 3, 4.0])
+[1, 2, 3]
+
+Filter.maps(["hello", 4.0, %{key: "value"}, %{}])
+[%{key: "value"}, %{}]
+```
+
+Implement the `Filter` module as documented.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Filter do
+  def integers(list) do
+    Enum.filter(list, &is_integer/1)
+  end
+
+  def floats(list) do
+    Enum.filter(list, &is_float/1)
+  end
+
+  def numbers(list) do
+    Enum.filter(list, fn number -> is_number(number) end)
+  end
+
+  def atoms(list) do
+    Enum.filter(list, &is_atom/1)
+  end
+
+  def lists(list) do
+    Enum.filter(list, fn item -> is_list(item) and item != [] end)
+  end
+
+  def maps(list) do
+    Enum.filter(list, &is_map/1)
+  end
+
+  def keyword_lists(list) do
+    Enum.filter(list, &Keyword.keyword?/1)
+  end
+end
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+defmodule Filter do
+  @doc """
+  Filter in integers in list.
+
+  ## Examples
+
+    iex> Filter.integers([1, 2, %{}, {}, []])
+    [1, 2]
+  """
+  def integers(list) do
+  end
+
+  @doc """
+  Filter in floats in list.
+
+  ## Examples
+
+    iex> Filter.floats([1, 2, %{}, {}, [], 1.2, 3.2])
+    [1.2, 3.2]
+  """
+  def floats(list) do
+  end
+
+  @doc """
+  Filter in numbers and floats in list.
+
+  ## Examples
+
+    iex> Filter.numbers([1, 2, %{}, {}, [], 1.2, 3.2])
+    [1, 2, 1.2, 3.2]
+  """
+  def numbers(list) do
+  end
+
+  @doc """
+  Filter in atoms in list.
+
+  ## Examples
+
+    iex> Filter.atoms([1, 2, %{}, {}, [], :first_atom, 1.2, 3.2, :second_atom])
+    [:first_atom, :second_atom]
+  """
+  def atoms(list) do
+  end
+
+  @doc """
+  Filter in lists and keyword lists in list.
+
+  ## Examples
+
+    iex> Filter.lists([1, 2, %{}, {}, [], 1.2, 3.2, :atom, [1, 2], [4, 5, 6]])
+    [[], [1, 2], [4, 5, 6]]
+  """
+  def lists(list) do
+  end
+
+  @doc """
+  Filter in maps in list.
+
+  ## Examples
+
+    iex> Filter.maps([1, 2, %{}, {}, [], 1.2, 3.2, :atom, %{key: "value"}])
+    [%{}, %{key: "value"}]
+  """
+  def maps(list) do
+  end
+
+  @doc """
+  Filter in keyword lists.
+
+  ## Examples
+
+    iex> Filter.keyword_lists([1, 2, %{}, {}, [], 1.2, 3.2, :atom, %{key: "value"}, [key: "value"]])
+    [[], [key: "value"]]
+  """
+  def keyword_lists(list) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Filter Values By Type exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Filter Values By Type">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/built-in_modules.livemd">Built-In Elixir Modules</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/tic-tac-toe.livemd">Tic-tac-toe</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

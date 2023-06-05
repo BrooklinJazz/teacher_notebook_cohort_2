@@ -1,0 +1,118 @@
+# Itinerary
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Itinerary">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/time_converting.livemd">Time Converting</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/timeline.livemd">Timeline</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Itinerary
+
+You are building a day planning application. Users will provide the time it takes to complete an activity in minutes and you will determine if there is enough time to fit the activity between two [DateTime](https://hexdocs.pm/elixir/DateTime.html)s.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Itinerary do
+  def has_time?(start, finish, minutes) do
+    DateTime.diff(finish, start) >= minutes * 60
+  end
+end
+```
+
+</details>
+
+Implement the `Itinerary` module as documented.
+
+```elixir
+defmodule Itinerary do
+  @doc """
+  Given a number of minutes, determine if there is enough time 
+  between two `DateTimes` to fit an activity lasting a number of minutes.
+
+  ## Examples
+
+    iex> Itinerary.has_time?(~U[2020-01-01 12:00:00Z], ~U[2020-01-01 12:01:00Z], 1)
+    true
+    
+    iex> Itinerary.has_time?(~U[2020-01-01 12:00:00Z], ~U[2020-01-01 12:10:00Z], 10)
+    true
+
+    iex> Itinerary.has_time?(~U[2020-01-01 07:00:00Z], ~U[2020-01-01 08:00:00Z], 60)
+    true
+
+    iex> Itinerary.has_time?(~U[2020-01-01 12:00:00Z], ~U[2020-01-01 12:30:00Z], 31)
+    false
+
+    iex> Itinerary.has_time?(~U[2020-01-01 07:00:00Z], ~U[2020-01-01 08:00:00Z], 61)
+    false
+    
+  """
+  def has_time?(start, finish, minutes) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Itinerary exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Itinerary">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/time_converting.livemd">Time Converting</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/timeline.livemd">Timeline</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

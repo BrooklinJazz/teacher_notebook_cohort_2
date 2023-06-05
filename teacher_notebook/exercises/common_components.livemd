@@ -1,0 +1,145 @@
+# Common Components
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Common Components">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/html_css.livemd">HTML & CSS</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/apis.livemd">APIs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Common Components
+
+You're going to use HTML and CSS to replicate some styled components.
+
+Create an `.html` document or use [CodePen](https://codepen.io/pen/) to create these components.
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    </style>
+  </head>
+  <body>
+    <!-- Component goes here -->
+  </body>
+</html>
+```
+
+## Hoverable Outline Button
+
+Replicate the following outlined button as closely as you can.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/outline-button.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+On hover, the button should change the `background-color`.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/outline-button-hover.png)
+
+## Rainbow Boxes
+
+Create a series of rainbow colored boxes like the following.
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+Research `padding`, `margin`, `background-color`, and `border` and consider using nested elements.
+
+</details>
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/rainbow_component.png)
+
+## Card Component
+
+Components like the following are often called **Card Components**. Create a card component matching the following with an image, heading, subtitle, body, and bottom bar decoration.
+
+You can use https://picsum.photos/200/100 to retrieve a fake image:
+
+```html
+<img src="https://picsum.photos/200/100"></img>
+```
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+You can create a rounded border using the `border-radius` and `border` declarations.
+
+You can create a horizontal bar using either the `<hr></hr>` element, or an empty `div` element.
+
+</details>
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/card_component_light_mode.png)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Common Components exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Common Components">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/html_css.livemd">HTML & CSS</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/apis.livemd">APIs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

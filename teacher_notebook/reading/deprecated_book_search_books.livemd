@@ -1,0 +1,779 @@
+# Book Search: Books
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Book Search: Books">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/blog_migration.livemd">Blog: Migration</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/blog_comments.livemd">Blog: Comments</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* How do we configure a one-to-many association with Ecto?
+* How do we create associated records using [Ecto.Changeset.put_assoc/4](https://hexdocs.pm/ecto/Ecto.Changeset.html#put_assoc/4), [Ecto.build_assoc/3](https://hexdocs.pm/ecto/Ecto.html#build_assoc/3), and [Ecto.cast_assoc/3](https://hexdocs.pm/ecto/Ecto.Changeset.html#cast_assoc/3)?
+
+## Overview
+
+### One-to-many Relationships
+
+In a one-to-many relationship, a single record in one table can be related to multiple records in another table. For example, in a database for a school, a instructor may have multiple students, but each student is only associated with one instructor. In this case, the instructor and student tables would have a one-to-many relationship.
+
+One-to-many relationships are commonly used in database design because they allow for efficient storage of data and easy retrieval of information. They are also flexible, as the number of records on either side of the relationship can change over time.
+
+For example, in the instructor-student example, if a instructor leaves the school, all the records in the student table associated with that instructor can be easily removed or updated to reflect the new instructor. Similarly, if a student graduates and is no longer associated with a instructor, their record can be removed from the student table without affecting the other records.
+
+Overall, one-to-many relationships are an important part of database design and are used to represent the many-sided relationships that exist in real-world data.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### `has_many` And `belongs_to`
+
+In the context of one-to-many relationships, "has many" is used to describe the relationship between the one side of the relationship and the many side. For example, in a instructor-student relationship, the instructor "has many" students.
+
+On the other hand, "belongs to" is used to describe the relationship between the many side of the relationship and the one side. In the instructor-student example, a student "belongs to" a instructor.
+
+These terms are commonly used in database design and programming to describe the structure of one-to-many relationships. They help to clarify the direction of the relationship and make it easier to understand how the data is organized and accessed.
+
+For example, when querying a database for information, a developer may use the "has many" and "belongs to" relationships to navigate through the data and retrieve the desired information. In this way, these terms play an important role in the organization and management of data in a one-to-many relationship.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Foreign Keys
+
+A foreign key is a field in a relational database table that is used to establish and enforce a link between the data in two tables. This link is known as a relationship, and it allows the data in one table to be related to the data in another table.
+
+Foreign keys are typically used to implement one-to-many relationships in a database. For example, in a database for a school, the student table may have a foreign key that references the primary key of the instructor table. This establishes a one-to-many relationship between instructors and students, where each instructor can have multiple students but each student is only associated with one instructor.
+
+Foreign keys are an important part of relational database design because they help to enforce the integrity of the data by ensuring that the relationships between tables are maintained. For example, if a record in the instructor table is deleted, the corresponding records in the student table that reference that instructor will also be deleted to maintain the relationship.
+
+Overall, foreign keys are an essential part of relational databases and are used to establish and enforce relationships between data in different tables.
+
+## BookSearch: Books
+
+To learn more about one-to-many relationships, we're going to add books to our [BookSearch](./book_search_authors.livemd) applications from the previous lesson. If you need clarification during this reading, you can reference the completed [BookSearch/books](https://github.com/DockYard-Academy/book_search/tree/books) branch of the DockYard Academy example `BookSearch` project.
+
+Each book will belong to an author, and each author can have many books. Therefore, we need to associate books with a particular author.
+
+```mermaid
+flowchart
+  Author
+  Author --> Book1
+  Author --> Book2
+  Author --> Book3
+```
+
+To associate books with an author, we need to model their relationship in our Database.
+Relational databases store data in any number of tables and use foreign keys to relate data to one another. In this case, each book will store a foreign key `author_id` to reference an author.
+
+Sometimes we model relationships and data tables using diagrams. For example, there is a diagram specification called a [UML (Unified Modelling Language)](https://en.wikipedia.org/wiki/Unified_Modeling_Language) with particular rules and symbols. For our purposes, we'll use simple diagrams where `1` represents the **one** in the relationship, and `*` represent **many**.
+
+Here's a diagram to describe the one-to-many relationship between books and authors.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+classDiagram
+  direction RL
+  class Author {
+    name: :string
+    books: [Book]
+  }
+  class Book {
+    title: :string
+    author_id: :id
+  }
+
+  Book "*" --> "1" Author :belongs to
+```
+
+## Run Book Search Project
+
+Ensure you have completed the `BookSearch` project from the previous lesson. If not, you can clone the [BookSearch](https://github.com/DockYard-Academy/book_search) project.
+
+All tests should pass.
+
+```
+mix test
+```
+
+Ensure you start the server.
+
+```
+mix phx.server
+```
+
+If you encounter any issues with your database you may need to reset it.
+
+```
+mix ecto.reset
+```
+
+If you encounter issues with your database in your test environment, you can drop the test database. It will be recreated when you run tests.
+
+```
+MIX_ENV=test mix ecto.drop
+```
+
+## Books & Authors Database Association
+
+Books will store a foreign key to reference the author. For example, we can generate the books resource with the following command. `author_id:references:author` creates the foreign key to the `"authors"` table.
+
+```
+$ mix phx.gen.html Books Book books title:string author_id:references:authors
+```
+
+We've generated the following migration for books.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Priv/repo/migrations/_create_books.exs
+
+defmodule BookSearch.Repo.Migrations.CreateBooks do
+  use Ecto.Migration
+
+  def change do
+    create table(:books) do
+      add :title, :string
+      add :author_id, references(:authors, on_delete: :nothing)
+
+      timestamps()
+    end
+
+    create index(:books, [:author_id])
+  end
+end
+```
+
+The [references/2](https://hexdocs.pm/ecto_sql/Ecto.Migration.html#references/2) function defines the foreign key relationship with the author table. `on_delete: :nothing` means that if an author is deleted, the book will remain in the Database.
+
+Run migrations.
+
+```
+$ mix ecto.migrate
+```
+
+## Creating A Book With An Author
+
+We're going to use the IEx shell to better understand the association between authors and books.
+
+Open the IEx shell.
+
+```
+iex -S mix
+```
+
+For the sake of convenience, alias `Author`, `Book`, and `Repo` as we're going to use them.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> alias BookSearch.Books.Book
+iex> alias BookSearch.Authors.Author
+iex> alias BookSearch.Repo
+```
+
+Create a new author.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> author = Author.changeset(%Author{}, %{name: "Patrick Rothfus"}) |> Repo.insert!()
+```
+
+Now we can try to create a book using the author.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> book = Book.changeset(%Book{}, %{title: "Name of the Wind", author_id: author.id}) |> Repo.insert!()
+```
+
+However, you'll notice that the created book does not have an author.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%BookSearch.Books.Book{
+   __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+   id: 1,
+   title: "Name of the Wind",
+   author_id: nil,
+   inserted_at: ~N[2022-12-15 05:30:41],
+   updated_at: ~N[2022-12-15 05:30:41]
+ }
+```
+
+That's because we don't have any logic to handle the `author_id` in `Book` the changeset.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule BookSearch.Books.Book do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "books" do
+    field :title, :string
+    field :author_id, :id
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(book, attrs) do
+    book
+    |> cast(attrs, [:title])
+    |> validate_required([:title])
+  end
+end
+```
+
+We have many options for how to build this association. One way to get around this issue is to include the `author_id` in the initial `Book` struct.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> Book.changeset(%Book{author_id: author.id}, %{title: "Name of the Wind"}) |> Repo.insert!()
+```
+
+You should see the `author_id` on the created book.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%BookSearch.Books.Book{
+   __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+   id: 2,
+   title: "Name of the Wind",
+   author_id: 1,
+   inserted_at: ~N[2022-12-15 05:37:08],
+   updated_at: ~N[2022-12-15 05:37:08]
+ }
+```
+
+## Books And Authors Schema Association
+
+Instead of including the `author_id` manually, it's more idiomatic to build the association using one of three functions provided by [Ecto](https://hexdocs.pm/ecto/Ecto.html).
+
+* [Ecto.build_assoc/3](https://hexdocs.pm/ecto/Ecto.html#build_assoc/3) builds a struct from the given association in the struct.
+* [Ecto.Changeset.put_assoc/4](https://hexdocs.pm/ecto/Ecto.Changeset.html#put_assoc/4) puts the given association entry or entries as a change in the changeset. Typically used for data internal to the application.
+* [Ecto.Changeset.cast_assoc/3](https://hexdocs.pm/ecto/Ecto.Changeset.html#cast_assoc/3) casts the given association with the changeset parameters. Typically used for data external to the application.
+
+In order to use these functions, we need to define the [has_many/3](https://hexdocs.pm/ecto/Ecto.Schema.html#has_many/3) and [belongs_to/3](https://hexdocs.pm/ecto/Ecto.Schema.html#belongs_to/3) association in our `Author` and `Book` schemas.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Has_many/3
+
+We can use the [has_many/3](https://hexdocs.pm/ecto/Ecto.Schema.html#has_many/3) macro to indicate a one-to-many association with another schema.
+
+Add `has_many/3` to the `Author` schema.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule BookSearch.Authors.Author do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "authors" do
+    field :name, :string
+    has_many :books, BookSearch.Books.Book
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(author, attrs) do
+    author
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+  end
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Belongs_to/3
+
+To indicate our books belong to a single author, we need to add the [belongs_to/3](https://hexdocs.pm/ecto/Ecto.Schema.html#belongs_to/3) relationship.
+Replace `field :author_id, :id` with the `belongs_to/3` macro.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule BookSearch.Books.Book do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "books" do
+    field :title, :string
+    belongs_to :author, BookSearch.Authors.Author
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(book, attrs) do
+    book
+    |> cast(attrs, [:title])
+    |> validate_required([:title])
+  end
+end
+```
+
+## Building Associations
+
+Now that we've defined the `has_many/3` and `belongs_to/3` relationship in our `Author` and `Book` schema, we can use the [Ecto](https://hexdocs.pm/ecto/Ecto.html) functions to create a book with an author.
+
+Make sure to recompile the IEx shell.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> recompile()
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Build_assoc/3
+
+[build_assoc/3](https://hexdocs.pm/ecto/Ecto.html#build_assoc/3) is a function in the Elixir programming language that is used to create a new record in a related table and associate it with an existing record in the current table. It is part of the Ecto framework, which is a domain-specific language for writing queries and interacting with databases in Elixir.
+
+We can call `build_assoc/3` in our code and pass it the current record, the name of the association, and the attributes of the new record.
+
+In the IEx shell, use `build_assoc/3` to create a `Book` struct with an associated author. This does not create the book, this is simply to demonstrate the return value of `build_assoc/3`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> Ecto.build_assoc(author, :books)
+%BookSearch.Books.Book{
+  __meta__: #Ecto.Schema.Metadata<:built, "books">,
+  id: nil,
+  title: nil,
+  author_id: 1,
+  author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+  inserted_at: nil,
+  updated_at: nil
+}
+```
+
+We can use this as the initial struct for our `Book` changeset. Run the following in the IEx shell to create a book.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> Ecto.build_assoc(author, :books) 
+iex> |> Book.changeset(%{title: "Name of the Wind"})
+iex> |> Repo.insert!()
+```
+
+This creates a book with an `author_id` association.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%BookSearch.Books.Book{
+   __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+   id: 2,
+   title: "Name of the Wind",
+   author_id: 1,
+   author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+   inserted_at: ~N[2022-12-15 06:01:47],
+   updated_at: ~N[2022-12-15 06:01:47]
+ }
+```
+
+Notice the book also includes an `author` field. That's because the `belongs_to/3` field knows about the author association. This is powerful, because we can use [Ecto.Repo.preload/3](https://hexdocs.pm/ecto/Ecto.Repo.html#c:preload/3) to load the associated data from the database.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> |> Repo.preload([:author])
+%BookSearch.Authors.Author{
+  __meta__: #Ecto.Schema.Metadata<:loaded, "authors">,
+  id: 1,
+  name: "Patrick Rothfus",
+  books: [
+    %BookSearch.Books.Book{
+      __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+      id: 2,
+      title: "Name of the Wind",
+      author_id: 1,
+      author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+      inserted_at: ~N[2022-12-15 06:01:47],
+      updated_at: ~N[2022-12-15 06:01:47]
+    }
+  ],
+  inserted_at: ~N[2022-12-15 05:30:19],
+  updated_at: ~N[2022-12-15 05:30:19]
+}
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Put_assoc/4
+
+[put_assoc/4](https://hexdocs.pm/ecto/Ecto.Changeset.html#put_assoc/4) puts the given association entry or entries as a change in the changeset. This allows us to work with associations as a whole.
+
+For example, we can use `put_assoc/4` to create an author with multiple associated books. Run the following in the IEx shell.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> Author.changeset(%Author{}, %{name: "Dennis E Tailor"})
+iex> |> Ecto.Changeset.put_assoc(:books, [%Book{title: "We Are Legion"}, %Book{title: "For We Are Many"}])
+iex> |> Repo.insert!()
+```
+
+This creates an `Author` with multiple books. It automatically preloads the `books` association.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%BookSearch.Authors.Author{
+   __meta__: #Ecto.Schema.Metadata<:loaded, "authors">,
+   id: 2,
+   name: "Dennis E Tailor",
+   books: [
+     %BookSearch.Books.Book{
+       __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+       id: 3,
+       title: "We Are Legion",
+       author_id: 2,
+       author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+       inserted_at: ~N[2022-12-15 06:14:15],
+       updated_at: ~N[2022-12-15 06:14:15]
+     },
+     %BookSearch.Books.Book{
+       __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+       id: 4,
+       title: "For We Are Many",
+       author_id: 2,
+       author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+       inserted_at: ~N[2022-12-15 06:14:15],
+       updated_at: ~N[2022-12-15 06:14:15]
+     }
+   ],
+   inserted_at: ~N[2022-12-15 06:14:15],
+   updated_at: ~N[2022-12-15 06:14:15]
+ }
+```
+
+If we want to add a new book in the author, we can put the `author` association in the book. We need to retrieve the author to associate it with the book. Repalce `2` with the id of the recently created author if it is not `2`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> author = BookSearch.Authors.get_author!(2)
+iex> Book.changeset(%Book{}, %{title: "All These Worlds"})
+iex> |> Ecto.Changeset.put_assoc(:author, author)
+iex> |> Repo.insert!()
+```
+
+This creates a book associated with our author.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%BookSearch.Books.Book{
+   __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+   id: 5,
+   title: "All These Worlds",
+   author_id: 2,
+   author: %BookSearch.Authors.Author{
+     __meta__: #Ecto.Schema.Metadata<:loaded, "authors">,
+     id: 2,
+     name: "Dennis E Tailor",
+     books: #Ecto.Association.NotLoaded<association :books is not loaded>,
+     inserted_at: ~N[2022-12-15 06:14:15],
+     updated_at: ~N[2022-12-15 06:14:15]
+   },
+   inserted_at: ~N[2022-12-15 06:31:35],
+   updated_at: ~N[2022-12-15 06:31:35]
+ }
+```
+
+We can retrieve our author and preload the `books` association to the the book has been associated with the author. Replace `2` with the id of the author if it is not `2`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> BookSearch.Authors.get_author!(2) |> Repo.preload([:books])
+%BookSearch.Authors.Author{
+  __meta__: #Ecto.Schema.Metadata<:loaded, "authors">,
+  id: 2,
+  name: "Dennis E Tailor",
+  books: [
+    %BookSearch.Books.Book{
+      __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+      id: 3,
+      title: "We are legion",
+      author_id: 2,
+      author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+      inserted_at: ~N[2022-12-15 06:14:15],
+      updated_at: ~N[2022-12-15 06:14:15]
+    },
+    %BookSearch.Books.Book{
+      __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+      id: 4,
+      title: "For we are many",
+      author_id: 2,
+      author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+      inserted_at: ~N[2022-12-15 06:14:15],
+      updated_at: ~N[2022-12-15 06:14:15]
+    },
+    %BookSearch.Books.Book{
+      __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+      id: 5,
+      title: "All These Worlds",
+      author_id: 2,
+      author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+      inserted_at: ~N[2022-12-15 06:31:35],
+      updated_at: ~N[2022-12-15 06:31:35]
+    }
+  ],
+  inserted_at: ~N[2022-12-15 06:14:15],
+  updated_at: ~N[2022-12-15 06:14:15]
+}
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Replacing Associations
+
+`put_assoc/4` will replace any existing associations. Let's update the author's list of books we just created to see this in action. Replace `2` with the id of the author if it has a different id. We need to preload the associated books in order to update them.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> BookSearch.Authors.get_author!(2)
+iex> |> Repo.preload([:books])
+# We Aren't Going To Update Any Fields On The Author, So We Leave The Attrs Map Empty.
+iex> |> Author.changeset(%{})
+iex> |> Ecto.Changeset.put_assoc(:books, [%Book{title: "All These Worlds"}])
+iex> |> Repo.insert!()
+```
+
+You'll notice this error when you try to run `put_assoc/4`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+** (RuntimeError) you are attempting to change relation :books of
+BookSearch.Authors.Author but the `:on_replace` option of this relation
+is set to `:raise`.
+```
+
+By default, our database prevents us from replacing associations. This is usually desirable.
+If we want to replace associations, we would need modify or write a new migration to change the `on_replace` option. See [Hexdocs: the on_replace option](https://hexdocs.pm/ecto/Ecto.Changeset.html#module-the-on_replace-option) for more.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Cast_assoc/3
+
+[cast_assoc/3](https://hexdocs.pm/ecto/Ecto.Changeset.html#cast_assoc/3) works similarly to `put_assoc/4` as it works with the entire association at once, however it's best used with external data we need to cast/validate with a changeset.
+
+> This function should be used when working with the entire association at once (and not a > single element of a many-style association) and receiving data external to the application.
+> 
+> * [HexDocs: cast_assoc/3](https://hexdocs.pm/ecto/Ecto.Changeset.html#cast_assoc/3)
+
+Run the following in the IEx shell to create a new author and validate the book data using the `Book.changeset/2` function.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> %Author{}
+iex> |> Author.changeset(%{name: "Douglas Adams", books: [%{title: "The Hitchhiker's Guide to the Galaxy"}]})
+iex> |> Ecto.Changeset.cast_assoc(:books, with: &Book.changeset/2)
+iex> |> Repo.insert!()
+```
+
+This creates an author and their associated book(s).
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+%BookSearch.Authors.Author{
+   __meta__: #Ecto.Schema.Metadata<:loaded, "authors">,
+   id: 4,
+   name: "Douglas Adams",
+   books: [
+     %BookSearch.Books.Book{
+       __meta__: #Ecto.Schema.Metadata<:loaded, "books">,
+       id: 7,
+       title: "The Hitchhiker's Guide to the Galaxy",
+       author_id: 4,
+       author: #Ecto.Association.NotLoaded<association :author is not loaded>,
+       inserted_at: ~N[2022-12-15 06:49:04],
+       updated_at: ~N[2022-12-15 06:49:04]
+     }
+   ],
+   inserted_at: ~N[2022-12-15 06:49:04],
+   updated_at: ~N[2022-12-15 06:49:04]
+ }
+```
+
+If we tried to create a book with invalid data, we would receive an error.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+iex> %Author{}
+iex> |> Author.changeset(%{name: "Douglas Adams", books: [%{}]})
+iex> |> Ecto.Changeset.cast_assoc(:books, with: &Book.changeset/2)
+iex> |> Repo.insert!()
+{:error,
+ #Ecto.Changeset<
+   action: :insert,
+   changes: %{
+     books: [
+       #Ecto.Changeset<
+         action: :insert,
+         changes: %{},
+         errors: [title: {"can't be blank", [validation: :required]}],
+         data: #BookSearch.Books.Book<>,
+         valid?: false
+       >
+     ],
+     name: "Douglas Adams"
+   },
+   errors: [],
+   data: #BookSearch.Authors.Author<>,
+   valid?: false
+ >}
+```
+
+## Push To GitHub
+
+Add the routes for `BookController` to your router.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# Set Up A Scope For The BookSearchWeb Web Application
+scope "/", BookSearchWeb do
+  # Use the :browser pipeline for all routes within this scope
+  pipe_through :browser
+
+  # Define a route for the root path that maps to the index action of the PageController
+  get "/", PageController, :index
+
+  # Define routes for the AuthorController actions
+  get "/authors", AuthorController, :index            # Index action
+  get "/authors/new", AuthorController, :new          # New action
+  get "/authors/:id", AuthorController, :show         # Show action
+  get "/authors/edit/:id", AuthorController, :edit    # Edit action
+  post "/authors", AuthorController, :create          # Create action
+  put "/authors/:id", AuthorController, :update       # Update action
+  patch "/authors/:id", AuthorController, :update     # Update action
+  delete "/authors/:id", AuthorController, :delete    # Delete 
+  
+  # Define routes for the BookController actions
+  get "/books", BookController, :index                # Index action
+  get "/books/new", BookController, :new              # New action
+  get "/books/:id", BookController, :show             # Show action
+  get "/books/edit/:id", BookController, :edit        # Edit action
+  post "/books", BookController, :create              # Create action
+  put "/books/:id", BookController, :update           # Update action
+  patch "/books/:id", BookController, :update         # Update action
+  delete "/books/:id", BookController, :delete        # Delete action
+end
+```
+
+Ensure all of your tests continue to pass.
+
+```
+$ mix test
+```
+
+**ONLY If you cloned the `book_search` project**: you'll have to re-initialize it as a git project so you have ownership over the project. The following command removes the git folder and re-initializes it. You'll then have to create a repository on GitHub and follow the instructions to connect the project.
+
+```
+$ rm -rf .git
+$ git init
+```
+
+Then stage and commit your changes to GitHub from the `book_search` folder.
+
+```
+$ git add .
+$ git commit -m "associate books with authors"
+$ git push
+```
+
+## Further Reading
+
+For more on Ecto and Phoenix, consider the following resources.
+
+* [Ecto.Query](https://hexdocs.pm/ecto/Ecto.Query.html)
+* [BookSearch Project With Books](https://github.com/DockYard-Academy/book_search/tree/books)
+* [Elixir Schools: Associations](https://elixirschool.com/en/lessons/ecto/associations)
+* [Elixir Schools: Querying#preloading](https://elixirschool.com/en/lessons/ecto/querying_basics#preloading-9)
+* [Elixir Forum: build_assoc vs put_assoc vs cast_assoc](https://elixirforum.com/t/confussed-with-build-assoc-vs-put-assoc-vs-cast-assoc/29116)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Book Search: Books reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Book Search: Books">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/blog_migration.livemd">Blog: Migration</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/blog_comments.livemd">Blog: Comments</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

@@ -1,0 +1,231 @@
+# Card Counting
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Card Counting">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/fun_formulas.livemd">Fun Formulas</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/habit_tracker.livemd">Habit Tracker</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Card Counting
+
+We're going to build some logic for a card counting application. Card counting is a strategy used in card games to determine if there are more high cards or low cards in the deck.
+
+There are **13** numbered cards in a common deck of playing cards.
+
+We'll use integers `1` to `13` to represent playing cards. Cards are either **low**, **normal**, or **high**.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart LR
+subgraph low cards
+  direction LR
+  1 --- 2 --- 3 --- 4 --- 5 --- 6
+end
+
+subgraph Normal Cards
+  direction LR
+  7 --- 8 --- 9
+end
+
+subgraph High Cards
+  direction LR
+  10 --- 11 --- 12 --- 13
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+In order to track if there are more high cards left in the deck, or low cards left in the deck, you'll track a running count starting at `0`.
+
+* When dealt a **low** card decrease the count by `1`.
+* When dealt a **high** card increase the count by `1`.
+* When dealt a **normal** card do nothing.
+
+## Bind Card Counts
+
+Bind integers `low`, `normal`, and `high` to track the amount to increase or decrease the current count by. You will use these variables in further exercises.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+low = -1
+normal = 0
+high = 1
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## High Card
+
+The initial count is `0`. You have been dealt one **high** card. Use arithmetic operators and the bound variables above to determine the new count.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+initial_count = 0
+initial_count + high
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Low Card
+
+The initial count is `0`. You have been dealt one **low** card. Use arithmetic operators and the bound variables above to determine the new count.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+initial_count = 0
+initial_count + low
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Multiple Cards
+
+The initial count is `5`. You have been dealt five **high** cards, two **low** cards, and two **normal** cards. Use arithmetic operators and the bound variables above to determine the new count.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+initial_count = 5
+initial_count + high * 5 + low * 2 + normal * 2
+```
+
+You could omit the **normal** cards or allow **high** and **low** cards to balance each other, however if the increment/decrement value changes then your code would break.
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Bonus: Determining Card Values
+
+You are dealt three cards of a random value between `1` and `13`. You can use [Enum.random/1](https://hexdocs.pm/elixir/Enum.html#random/1) to generate a random number.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+random_card = Enum.random(1..13)
+```
+
+Generate three random cards, use the values of the three randomly generated cards to determine the current count given the initial count is `0`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+random_card1 = Enum.random(1..13)
+random_card2 = Enum.random(1..13)
+random_card3 = Enum.random(1..13)
+
+cards =
+  Enum.map([random_card1, random_card2, random_card3], fn random_card ->
+    cond do
+      random_card <= 6 -> low
+      random_card >= 10 -> high
+      true -> normal
+    end
+  end)
+
+Enum.sum(cards)
+```
+
+You could omit the **normal** cards or allow **high** and **low** cards to balance each other, however if the increment/decrement value changes then your code would break.
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Card Counting exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Card Counting">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/fun_formulas.livemd">Fun Formulas</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/habit_tracker.livemd">Habit Tracker</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

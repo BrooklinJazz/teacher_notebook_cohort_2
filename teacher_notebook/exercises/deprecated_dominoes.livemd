@@ -1,0 +1,175 @@
+# Dominoes
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Dominoes">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/supervised_stack.livemd">Supervised Stack</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/monster_spawner.livemd">Monster Spawner</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Dominoe
+
+[Dominoes](https://en.wikipedia.org/wiki/Dominoes) are square tiles often placed near each other to make satisfying effects when it falls and knocks each other over.
+
+We've created a named `Domino` process that can receive a generic `:fall` message to cause it to crash. It will also print a message every time it's started with the name of the process.
+
+```elixir
+defmodule Domino do
+  use GenServer
+
+  def start_link(opts) do
+    IO.inspect(opts, label: "STARTED DOMINO")
+    GenServer.start_link(__MODULE__, opts, name: opts[:name])
+  end
+
+  @impl true
+  def init(opts) do
+    {:ok, opts}
+  end
+
+  @impl true
+  def handle_info(:fall, _state) do
+    raise "error"
+  end
+end
+```
+
+You're going to start three `Domino` processes under a supervisor. When one crashes, they should restart sequentially in the order they are defined.
+
+<!-- livebook:{"break_markdown":true} -->
+
+```mermaid
+flowchart TD 
+    Supervisor
+    Supervisor --> Domino1
+    Supervisor --> Domino2
+    Supervisor --> Domino3
+
+    classDef crashed fill:#fe8888;
+    classDef terminated fill:#fbab04;
+    classDef restarted stroke:#0cac08,stroke-width:4px
+
+    class Domino2 crashed
+    class Domino3 terminated
+    class Domino2,Domino3 restarted
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+For example, if `Domino2` crashes, then `Domino3` should also be restarted. If `Domino3` crashes, no other processes are affected.
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+Use the <code>:rest_for_one</code> strategy for your supervisor.
+</details>
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+children = [
+  %{
+    id: :domino1,
+    start: {Domino, :start_link, [[name: :domino1]]}
+  },
+  %{
+    id: :domino2,
+    start: {Domino, :start_link, [[name: :domino2]]}
+  },
+  %{
+    id: :domino3,
+    start: {Domino, :start_link, [[name: :domino3]]}
+  }
+]
+
+Supervisor.start_link(children, strategy: :rest_for_one)
+```
+
+</details>
+
+Keep in mind, if you have already started a named process, the supervisor might crash when you attempt to start it again. Re-evaluate the cell after the livebook crashes to resolve this issue.
+
+```elixir
+
+```
+
+Send your dominos messages to ensure they are crashing in the correct order. They will log a message that demonstrates the `Domino.start_link/1` function was called again.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+Replace `:domino_name` with the name of a domino process you started in the supervisor above.
+
+```elixir
+Process.send(:domino_name, :fall, [])
+```
+
+</details>
+
+Test sending each `Domino` process a message individually.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Dominoes exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Dominoes">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/supervised_stack.livemd">Supervised Stack</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/monster_spawner.livemd">Monster Spawner</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

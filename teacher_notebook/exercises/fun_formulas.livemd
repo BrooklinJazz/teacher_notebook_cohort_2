@@ -1,0 +1,204 @@
+# Fun Formulas
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Fun Formulas">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/match_operator.livemd">Match Operator</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/card_counting.livemd">Card Counting</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Fun Formulas
+
+As developers, it's our job to translate business requirements into something that the computer understands.
+
+These exercises will have you convert a common formula into an Elixir program.
+
+## Loading Bar Percentage
+
+We often need to display loading bars to the user. Loading bars use the current **percentage** they have finished loading in order to display the loading progress.
+
+You can calculate the percentage with $\frac{actual\ value}{total\ value}\times100$
+
+For example if we complete `7` out of `10` items, we would be `70.0%` complete.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+(7 / 10) * 100 # 70.0
+```
+
+Use arithmetic operators to determine the **percentage** given we have completed `12` out of `42` items.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+actual = 12
+total = 42
+
+(actual / total) * 100
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Rocket Ship
+
+We're building a rocket ship app to teach people about physics.
+
+Users can enter the `mass` and `acceleration` of a ship to visualize the `force` generated.
+
+Given that ${mass} * {acceleration} = force$, calculate the force when mass is `10` and acceleration is `50`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+mass = 10
+acceleration = 50
+
+mass * acceleration
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## What Do You Tip?
+
+It's common in many cultures to leave a tip whenever you buy a meal. It's common to calculate the tip as a percentage of the meal.
+
+Given the initial cost of a meal is `20`, and you want to leave a `15%` tip, use arithmetic operators to determine the total cost of the meal.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+initial_cost = 20
+tip_percent = 1.15
+
+initial_cost * tip_percent
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Pythagorean Theorum
+
+To calculate the longest side of a triangle we use $a^2 + b^2 = c^2$
+
+Given a triangle where side $a$ is `4`, and side $b$ is `10`, calculate $c^2$
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+a = 4
+b = 10
+
+a ** 2 + b ** 2
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Bonus: Square Root
+
+Earlier we calculated $c^2$ for pythagoream theorum. Given $c^2$ is `116` determine the square root of $c^2$ to calculate $c$.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example solution</summary>
+
+```elixir
+c_squared = 116
+:math.sqrt(c_squared)
+```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Fun Formulas exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Fun Formulas">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/match_operator.livemd">Match Operator</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/card_counting.livemd">Card Counting</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

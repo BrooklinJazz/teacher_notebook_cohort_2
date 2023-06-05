@@ -1,0 +1,162 @@
+# Rock Paper Scissors
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rock Paper Scissors">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/naming_numbers.livemd">Naming Numbers</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/modules.livemd">Modules</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Create The Perfect AI
+
+You're going to create the perfect AI for rock paper scissors that will always win.
+
+```mermaid
+flowchart LR
+scissors --beats--> paper --beats--> rock --beats--> scissors
+```
+
+Generate a random player choice of `:rock` ,`:paper`, or `:scissors` or manually enter `:rock`, `:paper`, and `:scissors` to determine your program works correctly.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+player_choice = Enum.random([:rock, :paper, :scissors])
+```
+
+Then, return the winning choice of either `:rock`, `:paper`, or `:scissors` that beats the player's choice.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Example solution</summary>
+
+  ```elixir
+  player_choice = :scissors
+  
+  case player_choice do
+    :rock -> :paper
+    :paper -> :scissors
+    :scissors -> :rock
+  end
+  ```
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Create Two Player Rock Paper Scissors
+
+Now that you know how to create a rock paper scissors AI, you're going to create a two player game of rock paper scissors.
+
+Bind a `player1_choice` and `player2_choice` variable to `:rock`, `:paper`, or `:scissors`.
+
+* If `player1_choice` beats `player2_choice`, return `"Player 1 wins!"`.
+* If `player2_choice` beats `player1_choice`, return `"Player 2 wins!"`.
+* If both players have the same choice, then return `"Draw"`.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+  <summary>Example solution</summary>
+
+  ```elixir
+  player1 = :rock
+  player2 = :scissors
+
+  case {player1, player2} do
+    {:rock, :scissors} -> "Player 1 Wins!"
+    {:paper, :rock} -> "Player 1 Wins!"
+    {:scissors, :paper} -> "Player 1 Wins!"
+    {:rock, :paper} -> "Player 2 Wins!"
+    {:paper, :scissors} -> "Player 2 Wins!"
+    {:scissors, :rock} -> "Player 2 Wins!"
+    {_same, _same} -> "Draw"
+  end
+  ```
+
+  You can also reduce code repetition using functions and the `in` keyword to check if the value exists in a list.
+
+  ```elixir
+  player1 = :rock
+  player2 = :scissors
+
+  beats? = fn choice1, choice2 ->
+    {choice1, choice2} in [{:rock, :scissors}, {:paper, :rock}, {:scissors, :paper}]
+  end
+
+  cond do
+    beats?.(player1, player2) -> "Player1"
+    beats?.(player2, player1) -> "Player2"
+    player1 == player2 -> "Draw"
+  end
+  ```
+
+</details>
+
+Enter your solution below.
+
+```elixir
+
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Rock Paper Scissors exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Rock Paper Scissors">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/naming_numbers.livemd">Naming Numbers</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/modules.livemd">Modules</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

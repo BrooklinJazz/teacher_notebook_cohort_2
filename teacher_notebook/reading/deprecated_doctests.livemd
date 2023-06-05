@@ -1,0 +1,155 @@
+# Doctests
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Doctests">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/games_wordle.livemd">Games: Wordle</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/typespecs.livemd">Typespecs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Doctests
+
+We use the `@moduledoc` and `@doc` module attributes to document our code in a mix project.
+By documenting our project, we explain to other developers the purpose of our code.
+
+`@moduledoc` contains documentation for the entire module, and `@doc` documents the function below it.
+
+When we created the `Math` mix project, it used the `@doc` and `@moduledoc` module attribute to document the main `math.ex` module.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule Math do
+  @moduledoc """
+  Documentation for `Math`.
+  """
+
+  @doc """
+  Hello world.
+
+  ## Examples
+
+      iex> Math.hello()
+      :world
+
+  """
+  def hello do
+    :world
+  end
+end
+
+```
+
+Notice the `Examples` section, which simulates an [IEx](https://hexdocs.pm/iex/IEx.html) shell.Any line with `iex>` is a Doctest. Doctests are run by the corresponding test file `math_test.exs` using the [doctest/2](https://hexdocs.pm/ex_unit/ExUnit.DocTest.html#doctest/2) macro.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule MathTest do
+  use ExUnit.Case
+  doctest Math
+end
+
+ExUnit.run()
+```
+
+Doctests are generally not as comprehensive as typical testing and are not a full replacement.
+However, they can be a great way to test the input and output of your code and ensure the documentation remains up to date.
+
+Generally, Doctests go in an `Examples` section.
+You can write multiple Doctests like so.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+  @doc """
+  add data types.
+
+  ## Examples
+
+      iex> Math.add(1, 1)
+      2
+
+      iex> Math.add(2.1, 2.1)
+      4.2
+  """
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+Previously you converted a `Math` module into a mix project in the [ExUnit with Mix](./exunit_with_mix.livemd) section.
+
+Add doctests to the `Math` module in the `math.ex` file for both the `add/2` and `subtract/2` function. Include an example for each data type (integers, floats, strings, lists, maps, keyword lists).
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [ElixirSchools: Documentation](https://elixirschool.com/en/lessons/basics/documentation)
+* [elixir-lang: doctests](https://elixir-lang.org/getting-started/mix-otp/docs-tests-and-with.html#doctests)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Doctests reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Doctests">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/games_wordle.livemd">Games: Wordle</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/typespecs.livemd">Typespecs</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

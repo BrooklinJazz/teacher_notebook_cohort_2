@@ -1,0 +1,360 @@
+# Tic-tac-toe
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Tic-tac-toe">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/filter_values_by_type.livemd">Filter Values By Type</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/non_enumerables.livemd">Non-Enumerables</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Overview
+
+You're going to create a game of [Tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe).
+
+In Tic-tac-toe, players take turns placing either an `X` or an `O` onto a 3 by 3 grid.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tic_tac_toe.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+We can represent a grid like this as a list of lists.
+
+```elixir
+grid = [
+  ["X", "O", nil],
+  [nil, "X", "O"],
+  [nil, nil, "X"]
+]
+```
+
+Usually we say grids have an **x** and a **y** axis. Each location in the grid is called a coordinate.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tic_tac_toe_coordinates_grid.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+We'll use an `{x, y}` tuple to represent a coordinate on the board.
+
+For example, the `"X"` in the top left corner of the board above would be at coordinate `{0, 2}`.
+
+## TicTacToe
+
+You're going to create a `TicTacToe` module which can read coordinates from a board, and fill them in.
+
+For example, reading the coordinate `{0, 2}` on the following board returns `"X"`.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+board = [
+  ["X", "O", nil],
+  [nil, "X", "O"],
+  [nil, nil, "X"]
+]
+
+TicTacToe.at(board, {0, 2})
+"X"
+```
+
+Filling the coordinate will return a newly updated board.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+board = [
+  ["X", "O", nil],
+  [nil, "X", "O"],
+  [nil, nil, "X"]
+]
+
+TicTacToe.fill(board, {0, 1}, "O")
+[
+  ["X", "O", nil],
+  ["O", "X", "O"],
+  [nil, nil, "X"]
+]
+```
+
+Implement the `TicTacToe` module as documented.
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+Remember that `Enum.at` can access a list at an index, however our coordinates are flipped
+on the board, so the first list is at **y = 2**.
+
+Therefore, if `y` is `0`, then we want to access the row list at index `2`.
+
+</details>
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule TicTacToe do
+  def at(board, coordinate) do
+    {x, y} = coordinate
+
+    Enum.at(board, 2 - y) |> Enum.at(x)
+  end
+
+  def fill(board, coordinate, symbol) do
+    {x, y} = coordinate
+    List.update_at(board, 2 - y, fn row ->
+      List.replace_at(row, x, symbol)
+    end)
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule TicTacToe do
+  @moduledoc """
+    Documentation for `TicTacToe`
+  """
+
+  @doc """
+  Read a coordinate on a board.
+
+  ## Examples
+
+      We've used a board with letter symbols for sake of example.
+
+      iex> board = [
+      ...> ["A", "B", "C"],
+      ...> ["D", "E", "F"],
+      ...> ["G", "H", "I"]
+      ...> ]
+      iex> TicTacToe.at(board, {0, 0})
+      "G"
+      iex> TicTacToe.at(board, {2, 1})
+      "F"
+      iex> TicTacToe.at(board, {0, 2})
+      "A"
+  """
+  def at(board, coordinate) do
+  end
+
+  @doc """
+  Fill in a coordinate on a board with the provided symbol and return a new updated board.
+
+  ## Examples
+
+      iex> board = [
+      ...> [nil, nil, nil], 
+      ...> [nil, nil, nil],
+      ...> [nil, nil, nil]
+      ...> ]
+      iex> TicTacToe.fill(board, {0, 0}, "X")
+      [[nil, nil, nil], [nil, nil, nil], ["X", nil, nil]]
+      iex> TicTacToe.fill(board, {1, 1}, "O")
+      [[nil, nil, nil], [nil, "O", nil], [nil, nil, nil]]
+  """
+  def fill(board, coordinate, symbol) do
+  end
+end
+```
+
+### Bonus: Winner
+
+Create a `TicTacToe.winner/1` function which accepts a board and determines if there is a winner. A player wins if they have three symbols in a row, three symbols in a column, or three symbols diagonally.
+
+For example:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+board = [
+  ["X", "O", "O"]
+  ["X", "O", nil]
+  ["X", nil, nil]
+]
+
+TicTacToe.winner(board) # returns "X".
+"X"
+```
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule TicTacToe do
+  def winner(board) do
+    cond do
+      winner?(board, "X") -> "X"
+      winner?(board, "O") -> "O"
+      true -> nil
+    end
+  end
+
+  def winner?(board, symbol) do
+    row_winner =
+      Enum.any?(board, fn row ->
+        Enum.all?(row, fn element -> element == symbol end)
+      end)
+
+    column_winner =
+      Enum.any?(0..2, fn index ->
+        Enum.all?(board, fn row ->
+          Enum.at(row, index) == symbol
+        end)
+      end)
+
+    diagonal_winner =
+      Enum.all?(0..2, fn index ->
+        board
+        |> Enum.at(index)
+        |> Enum.at(index) == symbol
+      end) or
+        Enum.all?(0..2, fn index ->
+          board
+          |> Enum.at(index)
+          |> Enum.at(2 - index) == symbol
+        end)
+
+    row_winner or column_winner or diagonal_winner
+  end
+end
+```
+
+Note it's also possible to use pattern matching to solve this problem.
+
+```elixir
+defmodule TicTacToe do
+  def winner(board) do
+    cond do
+      winner?(board, "X") -> "X"
+      winner?(board, "O") -> "O"
+      true -> nil
+    end
+  end
+
+  def winner?(board, x) do
+    match?([[^x, ^x, ^x], [_, _, _], [_, _, _]], board) or
+      match?([[_, _, _], [^x, ^x, ^x], [_, _, _]], board) or
+      match?([[_, _, _], [_, _, _], [_, _, _]], board) or
+      match?([[^x, _, _], [^x, _, _], [^x, _, _]], board) or
+      match?([[_, ^x, _], [_, ^x, _], [_, ^x, _]], board) or
+      match?([[_, _, ^x], [_, _, ^x], [_, _, ^x]], board) or
+      match?([[^x, _, _], [_, ^x, _], [_, _, ^x]], board) or
+      match?([[_, _, ^x], [_, ^x, _], [^x, _, _]], board)
+  end
+end
+```
+
+</details>
+
+To get started, copy the code below into the `TicTacToe` module above.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@doc """
+Determine if a player has won the game.
+
+## Examples
+
+  Row Wins:
+
+  iex> TicTacToe.winner([["X", "X", "X"], [nil, nil, nil], [nil, nil, nil]])
+  "X"
+  iex> TicTacToe.winner([[nil, nil, nil], ["X", "X", "X"], [nil, nil, nil]])
+  "X"
+  iex> TicTacToe.winner([[nil, nil, nil], [nil, nil, nil], ["X", "X", "X"]])
+  "X"
+
+  Column Wins:
+
+  iex> TicTacToe.winner([["X", nil, nil], ["X", nil, nil], ["X", nil, nil]])
+  "X"
+  iex> TicTacToe.winner([[nil, "X", nil], [nil, "X", nil], [nil, "X", nil]])
+  "X"
+  iex> TicTacToe.winner([[nil, nil, "X"], [nil, nil, "X"], [nil, nil, "X"]])
+  "X"
+
+  Diagonal Wins
+
+  iex> TicTacToe.winner([["X", nil, nil], [nil, "X", nil], [nil, nil, "X"]])
+  "X"
+  iex> TicTacToe.winner([[nil, nil, "X"], [nil, "X", nil], ["X", nil, nil]])
+  "X"
+
+  No Winner
+
+  iex> TicTacToe.winner([[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]])
+  nil
+  iex> TicTacToe.winner([[nil, "X", nil], [nil, "X", nil], [nil, nil, nil]])
+  nil
+
+"""
+def winner(board) do
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Tic-tac-toe exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Tic-tac-toe">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/filter_values_by_type.livemd">Filter Values By Type</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/non_enumerables.livemd">Non-Enumerables</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

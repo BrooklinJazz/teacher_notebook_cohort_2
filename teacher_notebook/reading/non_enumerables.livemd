@@ -1,0 +1,280 @@
+# Non-Enumerables
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Non-Enumerables">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/tic-tac-toe.livemd">Tic-tac-toe</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/comprehensions.livemd">Comprehensions</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Review Questions
+
+Upon completing this lesson, a student should be able to answer the following questions.
+
+* What are some examples of non-enumerable vs enumerable data structures?
+* How do you enumerate over non-enumerable data structures?
+* How do you convert non-enumerable data structures into enumerable data structures?
+
+## Overview
+
+### Non-Enumerables
+
+Non-enumerable data types are any data type that does not implement the [Enumerable](https://hexdocs.pm/elixir/Enumerable.html) protocol. For example, integers, floats, strings, atoms, and tuples are all not enumerable.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Enumeration With Non-Enumerables
+
+To use enumeration with a non-enumerable data type, we need to convert the data into an enumerable data type.
+
+For example, we could convert a string `"abc"` into a list of characters `["a", "b", "c"]` if we wanted to enumerate over each character.
+
+## Converting Non-Enumerables Into Enumerables
+
+While we can't enumerate over non-enumerable data types, Elixir provides many functions we can use to convert non-enumerable data types into enumerable data types.
+
+## Integers
+
+We can use the [Integer.digits/1](https://hexdocs.pm/elixir/Integer.html#digits/1) function to convert integers to a list of digits.
+
+```elixir
+Integer.digits(123)
+```
+
+### Your Turn
+
+In the Elixir cell below, convert the integer `4389` into a list of digits.
+
+```elixir
+
+```
+
+### Undigits
+
+We can convert a list of digits back into a single integer using [Integer.undigits/2](https://hexdocs.pm/elixir/Integer.html#undigits/2).
+
+```elixir
+Integer.undigits([1, 2, 3])
+```
+
+## Tuples
+
+Despite being so similar to lists, tuples are not considered enumerable.
+That's primarily because they are intended as fixed-sized containers, and any case that requires
+enumeration would likely be better served with lists.
+
+To get around this if needed, you can convert a tuple to a list with [Tuple.to_list/1](https://hexdocs.pm/elixir/Tuple.html#to_list/1).
+
+However, if you find yourself doing this often, it may be a better
+choice to start with a list instead of a tuple.
+
+```elixir
+Tuple.to_list({1, 2, 3})
+```
+
+We can then convert a list back into a tuple using [List.to_tuple/1](https://hexdocs.pm/elixir/List.html#to_tuple/1)
+
+```elixir
+List.to_tuple([1, 2, 3])
+```
+
+## Strings
+
+Strings are not enumerable.
+
+```elixir
+Enum.map("abc", fn char -> char end)
+```
+
+### [String.split/3](https://hexdocs.pm/elixir/String.html#split/3)
+
+<!-- livebook:{"break_markdown":true} -->
+
+However, strings can be converted into lists using [String.split/3](https://hexdocs.pm/elixir/String.html#split/3).
+
+[String.split/3](https://hexdocs.pm/elixir/String.html#split/3) splits a string based on some value.
+
+For example, we can split a string by every comma like so:
+
+```elixir
+String.split("a,b,c,d", ",")
+```
+
+We can split a string into a list of characters by splitting on every empty space `""` This does create an empty string becaused of the start and the end of the list.
+
+```elixir
+String.split("abcde", "")
+```
+
+You can trim whitespace using the `[trim: true]` option.
+
+```elixir
+String.split("abcde", "", trim: true)
+```
+
+By default, [String.split/1](https://hexdocs.pm/elixir/String.html#split/1) will split the string on every space.
+
+```elixir
+String.split("hello world")
+```
+
+Now your string is an enumerable list of characters.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Your Turn
+
+In the Elixir cell below, convert the string `"Hello, world!"` into a list of single characters.
+
+```elixir
+
+```
+
+### Joining Strings
+
+Once you've applied your transformation to the list of string characters, you can rejoin them using [Enum.join/2](https://hexdocs.pm/elixir/Enum.html#join/2)
+
+```elixir
+Enum.join(["a", "b", "c"], "")
+```
+
+The default joiner is a string, so you can omit the second argument.
+
+```elixir
+Enum.join(["a", "b", "c"])
+```
+
+Alternatively we can join the strings by some joining character.
+
+```elixir
+Enum.join(["a", "b", "c"], "_")
+```
+
+We can use [String.split/3](https://hexdocs.pm/elixir/String.html#split/3) and [Enum.join/2](https://hexdocs.pm/elixir/Enum.html#join/2) in combination with each other to split strings, enumerate over them applying some transformation, and then rejoining them.
+
+Here's a simple example of replacing all characters other than spaces with `"X"`.
+
+```elixir
+split_string = String.split("secret information", "")
+
+transformed_list =
+  Enum.map(split_string, fn char ->
+    case char do
+      " " -> " "
+      _ -> "X"
+    end
+  end)
+
+joined_string = Enum.join(transformed_list)
+```
+
+### Your Turn
+
+Create a `CharacterCount` module that can count the number of characters in a string.
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule CharacterCount do
+  def count(string) do
+    string
+    |> String.split("", trim: true)
+    |> Enum.count()
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule CharacterCount do
+  @moduledoc """
+  Character Count
+  """
+
+  @doc """
+  Count the number of characters in a string
+
+  ## Examples
+
+      iex> CharacterCount.count("abc")
+      3
+
+      iex> CharacterCount.count("abcd")
+      4
+  """
+  def count(string) do
+  end
+end
+```
+
+## Further Reading
+
+Consider the following resource(s) to deepen your understanding of the topic.
+
+* [DockYard Academy: Enum](./enum.livemd)
+* [Elixir Schools: Enum](https://elixirschool.com/en/lessons/basics/enum)
+* [Elixir-lang: Enumerables](https://elixir-lang.org/getting-started/enumerables-and-streams.html#enumerables)
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Non-Enumerables reading"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Non-Enumerables">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../exercises/tic-tac-toe.livemd">Tic-tac-toe</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../reading/comprehensions.livemd">Comprehensions</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>

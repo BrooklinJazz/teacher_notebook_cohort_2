@@ -1,0 +1,149 @@
+# Email Validation
+
+```elixir
+Mix.install([
+  {:jason, "~> 1.4"},
+  {:kino, "~> 0.9", override: true},
+  {:youtube, github: "brooklinjazz/youtube"},
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+])
+```
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Email Validation">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/regex.livemd">Regex</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/caesar_cypher.livemd">Caesar Cypher</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
+
+## Email Validation
+
+Most applications and websites with users have a sign up form with an email input.
+
+Generally, we validate this input to ensure that users enter a valid email.
+
+You are going to build an `Email.validate/1` function which checks if an email address is valid or not.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+Email.valid?("mail@mail.com")
+true
+
+Email.valid?("mail.com")
+false
+```
+
+For the sake of this exercise, an email is valid if it is in the format `string@string.string`. Be aware, this is not sufficient for true email validation where not all characters are allowed.
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+Consider using [Regex.match/2](https://hexdocs.pm/elixir/Regex.html#match/2).
+
+</details>
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Email do
+  def valid?(email) do
+    Regex.match?(~r/\w+\@\w+\.\w+/, email)
+  end
+end
+```
+
+</details>
+
+Implement the `Email` module as documented.
+
+```elixir
+defmodule Email do
+  @moduledoc """
+  Documentation for `Email`
+  """
+
+  @doc """
+  Checks if an email is valid.
+
+  ## Examples
+
+    iex> Email.valid?("mail@mail.com")
+    true
+
+    iex> Email.valid?("string@string.string")
+    true
+
+    iex> Email.valid?("string")
+    false
+
+    iex> Email.valid?(".string")
+    false
+
+    iex> Email.valid?("string.string")
+    false
+
+    iex> Email.valid?("string@string")
+    false
+
+    iex> Email.valid?("string@string.")
+    false
+  """
+  def valid?(email) do
+  end
+end
+```
+
+## Commit Your Progress
+
+DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.
+
+Run `git status` to ensure there are no undesirable changes.
+Then run the following in your command line from the `curriculum` folder to commit your progress.
+
+```
+$ git add .
+$ git commit -m "finish Email Validation exercise"
+$ git push
+```
+
+We're proud to offer our open-source curriculum free of charge for anyone to learn from at their own pace.
+
+We also offer a paid course where you can learn from an instructor alongside a cohort of your peers.
+We will accept applications for the June-August 2023 cohort soon.
+
+## Navigation
+
+<div style="display: flex; align-items: center; width: 100%; justify-content: space-between; font-size: 1rem; color: #61758a; background-color: #f0f5f9; height: 4rem; padding: 0 1rem; border-radius: 1rem;">
+<div style="display: flex;">
+<i class="ri-home-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../start.livemd">Home</a>
+</div>
+<div style="display: flex;">
+<i class="ri-bug-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="https://github.com/DockYard-Academy/curriculum/issues/new?assignees=&labels=&template=issue.md&title=Email Validation">Report An Issue</a>
+</div>
+<div style="display: flex;">
+<i class="ri-arrow-left-fill"></i>
+<a style="display: flex; color: #61758a; margin-left: 1rem;" href="../reading/regex.livemd">Regex</a>
+</div>
+<div style="display: flex;">
+<a style="display: flex; color: #61758a; margin-right: 1rem;" href="../exercises/caesar_cypher.livemd">Caesar Cypher</a>
+<i class="ri-arrow-right-fill"></i>
+</div>
+</div>
