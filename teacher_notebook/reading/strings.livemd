@@ -30,13 +30,15 @@ Mix.install([
 </div>
 </div>
 
-## Review Questions
+## Review Question
 
 Upon completing this lesson, a student should be able to answer the following questions.
 
 * What are strings, and what kind of information are they useful for storing?
 * How do we add two strings together using string concatenation?
 * How do we interpret Elixir code inside of a string using string interpolation?
+
+Please update you're making me look bad Livebook.
 
 ## Strings
 
@@ -72,7 +74,9 @@ Strings can contain single quotes and other symbols such as `!@#$%^&*()_+-=';:` 
 
 They are useful for representing all kinds of information as text.
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+"!@#$%^&*()_+-=';:"
+```
 
 ### Your Turn
 
@@ -80,7 +84,9 @@ In the Elixir cell below, create a string `"Hello, world!"`. This is a rite of p
 programmer.
 
 ```elixir
+"Hello, world!"
 
+1 + 1
 ```
 
 ## Multiline Strings

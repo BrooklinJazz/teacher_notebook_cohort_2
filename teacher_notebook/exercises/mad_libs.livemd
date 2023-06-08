@@ -34,6 +34,18 @@ Mix.install([
 
 You're going to create some mad lib games. A madlib is a game where the player can enter in a word or sentence to fill in the blanks.
 
+```elixir
+[a, b, c] = [1, 2, 3]
+c
+```
+
+```elixir
+my_string = "MESSAGE: hello there"
+
+"MESSAGE: " <> rest = my_string
+rest
+```
+
 ## String Concatenation Madlib
 
 In the Elixir cell below, bind each blank word to a variable. Then use **string concatenation** to combine these values into a single string madlib.
@@ -56,7 +68,8 @@ blank3 = "code"
 Enter your solution below.
 
 ```elixir
-
+first = "person"
+"A programmer is a" <> person "that turns" ____ into ____.
 ```
 
 ## String Interpolation Madlib

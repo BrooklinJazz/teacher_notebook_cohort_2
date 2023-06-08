@@ -66,8 +66,58 @@ For new students, we recommend that you [start here](reading/start_here.livemd).
   * [Shopping List](exercises/shopping_list.livemd)
   * [Family Tree](exercises/family_tree.livemd)
   * [Mazes](exercises/mazes.livemd)
+  * Extra: Performance Optimization
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+:atoms
+"strings"
+
+{:ok, "value"}
+{:error, "error message"}
+
+[:error, "error message"]
+
+{1, 2, 3, 4}
+[1, 2, 3, 4]
+
+list = [1, 2, 3]
+
+new_list = [0 | list]
+
+list
+
+[3 | [2 | [1 | []]]]
+```
+
+```elixir
+%{key: "value"}
+
+[key: "value"]
+
+kw_list = [{:key, 1}, {"key", 1}]
+```
+
+```elixir
+user = %{name: "Jon"}
+
+user[:admin][:role][:member]
+```
+
+```elixir
+{_, b, _} = {1, 2, 3}
+```
+
+```elixir
+Enum.map([a: 1, b: 2], fn {_key, value} ->
+  value
+end)
+```
+
+### Pattern Matching Discussion
+
+```elixir
+
+```
 
 ### Control Flow And Abstraction
 
@@ -529,7 +579,13 @@ The following topics are not part of the DockYard Academy core curriculum, but s
   * [Drills: MapSets](exercises/mapset_drills.livemd)
   * [Fibonacci Challenge](exercises/fibonacci_challenge.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+# user data -> form
+# params -> strings
+
+%{name: "Jon", email: "jon@jon.jon"}
+%{"name" => "Jon", "email" => "jon@jon.jon"}
+```
 
 ### Benchmarking And Performance
 

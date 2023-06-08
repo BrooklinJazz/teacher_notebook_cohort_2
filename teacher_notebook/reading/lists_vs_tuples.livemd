@@ -414,6 +414,10 @@ list = [1, 2, 3, 4, 5]
 List.insert_at(list, 3, 7)
 ```
 
+```elixir
+
+```
+
 ![](images/insert_linked_list_memory.png)
 
 <!-- livebook:{"break_markdown":true} -->

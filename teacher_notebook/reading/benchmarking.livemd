@@ -31,6 +31,33 @@ Mix.install([
 </div>
 </div>
 
+```elixir
+"#{1}"
+```
+
+```elixir
+a = "a"
+b = "b"
+{interpolation, _result} = :timer.tc(fn -> for x <- 0..10_000, do: "#{a}:#{b}" end)
+{concatenation, _result} = :timer.tc(fn -> for x <- 0..10_000, do: a <> ":" <> b end)
+
+# {interpolation, _result} = :timer.tc(fn -> for x <- 0..10_000, do: "#{a}hello#{b}hello" end)
+
+# {concatenation, _result} =
+#   :timer.tc(fn -> for x <- 0..10_000, do: a <> "hello" <> b <> "hello" end)
+
+{concatenation, interpolation}
+```
+
+```elixir
+Enum.reduce(1..100, {0, 0}, fn _, {int_acc, concat_acc} ->
+  {interpolation, _result} = :timer.tc(fn -> for x <- 0..10_000, do: "#{a}:#{b}" end)
+  {concatenation, _result} = :timer.tc(fn -> for x <- 0..10_000, do: a <> ":" <> b end)
+
+  {int_acc + interpolation, concat_acc + concatenation}
+end)
+```
+
 ## Review Questions
 
 Upon completing this lesson, a student should be able to answer the following questions.
@@ -342,6 +369,17 @@ For example:
 > Ben Hill Griffin Stadium, the stadium at the University of Florida, holds `88,548` people. In Florida the minimum wage is `$11.00` per hour. Working an eight hour day for five days a week fifty-two weeks a year this comes out to `$22,880` a year. If every seat in the stadium was filled by someone making minimum wage, the average annual income would be `$22,880`. and the total worth would be just over two billion `$2,025,978,240` In 2021 Jeff Bezos made ~ 197 Billion -- `$197,000,000,000`. If Jeff Bezos enters the stadium the total annual income is `$199,025,978,240` and the **AVERAGE** income would be about 2.24 million -- `$2,247,636`. One large outlier can really skew the average. This is often why we use the **median**, or middle value, of a set. It's less skewed by large outliers.
 > 
 > Example provided by Stephen Fowler
+
+```elixir
+
+```
+
+```elixir
+Benchee.run(%{
+  "interpolation" => fn -> 1 + 1 end,
+  "concatenation" => fn -> 
+})
+```
 
 ## Commit Your Progress
 

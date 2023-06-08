@@ -40,6 +40,21 @@ Upon completing this lesson, a student should be able to answer the following qu
 * What are arithmetic operators?
 * What is the order of operations, and how can you alter it using round brackets `()`?
 
+```elixir
+1.2 + 1.4
+```
+
+```elixir
+map = %{age: 34, name: "Jon", birthday: "1990-05-27"}
+
+map.birthday
+
+"age: 34, name: Jon, birthday: 1990-05-27"
+
+# "11"
+1 + "1"
+```
+
 ## Overview
 
 **Arithmetic** is a branch of mathematics that involves the manipulation of numbers.

@@ -295,6 +295,39 @@ maze = %{
 }
 ```
 
+```elixir
+[1, 2, 3, 4] = [1, 2, 3, 4]
+[1, 2, c, 4] = [1, 2, 3, 4]
+[head | tail] = [1, 2, 3, 4]
+[_, _, c | tail] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+left = %{key: "value"}
+%{} = %{key: "value"}
+%{keya: valuea} = %{keya: "valuea", keyb: "valueb"}
+%{key: "value"} = %{key: "value"}
+%{key: my_value} = %{key: "value"}
+%{:key => "value"} = %{key: "value"}
+# %{key => "value"} = %{key: "value"}
+
+valuea
+
+left = {1, 2, 3}
+{1, 2, 3} = {1, 2, 3}
+{a, b, c} = {1, 2, 3}
+
+left = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+elem(left, 9)
+```
+
+```elixir
+left = [a: 1, b: 2, c: 3]
+[head | tail] = [a: 1, b: 2, c: 3]
+
+left = [a: 1]
+[{a, one}] = [a: 1]
+```
+
 ## BONUS: Create Your Own Maze
 
 Generate a maze using the [Online Maze Generator](https://www.mazegenerator.net/). It should be

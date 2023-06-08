@@ -39,6 +39,32 @@ Upon completing this lesson, a student should be able to answer the following qu
 * How do we use list operators with keyword lists?
 * What is the internal representation of a keyword list in Elixir?
 
+```elixir
+IO.inspect("my value", label: "My Label")
+```
+
+```elixir
+opts = [label: false]
+
+Keyword.get(opts, :label, "value")
+```
+
+```elixir
+defmodule MyIO do
+  def inspect(value, %{key: "value"}) do
+    label = opts[:label]
+    label = opts[:label]
+    label = opts[:label]
+    label = opts[:label]
+    label = opts[:label]
+
+    IO.inspect(opts)
+  end
+end
+
+MyIO.inspect("my value", label: "My Label", pretty: true)
+```
+
 ## Keyword Lists
 
 Keyword lists are lists with keys. Each key associates with a value.

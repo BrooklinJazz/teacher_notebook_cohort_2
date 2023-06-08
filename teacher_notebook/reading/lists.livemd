@@ -37,6 +37,46 @@ Upon completing this lesson, a student should be able to answer the following qu
 * What is a list, and what is the difference between a list and a tuple?
 * How do you pattern match on a list?
 
+<!-- livebook:{"break_markdown":true} -->
+
+### Teacher Examples
+
+```elixir
+### Teacher Examples
+
+map = %{}
+
+# map.key
+
+# if map[:key] do
+#   IO.inspect(map.key)
+# end
+
+kw_list = [key: "value"]
+
+kw_list.(:key)
+```
+
+When reversing a list is more performant than appending.
+
+```elixir
+list = [1, 2, 3]
+
+# less performant
+list = [] ++ [1]
+list = list ++ [2]
+list = list ++ [3]
+list = list ++ [4]
+
+# more performant
+list = [1 | []]
+list = [2 | list]
+list = [3 | list]
+list = [4 | list]
+
+Enum.reverse(list)
+```
+
 ## Lists
 
 Lists store a list of other data types. Data types within a list are called **elements**.
