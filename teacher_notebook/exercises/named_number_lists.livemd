@@ -87,7 +87,32 @@ flowchart
 Enter your solution below.
 
 ```elixir
+# cond do
+#   each == 0 -> "zero"
+#   each == 1 -> "one"
+#   each == 2 -> "two"
+# end
 
+# case each do
+#   0 -> "zero"
+#   1 -> "one"
+#   2 -> "two"
+# end
+
+# truthy falsy conditions vs discrete value
+# between 10 and 15 -> condition
+# is the number 5 -> discrete value
+value = 5
+
+5 = value
+
+Enum.map([1, 2, 0], fn each ->
+  case each do
+    0 -> "zero"
+    1 -> "one"
+    2 -> "two"
+  end
+end)
 ```
 
 ## Commit Your Progress

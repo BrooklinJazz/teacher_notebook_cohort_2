@@ -54,11 +54,13 @@ grid = [
 
 Usually we say grids have an **x** and a **y** axis. Each location in the grid is called a coordinate.
 
-<!-- livebook:{"break_markdown":true} -->
-
-![](images/tic_tac_toe_coordinates_grid.png)
-
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+board = [
+  ["X", "O", nil],
+  [nil, "X", "O"],
+  [nil, nil, "X"]
+]
+```
 
 We'll use an `{x, y}` tuple to represent a coordinate on the board.
 
@@ -136,11 +138,85 @@ end
 
 </details>
 
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tic_tac_toe.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/tic_tac_toe_coordinates_grid.png)
+
+```elixir
+board = [
+  ["X", "O", nil],
+  [nil, "X", "O"],
+  [nil, nil, "X"]
+]
+```
+
+```elixir
+row1 = [1, 2, 3]
+row2 = [4, 5, 6]
+row3 = [7, 8, 9]
+
+board = [row1, row2, row3]
+
+coordinate = {2, 2}
+
+{x, y} = coordinate
+
+selected_row = Enum.at(board, 2 - y)
+Enum.at(selected_row, x)
+```
+
+```elixir
+index = 1
+
+list = [1, 2, 3]
+
+[a, b, c] = list
+
+case index do
+  0 -> a
+  1 -> b
+  2 -> c
+end
+```
+
+```elixir
+# row_index = case y do
+#   0 -> 2
+#   1 -> 1
+#   2 -> 0
+# end
+
+# selected_row = Enum.at(board, row_index)
+# selected_row = Enum.at(Enum.reverse(board), y)
+```
+
+```elixir
+# 5 ideas
+# solve an easier problem
+```
+
+```elixir
+board = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9]
+]
+```
+
+```elixir
+elem({1, 2, 3}, 2)
+```
+
 ```elixir
 defmodule TicTacToe do
   @moduledoc """
     Documentation for `TicTacToe`
   """
+  @board_size 2
 
   @doc """
   Read a coordinate on a board.
@@ -162,6 +238,13 @@ defmodule TicTacToe do
       "A"
   """
   def at(board, coordinate) do
+    {x, y} = coordinate
+    row_index = @board_size - y
+    column_index = x
+
+    board
+    |> Enum.at(row_index)
+    |> Enum.at(column_index)
   end
 
   @doc """
@@ -179,9 +262,51 @@ defmodule TicTacToe do
       iex> TicTacToe.fill(board, {1, 1}, "O")
       [[nil, nil, nil], [nil, "O", nil], [nil, nil, nil]]
   """
+
+  # problem solving
+  # break the problem down.
+  # input/output
+  # start with the result
+  # work your way backwards
+  # solve the easier problem. i,e. can you update a value in a list?
+
   def fill(board, coordinate, symbol) do
+    {x, y} = coordinate
+    board_size = 2
+    row_index = board_size - y
+    column_index = x
+    row_to_fill = Enum.at(board, row_index)
+
+    updated_row = List.replace_at(row_to_fill, column_index, symbol)
+    result = List.replace_at(board, row_index, updated_row)
   end
 end
+
+board = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9]
+]
+
+TicTacToe.fill(board, {0, 0}, "X")
+```
+
+```elixir
+board = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9]
+]
+
+x = 0
+y = 0
+# extract the desired row to fill -> [7, 8, 9]
+# find the column that we need to fill -> 7
+# fill at that spot at the columns and rows -> [[1,2,3], [4,5,6], ["X",8,9]]
+# update a row -> ["X", 8, 9]
+updated_row = ["X", 8, 9]
+# update the board with the updated row
+result = [[1, 2, 3], [4, 5, 6], ["X", 8, 9]]
 ```
 
 ### Bonus: Winner

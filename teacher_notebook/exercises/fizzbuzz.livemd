@@ -73,6 +73,18 @@ FizzBuzz.run(1..15)
 
 Enter your solution below.
 
+```elixir
+# IO
+# 1..15 -> [1, 2, "fizz", 4, "buzz", "fizz", 7, 8, "fizz", "buzz", 11, "fizz", 13, 14, "fizzbuzz"]
+# same length, transformed elements
+
+# map
+# 3 conditions
+# divisible by 5, divisible by 3, divisible by both.
+# conditions
+# 
+```
+
 <!-- livebook:{"attrs":{"source":"YouTube.new(\"https://www.youtube.com/watch?v=QPZ0pIK_wsc&ab_channel=TomScott\")","title":"FizzBuzz"},"chunks":null,"kind":"Elixir.HiddenCell","livebook_object":"smart_cell"} -->
 
 ```elixir
@@ -93,6 +105,36 @@ defmodule FizzBuzz do
     ["buzz", 11, "fizz", 13, 14, "fizzbuzz"]
   """
   def run(range) do
+  end
+end
+```
+
+### Over engineered Example
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule FizzBuzz do
+  @doc """
+  FizzBuzz.
+
+  ## Examples
+
+    iex> FizzBuzz.run(1..15)
+    [1, 2, "fizz", 4, "buzz", "fizz", 7, 8, "fizz", "buzz", 11, "fizz", 13, 14, "fizzbuzz"]
+
+    iex> FizzBuzz.run(10..15)
+    ["buzz", 11, "fizz", 13, 14, "fizzbuzz"]
+  """
+  def run(range) do
+    range |> Enum.map(&(
+      case &1 do
+        &1 when rem(&1, 3) === 0 and rem(&1, 5) === 0 -> "fizzbuzz"
+        &1 when rem(&1, 3) === 0 -> "fizz"
+        &1 when rem(&1, 5) === 0 -> "buzz"
+        _ -> &1
+      end
+    ))
   end
 end
 ```

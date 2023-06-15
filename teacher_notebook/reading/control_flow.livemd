@@ -55,6 +55,77 @@ flowchart
 
 The flow of our program through these branches, and how we control it is called **control flow**. We have a variety of tools to control the flow of our program including `if`, `cond`, and `case` statements.
 
+```elixir
+{a, b, c} = {1, 2, 3}
+left = {1, 2, 3}
+
+case left do
+  _ -> "do something"
+end
+```
+
+```elixir
+tuple = {2, 3}
+
+case tuple do
+  {1, 1} ->
+    "1"
+
+  {x, x} ->
+    "2"
+    # {same, different} -> "3"
+end
+```
+
+```elixir
+# decision
+# -> 
+# -> 
+# -> 
+
+weather = "sunny"
+weather = "rainy"
+weather = "acid rain"
+
+temperature = 10
+
+if weather == "hot" do
+  "wear a t-shirt"
+else
+  if weather == "acid rain" do
+    "wear a hazmat suit"
+  else
+    "wear a coat"
+  end
+end
+
+# unlimited paths
+# value -> match on cases
+
+case {weather, temperature} do
+  {"hot", 0} -> "special event"
+end
+
+# unlimited paths
+# cases -> conditions
+cond do
+  weather == "hot" and temperature > 30 -> "stay indoors"
+  true -> "1"
+end
+```
+
+```elixir
+# is an admin
+# notifications enabled
+user = %{admin: true, notifications: true, name: "Jon", email: "test@test.test"}
+
+rgb = {255, 255, 255}
+
+case rgb do
+  {255, 255, 255} -> "black"
+end
+```
+
 ## If Statements
 
 We've already seen `if` statements, which are a useful when we have one or two branching paths in our code.

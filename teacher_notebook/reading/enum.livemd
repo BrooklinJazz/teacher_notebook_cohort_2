@@ -594,7 +594,17 @@ Enum.all?(1..10_000_000, fn integer -> is_integer(integer) end)
 Use [Enum.all/2](https://hexdocs.pm/elixir/Enum.html#all/2) to determine if all of the `colors` in this list of colors are `:green`. You may change the value of `colors` to experiment with [Enum.all/2](https://hexdocs.pm/elixir/Enum.html#all/2).
 
 ```elixir
+color = :green
+
+color = :green
+```
+
+```elixir
 colors = [:green, :green, :red]
+
+Enum.any?(colors, fn color ->
+  color = :green
+end)
 ```
 
 ## Enum.any?/2

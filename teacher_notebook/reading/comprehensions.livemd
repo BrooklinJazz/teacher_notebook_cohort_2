@@ -30,6 +30,53 @@ Mix.install([
 </div>
 </div>
 
+```elixir
+even_numbers = []
+
+# map
+# filter
+for n <- 1..100, rem(n, 2) == 0, into: 0 do
+  n
+end
+```
+
+```elixir
+even_numbers = []
+
+# map
+# filter
+# reduce
+for n <- ["a", "b", "c"], into: "" do
+  n
+end
+```
+
+```elixir
+for x <- 1..3, y <- 1..3 do
+  {x, y}
+end
+
+Enum.map(1..3, fn x ->
+  Enum.map(1..3, fn y ->
+    {x, y}
+  end)
+end)
+|> List.flatten()
+```
+
+```elixir
+# bike shedding
+for n <- 1..3, do: n
+Enum.map(1..3, fn each -> each end)
+Enum.map(1..3, & &1)
+```
+
+```elixir
+Enum.map(1..3, fn y ->
+  y
+end)
+```
+
 ## Review Questions
 
 Upon completing this lesson, a student should be able to answer the following questions.

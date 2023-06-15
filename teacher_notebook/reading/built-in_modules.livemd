@@ -5,7 +5,8 @@ Mix.install([
   {:jason, "~> 1.4"},
   {:kino, "~> 0.9", override: true},
   {:youtube, github: "brooklinjazz/youtube"},
-  {:hidden_cell, github: "brooklinjazz/hidden_cell"}
+  {:hidden_cell, github: "brooklinjazz/hidden_cell"},
+  {:faker, "~> 0.17.0"}
 ])
 ```
 
@@ -357,7 +358,22 @@ Use the [Integer.gcd/2](https://hexdocs.pm/elixir/Integer.html#gcd/2) function t
 positive integer that divides both 10 and 15 evenly, so the result should be `5`.
 
 ```elixir
+Enum.empty?([]) && Enum.empty?([])
+```
 
+```elixir
+String.to_charlist("hello") |> IO.inspect(label: "My Label", charlists: :as_lists)
+
+# ["h", "e", "l", "l", "o"] 
+# [104, 101, 108, 108, 111]
+```
+
+```elixir
+String.graphemes("hello")
+```
+
+```elixir
+String.split("hello", "", trim: true)
 ```
 
 ## The String Module

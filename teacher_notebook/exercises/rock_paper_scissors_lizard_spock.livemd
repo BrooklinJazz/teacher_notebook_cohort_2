@@ -112,6 +112,24 @@ Implement the `RockPaperScissorsLizardSpock` module below.
 > `@doc` syntax runs tests on your code to provide feedback. However, be aware that for the sake of conciseness we do not always write fully comprehensive tests. You solution may pass tests, but be incomplete. You may press the dropdown button to hide the `@doc` documentation/tests.
 
 ```elixir
+lunchbox = %{main_course: "Pork Cutlet", dessert: "Broccoli"}
+
+if not true do
+  "Do something"
+end
+
+state = "fasting"
+
+if state != "fasting" do
+  "eat food"
+end
+
+unless state == "fasting" do
+  "eat lunch"
+end
+```
+
+```elixir
 defmodule RockPaperScissorsLizardSpock do
   @doc """
   ## Examples
@@ -128,6 +146,14 @@ defmodule RockPaperScissorsLizardSpock do
       false
   """
   def beats?(guess1, guess2) do
+    # solve the easier problem
+    case {guess1, guess} do
+      {:rock, :scissors} -> true
+      {:paper, :rock} -> true
+      {:scissors, :paper} -> true
+      # rock beats lizard
+      {:rock, :lizard} -> true
+    end
   end
 
   @doc """

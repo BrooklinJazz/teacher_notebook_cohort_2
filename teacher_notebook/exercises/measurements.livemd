@@ -30,6 +30,21 @@ Mix.install([
 </div>
 </div>
 
+```elixir
+Enum.any?([], fn each -> true end)
+```
+
+```elixir
+Enum.all?([])
+```
+
+```elixir
+# chunking
+list = [1, 2, 3, 4]
+
+Enum.chunk_every(list, 2, 1, :discard)
+```
+
 ## Measurements
 
 You are going to make a utility module for working with measurements.

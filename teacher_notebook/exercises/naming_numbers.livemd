@@ -84,7 +84,60 @@ naming_numbers.(1)
 Enter your solution below.
 
 ```elixir
+list = ["zero", "one"]
 
+Enum.at(list, "not an integer")
+```
+
+```elixir
+variable = 5
+
+variable =
+  case true do
+    true ->
+      variable + 2
+  end
+
+variable
+```
+
+```elixir
+# read your error.
+# IO.inspect()
+# observe, hypothesis, verify.
+# observe:
+# what line causes the issue?
+# what is my data?
+
+player1 = :rock
+player2 = :scissors
+
+IO.inspect(player1, label: "player1")
+IO.inspect(player2, label: "player2")
+
+# case {player1, player2} do
+#   {:rock, :scisors} -> "Player 1 wins"
+# end
+
+# elixir -> functions(1)
+#        -> macros 1 
+IO.inspect(1)
+```
+
+```elixir
+random1 = Enum.random(1..10)
+random2 = Enum.random(1..10)
+random3 = Enum.random(1..10)
+random4 = Enum.random(1..10)
+random5 = Enum.random(1..10)
+
+[one, two, three, four, five | _tail] = Enum.map(1..10, fn _each -> Enum.random(1..10) end)
+```
+
+```elixir
+IO.inspect("hello", label: "My Value")
+
+binding()
 ```
 
 ## Numbering Names
