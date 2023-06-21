@@ -120,27 +120,27 @@ defmodule Timeline do
     iex> Timeline.from_dates([~D[2020-01-01], ~D[2020-01-10], ~D[2020-01-22], ~D[2020-01-24]])
     [9, 12, 2]
   """
-  def from_dates(dates) do
-  end
 
-  @doc """
-  Given a list of "YYYY-MM-DD" strings return a timeline of days between each date.
-  Assume you will always be given two or more strings.
+  # def from_dates(_dates, _acc \\ [])
+  # def from_dates([], acc), do: Enum.reverse(acc)
+  # def from_dates([_], acc), do: Enum.reverse(acc)
 
-  ## Examples
+  # def from_dates([date1, date2 | tail], acc) do
+  #   from_dates([date2 | tail], [Date.diff(date2, date1) | acc])
+  # end
 
-    iex> Timeline.from_strings(["2020-01-01", "2020-01-02"])
-    [1]
-
-    iex> Timeline.from_strings(["2020-01-01", "2020-01-02", "2020-01-22"])
-    [1, 20]
-    
-    iex> Timeline.from_strings(["2020-01-01", "2020-01-10", "2020-01-22", "2020-01-24"])
-    [9, 12, 2]
-  """
-  def from_strings(date_strings) do
+  def from_dates(dates, acc) do
+    case dates do
+      [] -> Enum.reverse(acc)
+      [_] -> Enum.reverse(acc)
+      [date1, date2 | tail] -> from_dates([date2 | tail], [Date.diff(date2, date1) | acc])
+    end
   end
 end
+```
+
+```elixir
+Timeline.from_dates([~D[2020-01-01], ~D[2020-01-02], ~D[2020-01-22]])
 ```
 
 ## Commit Your Progress

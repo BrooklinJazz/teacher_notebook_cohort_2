@@ -37,6 +37,84 @@ Mix.install([
 * When should we use `map` vs `filter` vs `reduce`?
 * How can we build an accumulated value using reduce?
 
+```elixir
+# outputs a list
+# treatment (transformation) on the input data
+Enum.map([1, 2, 3], fn each -> each * 2 end)
+Enum.map([1, 2, 3], fn each -> inspect(each) end)
+```
+
+```elixir
+map = %{}
+"#{inspect(map)}"
+```
+
+```elixir
+# removes elements without transforming them
+Enum.filter([1, 2, 3, 4, 5], fn each -> rem(each, 2) == 0 end)
+```
+
+```elixir
+# "catch all"
+# "can do a lot" (everything is reduce)
+# builds up an accumulator allowing you transform it.
+Enum.reduce()
+```
+
+```elixir
+# accumulator
+# param for the callback function
+# passed around into every enumeration
+# start with some data type
+
+# sum a list of numbers (reduce)
+# [1, 2, 3] -> 6
+
+# initial acc: 0
+
+# 1 # 0 + 1 = 1
+
+# 1
+# 2 # 1 + 2 = 3
+# 3 # 3 + 3 = 6
+
+Enum.reduce([1, 2, 3], fn integer, acc ->
+  integer + acc
+end)
+
+# Enum.reduce/2 vs Enum.reduce/3
+# /2 uses the first value in the enumerable as the (default) accumulator
+# /3 provide a default accumulator
+
+# char count (reduce)
+
+# "aba" -> ["a", "b", "a"] -> %{"a" => 2, "b" => 1}
+
+# %{}
+
+# "a" # %{"a" => 1}
+# "b" # %{"a" => 1, "b" => 1}
+# "a" # %{"a" => 2, "b" => 1}
+
+char = "a"
+acc = %{"a" => 1}
+result = %{"a" => 1, "b" => 1}
+
+split_string = String.graphemes("aba")
+
+Enum.reduce(split_string, %{}, fn char, acc ->
+  Map.update(acc, char, 1, fn existing_value -> existing_value + 1 end)
+end)
+
+# 1. Input/Output
+# 2. Identify the type of problem (map/filter/reduce)
+# 3. Define the initial accumulator.
+# 4. Define the steps of the enumeration.
+# 5. Define the desired accumulator. (for each step)
+# 6. (optional) Solve one step of the enumeration (at a time)
+# 7. Put that into a reduce statement
+```
+
 ## Overview
 
 Reduce is an incredibly powerful tool you can leverage in a wide variety of circumstances.
@@ -79,7 +157,19 @@ Anytime you have a collection, and want to produce a non-list output, [Enum.redu
 For example, we can simply return `0` in the body of the callback function to return this value as the accumulator.
 
 ```elixir
-Enum.reduce(1..3, 0, fn _integer, _acc -> 0 end)
+Enum.reduce(1..3, [], fn _integer, acc -> [0 | acc] end)
+
+# 0
+
+# 1 # 0
+# 2 # 0
+# 3 # 0
+
+# []
+
+# 1 # [0]
+# 2 # [0, 0]
+# 3 # [0, 0, 0]
 ```
 
 With each step in [Enum.reduce/3](https://hexdocs.pm/elixir/Enum.html#reduce/3) we create a new acculumator of `0`.

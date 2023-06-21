@@ -1,0 +1,106 @@
+# Strings and Regex Bonus Challenge
+
+## Overview
+
+Many of the problems in this **Bonus Challenge** were inspired by real-world problems we encountered when building the DockYard Academy curriculum.
+
+## Readme Outline Bullets
+
+Given a curriculum outline in the format below, create a bullet list of header sections in the desired format.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+"""
+## Heading 2
+* Heading 3
+* Heading 3
+* Heading 3
+## Heading 2
+* Heading 3
+* Heading 3
+* Heading 3
+## Heading 2
+"""
+```
+
+```elixir
+outline = """
+# Heading 1
+
+## Heading 2
+### Heading 3
+### Heading 3
+### Heading 3
+## Heading 2
+### Heading 3
+### Heading 3
+### Heading 3
+## Heading 2
+"""
+```
+
+## Insert An Outline
+
+Place the bullet-point outline you created previously between the `<!-- course-outline-start -->` and `<!-- course-outline-start -->` text.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+"""
+# Readme
+<!-- course-outline-start -->
+Replace Any Outline Between These Comments.
+<!-- course-outline-end -->
+
+# Other Sections Below
+"""
+```
+
+## Navigation
+
+Based on an outline that looks like the following:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+"""
+### Course Tools
+
+* Reading
+  * [Command Line](reading/command_line.livemd)
+  * [Git](reading/git.livemd)
+  * [Livebook](reading/livebook.livemd)
+  * [Code Editors](reading/code_editors.livemd)
+  * [IEx](reading/iex.livemd)
+* Exercises
+  * [Command Line Family Tree](exercises/command_line_family_tree.livemd)
+  * [GitHub Engineering Journal](exercises/github_engineering_journal.livemd)
+  * [GitHub Collab](exercises/github_collab.livemd)
+"""
+```
+
+Given a file name, Replace any `## Navigation` section with the correct navigation without affecting any headings `##` below.
+
+Here's an example for the `Git` section.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+"""
+# Git
+This heading shouldn't be affected
+
+## Navigation
+
+Prev: [Command Line](reading/command_line.livemd)
+Next: [Livebook](reading/livebook.livemd)
+
+## Overview
+This overview shouldn't be affected.
+"""
+```
+
+```elixir
+
+```

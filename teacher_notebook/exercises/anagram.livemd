@@ -60,6 +60,103 @@ end
 </details>
 
 ```elixir
+# Input/Output
+# 2 strings -> true/false
+# abc, bac, -> true
+
+# 5 Ideas
+# sorting
+# pro: simplicity (of comparison, implementation)
+# make sure strings are same length? (NO)
+# "aabbcc"
+# "abbc"
+# con: expensive/slow!
+
+# count the # of each letter
+# "aaabbc"
+# %{a: 3, b: 2, c: 1}
+# [{"a", 3}, {"b", 2}, {"c", 1}]
+# [a: 3, b: 2, c: 1]
+# ["a", "a", "a"]
+
+# aab
+# bba
+# does one word contain the second word? (string comparison)
+# are all of the letters in one word contained by all the letters of another? (list comparison)
+# "aabc" vs "aab"
+# "aaba vs "aab"
+# will work as long as you check the length
+
+# can we sum charlists?
+# "AC" vs "BB"?
+# ?A + ?C == ?B + ?B
+
+# list subtraction
+```
+
+```elixir
+# codepoints/character codes/unicode
+
+# on/off
+# 1/0
+# [0, 0, 0, 0, 0, 0, 0, 0]
+# [0, 0, 0, 0, 0, 1, 0, 0]
+# 255
+# We need to represent strings (characters)
+
+?A == 65
+?B == 66
+?C == 67
+
+[65, 44, 80, 120]
+```
+
+```elixir
+# returns a boolean
+String.contains?()
+Map.update!()
+```
+
+```elixir
+# count the # of each letter
+# "aaabbc"
+# %{a: 3, b: 2, c: 1}
+# [{"a", 3}, {"b", 2}, {"c", 1}]
+# [a: 3, b: 2, c: 1]
+# ["a", "a", "a"]
+
+# "aaabbc" -> %{a: 3, b: 2, c: 1}
+# ["a", "b", "c"] -> %{a: 1}
+# [] -> %{a: 1, b: 1, c: 1}
+
+map = %{"a" => 1}
+
+a = "a"
+b = "b"
+c = "c"
+
+Map.update!(map, "a", fn each -> each + 1 end)
+
+# map = Map.update(map, a, 1, fn each -> each + 1 end)
+# map = Map.update(map, b, 1, fn each -> each + 1 end)
+# map = Map.update(map, c, 1, fn each -> each + 1 end)
+# map = Map.update(map, a, 1, fn each -> each + 1 end)
+
+# word = "aabc"
+# letter_list = String.split(word, "", trim: true)
+
+case Date.new(202_323, 6, 15) do
+  {:ok, date} -> date
+  {:error, _} -> "Do my own thing"
+end
+
+# Date.new!(202_323, 6, 15)
+
+# let it crash
+# 
+```
+
+```elixir
 defmodule Anagram do
   @moduledoc """
   Documentation for `Anagram`.
@@ -83,6 +180,15 @@ defmodule Anagram do
     true
   """
   def anagram?(word, possible_anagram) do
+    word_count(word) == word_count(possible_anagram)
+  end
+
+  defp word_count(word) do
+    word
+    |> String.split("", trim: true)
+    |> Enum.reduce(%{}, fn letter, acc ->
+      Map.update(acc, letter, 1, fn count -> count + 1 end)
+    end)
   end
 
   @doc """
@@ -100,6 +206,7 @@ defmodule Anagram do
     []
   """
   def filter_anagrams(word_list, anagram) do
+    Enum.filter(word_list, fn each -> anagram?(each, anagram) end)
   end
 end
 ```

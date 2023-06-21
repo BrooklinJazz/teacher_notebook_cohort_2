@@ -31,6 +31,18 @@ Mix.install([
 </div>
 </div>
 
+```elixir
+Stream.iterate({0, 1}, fn {prev, curr} -> {curr, prev + curr} end) |> Enum.take(100)
+```
+
+```elixir
+
+```
+
+```elixir
+
+```
+
 ## Fibonacci Sequence
 
 The Fibonacci sequence is a series of the following numbers.
@@ -69,6 +81,10 @@ In the Elixir cell below, create a `FastFib` module. The `FastFib` module should
 ```elixir
 defmodule FastFib do
   def sequence(length) do
+    Stream.unfold({0, 1}, fn
+      {previous, current} -> {previous, {current, previous + current}}
+    end)
+    |> Enum.at(value)
   end
 end
 ```
@@ -78,7 +94,7 @@ Use [Benchee](https://hexdocs.pm/benchee/Benchee.html) to benchmark the performa
 ```elixir
 Benchee.run(
   %{
-    fast_fib: fn n -> FastFib.sequence(n) end
+    fast_fib: fn n -> 1 + 1 end
   },
   inputs: %{
     "1: small" => 10,
@@ -87,7 +103,7 @@ Benchee.run(
     # Make sure to add a comma above.
     # "3: large" => 100,
     # "4: xl" => 1000,
-    # "6: 2xl" => 10000,
+    # "6: 2xl" => 10000
     # "7: 3xl" => 100_000
   },
   memory_time: 2

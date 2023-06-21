@@ -158,6 +158,12 @@ double.(20)
   * [RPG Dialogue](exercises/rpg_dialogue.livemd)
   * Bonus: [Pokemon Battle](exercises/pokemon_battle.livemd)
 
+<!-- livebook:{"break_markdown":true} -->
+
+### Week 1 Review
+
+* [week 1 review]()
+
 ```elixir
 defmodule Vehicles do
   # nested modules
@@ -455,7 +461,9 @@ Integer.undigits([1, 2, 3, 4])
   * [Custom Enum With Reduce](exercises/custom_enum_with_reduce.livemd)
   * Bonus: [Data Traversal](exercises/data_traversal.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+OptionParser.parse(["--source", "lib"], strict: [source: :string])
+```
 
 ### Dates And Time
 
@@ -466,7 +474,44 @@ Integer.undigits([1, 2, 3, 4])
   * [Itinerary](exercises/itinerary.livemd)
   * Bonus: [Timeline](exercises/timeline.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+date = Date.new!(2023, 6, 20)
+
+Map.from_struct(date)
+```
+
+```elixir
+datetime = DateTime.utc_now()
+
+Map.from_struct(datetime)
+```
+
+```elixir
+DateTime.add(datetime, 2, :day)
+```
+
+```elixir
+datetime
+```
+
+```elixir
+past_datetime = DateTime.add(datetime, -2, :day)
+```
+
+```elixir
+# :lt
+DateTime.compare(datetime, past_datetime)
+```
+
+```elixir
+datetime
+```
+
+```elixir
+"2022 June 14th 7am"
+
+Calendar.strftime(datetime, "%Y %B %d")
+```
 
 ### String Manipulation
 

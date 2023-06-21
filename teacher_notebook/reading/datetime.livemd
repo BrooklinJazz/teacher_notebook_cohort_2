@@ -301,7 +301,7 @@ If you solved the challenge above using sigils, complete it again using function
 Enter your new solution below.
 
 ```elixir
-DateTime.new!(~D[1938-04-18])
+
 ```
 
 Create a [DateTime](https://hexdocs.pm/elixir/DateTime.html) for today at the current time in universal time.
@@ -388,6 +388,10 @@ with [DateTime](https://hexdocs.pm/elixir/DateTime.html).
 
 [Timex](https://hexdocs.pm/timex/Timex.html) uses the [tzdata](https://github.com/lau/tzdata) timezone database for Elixir.
 You can create a timezone aware [DateTime](https://hexdocs.pm/elixir/DateTime.html) using [Timex.now/1](https://hexdocs.pm/timex/Timex.html#now/1) and the name of a timezone.
+
+```elixir
+DateTime.utc_now()
+```
 
 ```elixir
 Timex.now("Asia/Kabul")

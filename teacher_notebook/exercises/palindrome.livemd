@@ -63,6 +63,115 @@ end
 Implement the `Palindrome` module as documented below.
 
 ```elixir
+Enum.find(["a", "b", "c"], fn each -> each == "c" end)
+```
+
+```elixir
+
+```
+
+```elixir
+list = ["a", "b", "c"]
+Enum.at(["a", "b", "c"], 0)
+
+Enum.reverse(list)
+
+# map -> length is same, some transformation applied.
+# needs position
+
+# a -> c
+# last (won't work for all)
+list = ["a", "b", "c"]
+
+# 0 -> "c" (2)
+# 1 -> "b" (1)
+# 2 -> "a" (0)
+
+list_length = length(list)
+list_max_index = list_length - 1
+
+list
+|> Enum.with_index()
+|> Enum.map(fn each ->
+  index = elem(each, 1)
+  Enum.at(list, list_max_index - index)
+end)
+
+# reduce
+Enum.reduce(list, [], fn each, acc ->
+  [each | acc]
+end)
+
+# reduce comprehension
+acc = nil
+
+word = "aba"
+list = String.split(word, "", trim: true)
+list = String.codepoints(word)
+list = String.graphemes(word)
+
+reversed =
+  for index <- length(list)..1, into: "" do
+    Enum.at(list, index - 1)
+  end
+
+word == reversed
+```
+
+```elixir
+for letter <- String.graphemes("hello"), reduce: [] do
+  acc ->
+    [letter | acc]
+end
+```
+
+```elixir
+for letter <- String.graphemes("hello"), reduce: "" do
+  acc ->
+    letter <> acc
+end
+```
+
+```elixir
+list = String.graphemes("hello")
+
+for letter <- tl(list), reduce: hd(list) do
+  acc ->
+    IO.inspect({letter, acc})
+end
+```
+
+```elixir
+a = "a"
+b = "b"
+c = "c"
+
+# c b a
+list = []
+# 
+list = [a | list]
+list = [b | list]
+list = [c | list]
+```
+
+```elixir
+list
+|> Enum.with_index()
+|> Enum.map(fn each ->
+  index = elem(each, 1)
+  Enum.at(list, list_max_index - index)
+end)
+```
+
+```elixir
+
+```
+
+```elixir
+
+```
+
+```elixir
 defmodule Palindrome do
   @moduledoc """
   Documentation for `Palindrome`.
@@ -86,6 +195,11 @@ defmodule Palindrome do
     false
   """
   def palindrome?(string) do
+    string
+    |> String.split("", trim: true)
+    |> Enum.reduce("", fn each, acc ->
+      each <> acc
+    end) == string
   end
 end
 ```

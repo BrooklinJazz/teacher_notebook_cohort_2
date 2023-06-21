@@ -58,7 +58,9 @@ Using these values above, `all_items/0` should generate `300` unique items.
 ] = Products.all_items()
 ```
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+
+```
 
 ### Products.search/2
 

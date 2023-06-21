@@ -74,8 +74,40 @@ defmodule Itinerary do
     
   """
   def has_time?(start, finish, minutes) do
+    "nonsense"
+    # diff = DateTime.diff(finish, start, :minute)
+
+    # diff >= minutes
+    # diff < minutes
+
+    # if diff >= minutes do
+    #   false
+    # else
+    #   true
+    # end
+
+    # cond do
+    #   diff >= minutes -> true
+    #   diff <= minutes -> false
+    #   true -> "invalid input"
+    # end
   end
 end
+
+Itinerary.has_time?(~U[2020-01-01 07:00:00Z], ~U[2020-01-01 08:00:00Z], 61)
+```
+
+```elixir
+case Date.new(202_123_113, 6, 20) do
+  {:ok, date} -> date
+  {:error, message} -> message
+end
+
+# 
+```
+
+```elixir
+Date.new!(202_123_113, 6, 20)
 ```
 
 ## Commit Your Progress
