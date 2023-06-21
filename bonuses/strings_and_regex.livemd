@@ -42,12 +42,23 @@ outline = """
 
 ## Insert An Outline
 
-Place the bullet-point outline you created previously between the `<!-- course-outline-start -->` and `<!-- course-outline-start -->` text.
+In the `readme` below, programatically replace the bullet-point outline you created previously between the `<!-- course-outline-start -->` and `<!-- course-outline-start -->` text.
 
 <!-- livebook:{"force_markdown":true} -->
 
 ```elixir
 """
+# Readme
+<!-- course-outline-start -->
+Replace Any Outline Between These Comments.
+<!-- course-outline-end -->
+
+# Other Sections Below
+"""
+```
+
+```elixir
+readme = """
 # Readme
 <!-- course-outline-start -->
 Replace Any Outline Between These Comments.
@@ -102,5 +113,18 @@ This overview shouldn't be affected.
 ```
 
 ```elixir
+outline = """
+### Course Tools
 
+* Reading
+  * [Command Line](reading/command_line.livemd)
+  * [Git](reading/git.livemd)
+  * [Livebook](reading/livebook.livemd)
+  * [Code Editors](reading/code_editors.livemd)
+  * [IEx](reading/iex.livemd)
+* Exercises
+  * [Command Line Family Tree](exercises/command_line_family_tree.livemd)
+  * [GitHub Engineering Journal](exercises/github_engineering_journal.livemd)
+  * [GitHub Collab](exercises/github_collab.livemd)
+"""
 ```
