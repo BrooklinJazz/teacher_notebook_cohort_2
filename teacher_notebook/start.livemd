@@ -33,7 +33,66 @@ For new students, we recommend that you [start here](reading/start_here.livemd).
   * [GitHub Engineering Journal](exercises/github_engineering_journal.livemd)
   * Bonus: [GitHub Collab](exercises/github_collab.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+user = %{admin: false}
+notifications_enabled = :all
+
+# case user do
+#   %{admin: true} ->
+#     case notifications_enabled do
+#       :all -> IO.puts("SENDING EMAIL")
+#     end
+# end
+
+with %{admin: true} <- user, :all <- notifications_enabled do
+  IO.puts("SENDING EMAIL")
+else
+  %{admin: false} -> IO.puts("YOU MUST BE AN ADMIN")
+  message -> IO.inspect(message)
+end
+```
+
+```elixir
+my_function = &(&1 + &2)
+my_function = fn param1, param2 -> param1 + param2 end
+
+my_function.(1, 1)
+```
+
+```elixir
+defmodule Increment do
+  def increment(integer) do
+    integer + 1
+  end
+
+  def increment(integer, increment_by) do
+    integer + increment_by
+  end
+end
+
+# 2 types of anonymous functions
+increment = &(&1 + 1)
+increment = fn integer -> integer + 1 end
+
+# 2 ways of using capture operator
+# 1. to define to a function &(&1 + &2)
+# 2. to refer to a function definition &function/1 
+
+Enum.map(1..3, &Increment.increment/1)
+Enum.map(1..3, &Increment.increment(&1, 2))
+```
+
+```elixir
+# expected = "hello"
+# actual = %{test: "hi"}
+
+# assert %{test: ^expected} = actual
+
+case %{test: "value"} do
+  %{test: v} = map ->
+    v
+end
+```
 
 ### Basics
 
@@ -389,6 +448,29 @@ Enum.reduce(list, "", fn each, acc ->
 end)
 ```
 
+```elixir
+# map -> take an enumerable, does something to each out -> outputs a list of the same length.
+# filter -> filter values from an enumerable based on some condition (length is same or less)
+# reduce -> take an initial accumulator, enumerate on enumerable, build the acc value.
+```
+
+```elixir
+favourite_number = 7
+
+guess = 7
+
+case guess do
+  num when num == favourite_number -> "correct"
+  _ -> "wrong"
+end
+
+assert false
+
+# operation: ==
+# left: 1
+# right: 2
+```
+
 ### Built-in Modules
 
 * Reading
@@ -408,6 +490,10 @@ end)
   * [Palindrome](exercises/palindrome.livemd)
   * [Anagram](exercises/anagram.livemd)
   * [Comprehension Search](exercises/comprehension_search.livemd)
+
+```elixir
+"hello"
+```
 
 ```elixir
 :timer.tc(fn ->
