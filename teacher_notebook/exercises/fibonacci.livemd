@@ -106,6 +106,66 @@ defmodule Fibonacci do
 end
 ```
 
+```elixir
+# defmodule Fib do
+#   def of(0), do: 0
+#   def of(1), do: 1
+
+#   def of(n) do
+#     of(n - 1) + of(n - 2)
+#   end
+# end
+
+# Fib.of(4)
+# Fib.of(4)
+# Fib.of(3) + Fib.of(2)
+#   Fib.of(3)
+#   Fib.of(2) + Fib.of(1)
+#     Fib.of(2)
+#     Fib.of(1) + Fib.of(0)
+#   Fib.of(2)
+#   Fib.of(1) + Fib.of(0)
+
+# 3
+# 2 + 1
+#   2
+#   1 + 1
+#     1
+#     1 + 0
+#   1
+#   1 + 0
+```
+
+```elixir
+defmodule Fib do
+  def of(0), do: 0
+  def of(1), do: 1
+
+  def of(n) do
+    IO.puts("fib(#{n})")
+    of(n - 1) + of(n - 2)
+  end
+end
+
+# Fib.of(4)
+# of(3) + of(2)
+# of(3)
+# of(2) + of(1)
+# of(2)
+# of(1) + of(0)
+# of(2)
+# of(1) + of(0)
+
+# 3
+# 2 + 1
+# 2
+# 1 + 1
+# 1
+# 1 + 0
+# 1
+Fib.of(50)
+```
+
 ## Commit Your Progress
 
 DockYard Academy now recommends you use the latest [Release](https://github.com/DockYard-Academy/curriculum/releases) rather than forking or cloning our repository.

@@ -104,62 +104,34 @@ Implement the `Lucas` module as documented.
 
 ```elixir
 defmodule Lucas do
-  @doc """
-  return the nth lucas number.
+  def sequence(0), do: [1]
+  def sequence(1), do: [2, 1]
+  def sequence(count, acc \\ [1, 2])
+  def sequence(2, acc), do: Enum.reverse(acc)
 
-  ## Examples
-
-    iex> Lucas.number(0)
-    2
-
-    iex> Lucas.number(1)
-    1
-
-    iex> Lucas.number(2)
-    3
-
-    iex> Lucas.number(3)
-    4
-
-    iex> Lucas.number(4)
-    7
-    
-    iex> Lucas.number(5)
-    11
-
-    iex> Lucas.number(6)
-    18
-
-    iex> Lucas.number(20)
-    15127
-  """
-  def number(n) do
-  end
-
-  @doc """
-  Generate a list of lucas numbers with the given length.
-
-  ## Examples
-
-    iex> Lucas.sequence(1)
-    [2]
-
-    iex> Lucas.sequence(2)
-    [2, 1]
-
-    iex> Lucas.sequence(3)
-    [2, 1, 3]
-
-    iex> Lucas.sequence(4)
-    [2, 1, 3, 4]
-
-    iex> Lucas.sequence(10)
-    [2, 1, 3, 4, 7, 11, 18, 29, 47, 76]
-  """
-
-  def sequence(length) do
+  def sequence(size, [current, prev | tail] = acc) do
+    sequence(size - 1, [current + prev | acc])
   end
 end
+
+Lucas.sequence(1)
+```
+
+```elixir
+defmodule Luc do
+  # 2, 1
+  # 1, 3
+  # 3, 4
+  # 4, 7
+  def solve(0), do: 2
+  def solve(1), do: 1
+
+  def solve(n, {previous, current} \\ {2, 1}) do
+    solve(n - 1, {current, current + previous})
+  end
+end
+
+Luc.solve(4)
 ```
 
 ## Commit Your Progress

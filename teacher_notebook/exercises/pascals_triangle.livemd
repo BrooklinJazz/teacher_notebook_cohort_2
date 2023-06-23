@@ -30,6 +30,16 @@ Mix.install([
 </div>
 </div>
 
+```elixir
+defmodule Infinite do
+  def loop(count) do
+    loop(count + 1) + 1
+  end
+end
+
+Infinite.loop(0)
+```
+
 ## Pascal's Triangle
 
 In this exercise, you're going to generate Pascal's Triangle for a certain number of rows.

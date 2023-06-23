@@ -183,7 +183,9 @@ Using the codepoints for these characters, we can create a charlist to see the r
 We can also create a binary using `<<>>`. Don't worry about using this syntax. It's uncommon for most real-world applications.
 
 ```elixir
-<<104, 101, 108, 108, 111>>
+<<104, 101, 108, 108, a>> = <<104, 101, 108, 108, 111>>
+
+a
 ```
 
 ### UTF-8
@@ -347,6 +349,26 @@ codepoints matching `"hello"` we create the `"hello"` string.
 ```elixir
 # H E L L O
 <<104, 101, 108, 108, 111>>
+```
+
+```elixir
+is_bitstring("hello")
+```
+
+```elixir
+is_binary("hello")
+```
+
+```elixir
+# binary (a bitstring that is divisible by 8)
+# 0 0 0 0 0 0 0 0
+
+# bitstring
+# 0 0 0
+```
+
+```elixir
+is_binary(<<0>>)
 ```
 
 It's fairly rare that you'll need to work directly with bitstrings for most applications. If you'd like to learn more, you can reference the [Elixir Documentation](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1).

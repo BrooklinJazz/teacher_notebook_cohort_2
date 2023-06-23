@@ -37,6 +37,10 @@ Upon completing this lesson, a student should be able to answer the following qu
 * How do we use recursive functions to accomplish enumeration or traverse some data structure until it's empty?
 * What are the performance impacts of tail-recursion vs body-recursion?
 
+```elixir
+
+```
+
 ## Recursion
 
 Recursion is a programming technique where a function calls itself. This creates a looping effect until some exit condition is met.
@@ -167,6 +171,16 @@ Make sure you comment out the code above, otherwise Livebook will keep disconnec
 <!-- livebook:{"break_markdown":true} -->
 
 ![](images/body-recursion-process-full.PNG)
+
+```elixir
+defmodule Tail do
+  def recursion([head | tail]) do
+    recursion(tail ++ tail)
+  end
+end
+
+Tail.recursion([1, 2, 3])
+```
 
 ## Using Recursion
 

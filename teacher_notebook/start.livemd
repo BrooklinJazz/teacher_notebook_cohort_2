@@ -524,7 +524,62 @@ Calendar.strftime(datetime, "%Y %B %d")
   * Bonus: [Rollable Expressions](exercises/rollable_expressions.livemd)
   * Bonus: [Phone Number Parsing](exercises/phone_number_parsing.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+Kernel.to_string('hello')
+```
+
+```elixir
+str = """
+999-999-9999
+999-999-9999
+999-999-9999
+999-999-9999
+999-999-9999
+999-999-9999
+"""
+
+Regex.scan(~r/(\d{3})-(\d{3})-(\d{4})/, str)
+```
+
+```elixir
+value = "b"
+
+str = "ac"
+
+"a" <> "b"
+
+"a#{1 + 1}c"
+```
+
+```elixir
+str = """
+888-999-9999
+888-999-9999
+888-999-9999
+888-999-9999
+888-999-9999
+XXX-999-XXXX
+"""
+
+Regex.replace(~r/(\d{3})-(\d{3})-(\d{4})/, str, "XXX-\\2-XXXX")
+
+# Regex.replace(~r/(\d{3})-(\d{3})-(\d{4})/, str, fn _full_match, _, thingy, _third ->
+#   "XXX-#{second}-XXXX"
+# end)
+```
+
+```elixir
+Regex.replace(~r/b/, "abc", fn each -> 97 end)
+```
+
+```elixir
+is_binary(<<2::2>>)
+is_bitstring(<<2::2>>)
+```
+
+```elixir
+"a" in ["a"]
+```
 
 ### Recursion
 
@@ -537,7 +592,88 @@ Calendar.strftime(datetime, "%Y %B %d")
   * Bonus: [Pascals Triangle](exercises/pascals_triangle.livemd)
 
 ```elixir
+def Fib do
+  def fib(0), do: 1
 
+  def fib(n) do
+    fib(n + 1) + fib()
+  end
+end
+
+# loop(0)
+# loop(1)
+# loop(2)
+# loop(3)
+# loop(4)
+# loop(5) -> 5
+
+# pop
+```
+
+```elixir
+# 5 ideas
+# another function definition
+# control flow
+# case statement
+# cond
+# if
+# guard
+# 
+
+def Stack do
+end
+
+defmodule FunctionDefinition do
+  def again(count \\ 5)
+
+  def again(0) do
+    IO.puts("FINISHED")
+  end
+
+  def again(count) do
+    IO.puts(count)
+    again(count - 1)
+  end
+end
+
+defmodule ControlFlow do
+  def again(count \\ 5) do
+    if count <= 0 do
+      IO.puts("FINISHED")
+    else
+      again(count - 1)
+    end
+
+    case count do
+      0 ->
+        IO.puts("FINISHED")
+
+      _ ->
+        IO.puts(count)
+        again(count - 1)
+    end
+
+    cond do
+      count <= 0 ->
+        IO.puts("FINISHED")
+
+      true ->
+        IO.puts(count)
+        again(count - 1)
+    end
+  end
+end
+
+# infinite recursion
+# Kid.again()
+```
+
+```elixir
+Kernel.+(Kernel.+(1, 1), Kernel.+(2, 2))
+
+# Kernel.+(2, 4)
+# 2
+# 4
 ```
 
 ## Mix Projects

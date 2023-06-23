@@ -1,0 +1,296 @@
+# Elixir Fundamentals Review
+
+## Instructions
+
+To submit your solution, you're going to create a new pull request to your DockYard Academy Curriculum.
+
+This pull request should only include changes made in this exercises. All other changes should already be pushed to your `main` branch on your GitHub repository.
+
+Ensure you have no staged or unstaged changes.
+
+```git
+git status
+```
+
+Create a new branch
+
+```git
+git checkout -b elixir-fundamentals-review
+```
+
+Finish the exercises below, then stage and commit your changes. Push these changes to a remote `elixir-fundamentals-review` branch. Make a pull request on GitHub from `elixir-fundamentals-review` to your `main` branch.
+
+Send your instructor a link to the pull request to submit your solutions.
+
+## Data Structures
+
+Access the `"hello"` key's value from the following map:
+
+```elixir
+string_map = %{"hello" => "world"}
+```
+
+Access the `:hello` key's value from the following map:
+
+```elixir
+atom_map = %{hello: "world"}
+```
+
+Use pattern matching to bind `1`, `2`, and `3` to variables `one`, `two`, and `three` in the following tuple.
+
+```elixir
+{1, 2, 3}
+```
+
+Use pattern matching to bind the `head` and the `tail` of the following list.
+
+```elixir
+[1, 2, 3]
+```
+
+Use pattern matching to bind `:a` and `:b` in the following keyword list to variables `a` and `b`.
+
+```elixir
+[a: 1, b: 2]
+```
+
+## Control Flow
+
+Complete the `Grade` module as documented.
+
+```elixir
+defmodule Grade do
+  @doc """
+  Return the appropriate letter grade for a given integer grade. 
+  Assume you do not need to handle floats.
+
+  86-100: A
+  72-85:  B
+  62-71:  C
+  51-61:  D
+  0-50:   F
+
+  iex> Grade.letter_grade(86)
+  "A"
+  iex> Grade.letter_grade(51)
+  "D"
+  """
+  def letter_grade(integer) do
+  end
+
+  @doc """
+  Return the grade range for a given letter grade.
+
+  A: 86..100
+  B: 72..85
+  C: 62..71
+  D: 51..61
+  F: 0..50
+
+  iex> Grade.grade_range("A")
+  86..100
+  iex> Grade.grade_range("C")
+  62..71
+  """
+  def grade_range(letter) do
+  end
+
+  @doc """
+  Determine if a number grade is a passing grade (50 or above)
+  iex> Grade.pass?(50)
+  "50 is a passing grade."
+
+  iex> Grade.pass?(100)
+  "100 is a passing grade."
+
+
+  iex> Grade.pass?(20)
+  "20 is a failing grade."
+  """
+  def pass?(integer) do
+  end
+end
+```
+
+## Modules and Structs
+
+In the cell below, define a `Post` struct with `:title` and `:content` keys. Enforce that these keys must be provided a value. You do not need to validate the values.
+
+```mermaid
+erDiagram
+    Post {
+        string title
+        string content
+    }
+```
+
+```elixir
+
+```
+
+Create an instance of the `Post` struct you defined above.
+
+```elixir
+
+```
+
+## Enumeration
+
+Complete the `Enumeration` module as documented.
+
+```elixir
+defmodule Enumeration do
+  @doc """
+  Double every integer in a list or range.
+
+  iex> Enumeration.double(1..5)
+  [2, 4, 6, 8, 10]
+  """
+  def double(list) do
+  end
+
+  @doc """
+  Return only the even numbers in a list or range.
+
+  iex> Enumeration.evens([2, 2, 5, 4])
+  [2, 2, 4]
+  """
+  def evens(list) do
+  end
+
+  @doc """
+  Sum only the even numbers in a list or range.
+
+  iex> Enumeration.sum_evens([2, 2, 5, 4])
+  8
+  """
+  def sum_evens(list) do
+  end
+end
+```
+
+## Built In Modules
+
+You're going to use the built-in modules to perform the common CRUD (create, read, update, destroy/delete) operations on each data structure.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Maps
+
+<!-- livebook:{"break_markdown":true} -->
+
+Update (increment) the `:count` key in this map to return `%{count: 2}`.
+
+```elixir
+%{count: 1}
+```
+
+Set the `:greeting` key in this map to be `"hi"` instead of `"hello"`.
+
+```elixir
+%{greeting: "hello"}
+```
+
+Delete the `:complete` key from this map to return an empty map.
+
+```elixir
+%{complete: "task"}
+```
+
+### List
+
+<!-- livebook:{"break_markdown":true} -->
+
+Delete the `"a"` element in this list.
+
+```elixir
+["a", "b", "c"]
+```
+
+Insert a "b" element at index `1` in this list.
+
+```elixir
+["a", "c"]
+```
+
+Update the element at index `1` in this list to be lowercase.
+
+```elixir
+["a", "B", "c"]
+```
+
+### Keyword List
+
+<!-- livebook:{"break_markdown":true} -->
+
+Delete the `:a` key/value pair in this keyword list.
+
+```elixir
+[a: 1]
+```
+
+Insert a `:b` key with the value `2` in this keyword list at index `1` to create `[a: 1, b: 2, c: 3]`. Order does matter.
+
+<details style="background-color: burlywood; padding: 1rem; margin: 1rem 0;">
+<summary>Hint</summary>
+
+Remember that you can use `List` functions such as `List.insert_at/3` with keyword lists.
+
+</details>
+
+```elixir
+[a: 1, c: 3]
+```
+
+Retrieve the value for the `:label` key in this keyword list of options.
+
+```elixir
+[label: "some label"]
+```
+
+## Strings and Regex
+
+Split all of the letters in this string to make `["a", "b", "c"]`.
+
+```elixir
+"abc"
+```
+
+Find all of the single digit characters in this string to make `["1", "2", "2", "3"]`
+
+```elixir
+"a1b22c3"
+```
+
+Determine if the `<<2::2>>` bitstring is a valid binary. This should be `false`.
+
+```elixir
+<<2::2>>
+```
+
+Determine if `<<2::2>>` is a bitstring. This should be `true`.
+
+```elixir
+<<2::2>>
+```
+
+Determine if `"hello"` is a valid binary. This should be `true`.
+
+```elixir
+"hello"
+```
+
+## Recursion
+
+Use recursion to sum every value in a list.
+
+```elixir
+defmodule Recursion do
+  @doc """
+  iex> Recursion.sum([1, 2, 3])
+  6
+  """
+  def sum(list) do
+  end
+end
+```
