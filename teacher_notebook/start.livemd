@@ -335,10 +335,10 @@ Enum.map("", fn each -> nil end)
 
 ```elixir
 string = "hello"
-charlist = ''
+charlist = ~c""
 
-'ABC' == [?A, ?B, ?C]
-'ABC' == [65, 66, 67]
+~c"ABC" == [?A, ?B, ?C]
+~c"ABC" == [65, 66, 67]
 
 defmodule Example do
   def function do
@@ -375,7 +375,7 @@ Enum.map({1, 2, 3}, fn each -> each end)
 ```
 
 ```elixir
-'hello'
+~c"hello"
 ```
 
 ```elixir
@@ -611,7 +611,7 @@ Calendar.strftime(datetime, "%Y %B %d")
   * Bonus: [Phone Number Parsing](exercises/phone_number_parsing.livemd)
 
 ```elixir
-Kernel.to_string('hello')
+Kernel.to_string(~c"hello")
 ```
 
 ```elixir

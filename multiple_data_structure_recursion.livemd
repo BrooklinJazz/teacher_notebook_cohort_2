@@ -144,3 +144,56 @@ defmodule Frequencies do
   end
 end
 ```
+
+## Nested Traversal
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule NestedLists do
+  @doc """
+  Traverse nested data lists and flatten them.
+
+  iex> NestedLists.flatten([[1, 2, 3], [4, 5]])
+  [1, 2, 3, 4, 5]
+
+  # iex>  NestedLists.flatten([[1], [], [1]])
+  # [1, 1]
+
+  # iex>  NestedLists.flatten([[1, [2, [3]], 4], [5]])
+  # [1, 2, 3, 4, 5]
+  """
+  def flatten(lists, acc \\ [])
+  def flatten([], acc), do: Enum.reverse(acc)
+
+  def flatten([head | tail], acc) do
+    if is_list(head) do
+      flatten(head) ++ flatten(tail, acc)
+    else
+      flatten(tail, [head | acc])
+    end
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule NestedLists do
+  @doc """
+  Traverse nested data lists and flatten them.
+
+  iex> NestedLists.flatten([[1, 2, 3], [4, 5]])
+  [1, 2, 3, 4, 5]
+
+  # iex>  NestedLists.flatten([[1], [], [1]])
+  # [1, 1]
+
+  # iex>  NestedLists.flatten([[1, [2, [3]], 4], [5]])
+  # [1, 2, 3, 4, 5]
+  """
+  def flatten(lists) do
+  end
+end
+```
