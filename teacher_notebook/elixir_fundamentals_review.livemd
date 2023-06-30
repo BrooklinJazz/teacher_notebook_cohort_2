@@ -22,6 +22,10 @@ Finish the exercises below, then stage and commit your changes. Push these chang
 
 Send your instructor a link to the pull request to submit your solutions.
 
+```elixir
+1 + 1
+```
+
 ## Data Structures
 
 Access the `"hello"` key's value from the following map:

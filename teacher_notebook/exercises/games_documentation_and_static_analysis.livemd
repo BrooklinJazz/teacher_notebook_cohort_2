@@ -30,6 +30,17 @@ Mix.install([
 </div>
 </div>
 
+```elixir
+answer = String.graphemes("aaaaa")
+
+guess = String.graphemes("bbbbb")
+
+result = [:grey, :grey, :grey, :grey, :grey]
+
+# 5 ideas:
+# Enum.all?
+```
+
 ## Games: Documentation & DocTesting
 
 Document your existing [Games](./games.livemd) project. Add documentation tests and examples where appropriate.

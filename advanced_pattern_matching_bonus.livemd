@@ -1,0 +1,146 @@
+# Multiple Data Structure Recursion
+
+## Zip
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Zip do
+  def zip(list1, list2, acc \\ [])
+  def zip(_, [], acc), do: Enum.reverse(acc)
+  def zip([], _, acc), do: Enum.reverse(acc)
+
+  def zip([head1 | tail1], [head2 | tail2], acc) do
+    zip(tail1, tail2, [{head1, head2} | acc])
+  end
+
+  def zip_many(lists, acc \\ []) do
+    if [] in lists do
+      acc
+      |> Enum.reverse()
+      |> Enum.map(&List.to_tuple/1)
+    else
+      heads = Enum.map(lists, &hd/1)
+      tails = Enum.map(lists, &tl/1)
+
+      zip_many(tails, [heads | acc])
+    end
+  end
+end
+```
+
+</details>
+
+```elixir
+defmodule Zip do
+  @doc """
+  Zip two lists together.
+
+  iex> Zip.zip(["a", "b", "c"], [1, 2, 3])
+  [{"a", 1}, {"b", 2}, {"c", 3}]
+
+  Ignore trailing elements.
+
+  iex> Zip.zip(["a", "b", "c"], [1, 2, 3, 4])
+  [{"a", 1}, {"b", 2}, {"c", 3}]
+
+  iex> Zip.zip(["a", "b", "c", "d"], [1, 2, 3])
+  [{"a", 1}, {"b", 2}, {"c", 3}]
+  """
+  def zip(_list1, _list2) do
+  end
+
+  @doc """
+  Zip any number of lists together
+
+  iex> Zip.zip_many([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+  [{1, 4, 7}, {2, 5, 8}, {3, 6, 9}]
+
+  Ignore trailing elements.
+
+  iex> Zip.zip_many([[1, 2, 3], [4, 5, 6], [7, 8, 9, 10]])
+  [{1, 4, 7}, {2, 5, 8}, {3, 6, 9}]
+  """
+  def zip_many(_lists) do
+  end
+end
+```
+
+## Frequencies
+
+<details style="background-color: lightgreen; padding: 1rem; margin: 1rem 0;">
+<summary>Example Solution</summary>
+
+```elixir
+defmodule Frequencies do
+  def frequencies(list, acc \\ %{}) do
+    case list do
+      [head | tail] ->
+        frequencies(tail, Map.update(acc, head, 1, fn count -> count + 1 end))
+
+      [] ->
+        acc
+    end
+  end
+
+  def many_frequencies(lists, acc \\ %{})
+  def many_frequencies([], acc), do: acc
+
+  def many_frequencies(lists, acc) do
+    frequency_map = increment_frequencies(lists, acc)
+    non_empty_tails = get_non_empty_tails(lists)
+
+    many_frequencies(non_empty_tails, frequency_map)
+  end
+
+  defp increment_frequencies(lists, acc) do
+    Enum.reduce(lists, acc, fn
+      [], acc ->
+        acc
+
+      list, frequency_map ->
+        increment_map(frequency_map, hd(list))
+    end)
+  end
+
+  defp get_non_empty_tails(lists) do
+    Enum.reduce(lists, [], fn
+      [], acc -> acc
+      list, acc -> [tl(list) | acc]
+    end)
+  end
+
+  defp increment_map(map, key), do: Map.update(map, key, 1, fn count -> count + 1 end)
+end
+```
+
+</details>
+
+```elixir
+defmodule Frequencies do
+  @doc """
+  Count the frequencies of every element in a list.
+
+  iex> Frequencies.frequencies([1, 1, 1, 2, 3, 3])
+  %{1 => 3, 2 => 1, 3 => 2}
+  """
+  def frequencies(_list) do
+  end
+
+  @doc """
+  Count the frequencies of every element in many lists until all lists are empty.
+
+  iex> Frequencies.many_frequencies([[1, 1, 1, 2, 3, 3], [1, 1, 2], [1]])
+  %{1 => 6, 2 => 2, 3 => 2}
+
+  iex> Frequencies.many_frequencies([[1, 1, 1, 2, 3, 3], [1, 1, 2], [1, 2, 3]])
+  %{1 => 6, 2 => 3, 3 => 3}
+
+  iex> Frequencies.many_frequencies([])
+  %{}
+  """
+  def many_frequencies(_lists) do
+  end
+end
+```

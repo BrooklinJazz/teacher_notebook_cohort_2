@@ -159,6 +159,36 @@ This creates a `docs/` folder. Inside the docs folder is an `index.html` file.
 
 You can open the `docs/index.html` file in your browser to view the project documentation.
 
+```elixir
+defmodule Math do
+  @type my_number :: integer() | float()
+  @spec add(my_number(), integer | float) :: integer | float
+  def add(number1, number2), do: number1 + number2
+
+  @spec subtract(my_number(), integer | float) :: integer | float
+  def subtract(number1, number2), do: number1 - number2
+end
+```
+
+```elixir
+defmodule RPS do
+  @type choice :: atom()
+
+  @spec play(choice(), choice()) :: String.t()
+  def play(player1_choice, player2_choice) do
+    "You win!"
+  end
+end
+```
+
+```elixir
+arg
+|> function()
+|> another_function()
+
+# another_function(arg)
+```
+
 ## Typespecs
 
 ### `@spec`
