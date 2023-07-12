@@ -1,0 +1,113 @@
+# Untitled notebook
+
+## Section
+
+```elixir
+pid = spawn(fn -> Process.sleep(10000) end)
+
+send(pid, :hello1)
+send(pid, :hello2)
+send(pid, :hello3)
+send(pid, :hello4)
+:erlang.process_info(pid, [:messages])
+```
+
+```elixir
+defmodule SlowStarter do
+  use GenServer
+
+  def init(_init_arg) do
+    IO.inspect(self(), label: "Child")
+    IO.puts("initializing process")
+    # Process.send_after(self(), :setup_state, 1000)
+    send(self(), :setup_state)
+    {:ok, 0}
+  end
+
+  def handle_call(:ping, _from, state) do
+    {:reply, "pong", state}
+  end
+
+  def handle_info(:setup_state, state) do
+    # simulating expensive computation
+    IO.puts("expensive work starting")
+    Process.sleep(4000)
+    IO.puts("expensive work done")
+    {:noreply, state}
+  end
+end
+```
+
+```elixir
+spawn(fn ->
+  IO.inspect(self(), label: "Parent")
+  IO.inspect(GenServer.start_link(SlowStarter, [], name: :slow_module))
+end)
+
+Process.sleep(100)
+GenServer.call(:slow_module, :ping)
+```
+
+```elixir
+defmodule ContinueExample do
+  use GenServer
+
+  def init(_init_arg) do
+    IO.puts("initializing process")
+    {:ok, 0, {:continue, :setup_state}}
+  end
+
+  def handle_call(:ping, _from, state) do
+    {:reply, "pong", state}
+  end
+
+  def handle_continue(:setup_state, state) do
+    # simulating expensive computation
+    IO.puts("starting expensive computation")
+    Process.sleep(4000)
+    IO.puts("finished expensive computation")
+    {:noreply, state}
+  end
+end
+```
+
+```elixir
+spawn(fn ->
+  GenServer.start_link(ContinueExample, [], name: :continue_pid)
+end)
+
+spawn(fn ->
+  GenServer.call(:continue_pid, :ping) |> IO.inspect()
+end)
+```
+
+```elixir
+defmodule PingPong do
+  use GenServer
+
+  def init(_init_arg) do
+    {:ok, 0}
+  end
+
+  def handle_call(:ping, _from, state) do
+    IO.puts("handling ping")
+    Process.sleep(2000)
+    {:reply, "pong", state}
+  end
+end
+```
+
+```elixir
+{:ok, pid1} = GenServer.start_link(PingPong, [])
+# {:ok, pid2} = GenServer.start_link(PingPong, [])
+
+spawn(fn ->
+  GenServer.call(pid1, :ping)
+end)
+
+spawn(fn ->
+  GenServer.call(pid1, :ping)
+end)
+
+IO.puts("I finished!")
+```

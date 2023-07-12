@@ -46,6 +46,11 @@ invalid_user2 = "Yusef"
 ```
 
 ```elixir
+%User{name: name} = %User{name: nil}
+is_binary(name)
+```
+
+```elixir
 defmodule User do
   @moduledoc """
   Send messages between users.
@@ -66,20 +71,62 @@ defmodule User do
 
   def validate_users(users) do
     Enum.map(users, fn user ->
-      with %User{name: name} <- user, true <- {:missing_name, is_binary(name)} do
+      with %User{name: name} <- user, true <- is_binary(name) do
         {:ok, user}
       else
         false ->
           {:error, :missing_name}
 
         _ ->
-          {:e}
-          IO.inspect(thing)
-          :error
+          {:error, :not_a_user}
       end
     end)
   end
+
+  # circle back to one case statement.
+  def validate_users(users) do
+    Enum.map(users, &validate_user/1)
+  end
+
+  defp validate_user(%User{name: name} = user) when is_binary(name), do: {:ok, user}
+  defp validate_user(%User{name: name} = user), do: {:error, :missing_name}
+  defp validate_user(_), do: {:error, :not_a_user}
+
+  # def validate_users(users) do
+  #   Enum.map(users, fn each ->
+  #     case each do
+  #       %User{name: name} ->
+  #         case is_binary(name) do
+  #           true -> {:ok, each}
+  #           false -> {:error, :missing_name}
+  #         end
+
+  #       _ ->
+  #         {:error, :not_a_user}
+  #     end
+  #   end)
+  # end
 end
+```
+
+```elixir
+case is_binary("hello") do
+  # when true print hello
+  true -> IO.inspect("hello")
+end
+```
+
+```elixir
+User.validate_users([%User{name: nil}])
+```
+
+```elixir
+name = "Jakub"
+
+is_binary(name)
+
+# if name is binary, print the name.
+# else print uh oh.
 ```
 
 ## Commit Your Progress

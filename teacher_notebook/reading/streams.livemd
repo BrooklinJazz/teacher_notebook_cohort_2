@@ -128,10 +128,15 @@ means that we build up functions to execute on each element in the stream.
 Notice that the following does not execute, it instead builds up future work to execute and returns a [Stream](https://hexdocs.pm/elixir/Stream.html) data structure with a list of functions to apply.
 
 ```elixir
-1..10
-|> Stream.map(fn each -> each * 2 end)
-|> Stream.filter(fn each -> each <= 10 end)
-|> Stream.take(4)
+stream =
+  1..10
+  |> Stream.map(fn each -> each * 2 end)
+  |> Stream.filter(fn each -> each <= 10 end)
+  |> Stream.take(4)
+```
+
+```elixir
+Enum.to_list(stream)
 ```
 
 The Stream stores the enumerable, and the list of functions to call on it. The Stream will only evaluate
@@ -142,7 +147,8 @@ when it's called with any eager function from the [Enum](https://hexdocs.pm/elix
 |> Stream.map(fn each -> each * 2 end)
 |> Stream.filter(fn each -> each <= 10 end)
 |> Stream.take(4)
-|> Enum.to_list()
+
+# |> Enum.to_list()
 ```
 
 We can see this more clearly if we use [IO.puts/1](https://hexdocs.pm/elixir/IO.html#puts/1) to trigger a side effect. Notice we're not printing anything.
@@ -350,7 +356,7 @@ flowchart LR
 ```
 
 ```elixir
-Stream.iterate(0, fn accumulator -> accumulator + 1 end) |> Enum.take(5)
+Stream.iterate(0, fn accumulator -> "#{accumulator + 1}" end) |> Enum.take(5)
 ```
 
 The initial value of the accumulator will be `0`. The next value of the accumulator will
@@ -449,6 +455,25 @@ Stream.unfold(5, fn accumulator ->
   value = "value: #{accumulator}"
   next_accumulator = accumulator + 1
   {value, next_accumulator}
+end)
+|> Enum.take(5)
+```
+
+```elixir
+
+```
+
+```elixir
+Enum.reduce(1..5, {[""], 0}, fn each, {value, acc} ->
+  IO.inspect({value, acc})
+  {["#{acc}" | value], acc + each}
+end)
+```
+
+```elixir
+Stream.unfold(5, fn acc ->
+  IO.inspect(acc)
+  {"#{acc}", acc + 1}
 end)
 |> Enum.take(5)
 ```

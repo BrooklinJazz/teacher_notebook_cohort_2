@@ -394,6 +394,11 @@ defmodule MessageNestedIfExample do
   end
 end
 
+# user is an admin
+# message is empty -> error
+# message has content -> send
+# user is not an admin -> error
+
 MessageNestedIfExample.send(%{is_admin: true}, "")
 ```
 
@@ -402,6 +407,17 @@ Nested `if` statements are generally a clue that we should consider an alternati
 Let's see how we could solve this problem with pattern matching.
 
 ```elixir
+# tree like control flow
+# user is an admin
+# message is empty -> error
+# message has content -> send
+# user is not an admin -> error
+
+# comb
+# user is an admin and content is empty -> error
+# user is an admin and has content -> send
+# user is not an admin -> error
+
 defmodule MessageMatchExample do
   def send(%{is_admin: true}, "") do
     {:error, :empty_message}

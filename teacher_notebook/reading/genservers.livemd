@@ -37,6 +37,138 @@ Mix.install([
 * Why might we use asynchronous vs synchronous messages?
 * What happens when we send a [GenServer](https://hexdocs.pm/elixir/GenServer.html) too many messages? What might happen to the [GenServer](https://hexdocs.pm/elixir/GenServer.html) mailbox?
 
+```elixir
+Process.list() |> Enum.count()
+```
+
+```elixir
+defmodule Counter do
+  use GenServer
+
+  # Client API
+  def start_link(_arg) do
+    GenServer.start_link(__MODULE__, 10, name: __MODULE__)
+  end
+
+  def get_count(pid) do
+    GenServer.call(pid, :get_count)
+  end
+
+  def increment(pid) do
+    GenServer.cast(pid, :increment)
+  end
+
+  def increment(pid, value) do
+    GenServer.cast(pid, {:increment, value})
+  end
+
+  # Server Callbacks
+  @impl true
+  def init(count) do
+    {:ok, count}
+  end
+
+  @impl true
+  def handle_call(:get_count, _from, state) do
+    response = state
+    new_state = state
+    {:reply, response, new_state}
+  end
+
+  @impl true
+  def handle_cast(:reset, state) do
+    {:noreply, 0}
+  end
+
+  @impl true
+  def handle_cast(:increment, state) do
+    {:noreply, state + 1}
+  end
+
+  @impl true
+  def handle_cast({:increment, value}, state) do
+    {:noreply, state + value}
+  end
+end
+```
+
+```elixir
+Process.list() |> Enum.count()
+```
+
+```elixir
+GenServer.start_link(Counter, 10)
+```
+
+```elixir
+{:ok, pid} = Counter.start_link([])
+# :sys.get_state(pid)
+```
+
+```elixir
+Process.whereis(Counter)
+```
+
+```elixir
+Counter.increment(Counter)
+```
+
+```elixir
+Counter.get_count(Counter)
+```
+
+```elixir
+Counter.increment(pid)
+```
+
+```elixir
+Counter.get_count(pid)
+```
+
+```elixir
+Counter.increment(pid, 10)
+```
+
+```elixir
+{:ok, pid} = GenServer.start_link(Counter, nil)
+```
+
+```elixir
+GenServer.cast(pid, :reset)
+```
+
+```elixir
+:sys.get_state(pid)
+```
+
+```elixir
+GenServer.call(pid, :get_count)
+```
+
+```elixir
+
+```
+
+```elixir
+Counter.init(3)
+```
+
+```elixir
+
+```
+
+```elixir
+:sys.get_state(pid)
+```
+
+```elixir
+pid
+```
+
+```elixir
+Counter.__info__(:functions)
+```
+
 ## Generic Server
 
 In Elixir, a Generic Server refers to a programming pattern and behavior implemented using the [GenServer](https://hexdocs.pm/elixir/GenServer.html) module from the OTP (Open Telecom Platform) library. The Generic Server pattern is a way to structure concurrent and fault-tolerant processes that receive and handle messages.

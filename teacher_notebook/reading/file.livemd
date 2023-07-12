@@ -210,6 +210,12 @@ Bang functions raise an error if they fail.
 File.ls!("invalid")
 ```
 
+```elixir
+case 2 do
+  1 -> "1"
+end
+```
+
 Regular functions typically return an `{:ok, value}` or an `{:error, reason}` tuple.
 
 ```elixir
@@ -232,7 +238,11 @@ To get around these issues we can use `:erlang.binary_to_term/1` and `:erlang.te
 
 When creating the file, we need to convert the Elixir term into binary using `:erlang.binary_to_term`
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+:erlang.term_to_binary(%{key: "1"})
+
+[116, 100, 0, 3, 107, 101, 121, 109, 0, 0, 0, 1, 49]
+```
 
 ```mermaid
 flowchart LR
@@ -242,9 +252,7 @@ subgraph Writing
 end
 ```
 
-```elixir
-:erlang.term_to_binary(%{key: "value"})
-```
+<!-- livebook:{"break_markdown":true} -->
 
 When reading the saved binary, we need to convert it back into an elixir term using `:erlang.term_to_binary/1`.
 

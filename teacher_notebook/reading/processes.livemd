@@ -37,6 +37,97 @@ Upon completing this lesson, a student should be able to answer the following qu
 * How do processes send and receive messages?
 * What is state and why might we use it in our programs?
 
+```elixir
+
+```
+
+```elixir
+pid =
+  spawn(fn ->
+    Process.sleep(20000)
+    raise "crash!!!!"
+  end)
+```
+
+```elixir
+Process.link(pid)
+```
+
+```elixir
+Process.alive?(pid)
+```
+
+```elixir
+self()
+```
+
+```elixir
+defmodule Count do
+  def run(count \\ 0) do
+    IO.inspect(count, label: "the current count is...")
+
+    receive do
+      :increment ->
+        run(count + 1)
+
+      :stop ->
+        IO.puts("I am stopping...")
+    end
+  end
+end
+```
+
+```elixir
+pid = spawn(fn -> Count.run() end)
+```
+
+```elixir
+send(pid, :stop)
+```
+
+```elixir
+Process.alive?(pid)
+```
+
+```elixir
+defmodule Loop do
+  def start do
+    IO.puts("I am listening...")
+
+    receive do
+      {:hello, value} ->
+        IO.puts(value)
+    end
+
+    start()
+  end
+end
+```
+
+```elixir
+pid = spawn(fn -> Loop.start() end)
+```
+
+```elixir
+send(pid, {:hello, "Jose"})
+```
+
+```elixir
+Process.alive?(pid)
+```
+
+```elixir
+send(self(), {:add_count, 10})
+
+receive do
+  {:add_count, value} -> IO.inspect(value)
+end
+```
+
+```elixir
+
+```
+
 ## Processes
 
 > In Elixir, all code runs inside processes.

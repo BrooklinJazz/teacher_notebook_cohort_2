@@ -33,66 +33,7 @@ For new students, we recommend that you [start here](reading/start_here.livemd).
   * [GitHub Engineering Journal](exercises/github_engineering_journal.livemd)
   * Bonus: [GitHub Collab](exercises/github_collab.livemd)
 
-```elixir
-user = %{admin: false}
-notifications_enabled = :all
-
-# case user do
-#   %{admin: true} ->
-#     case notifications_enabled do
-#       :all -> IO.puts("SENDING EMAIL")
-#     end
-# end
-
-with %{admin: true} <- user, :all <- notifications_enabled do
-  IO.puts("SENDING EMAIL")
-else
-  %{admin: false} -> IO.puts("YOU MUST BE AN ADMIN")
-  message -> IO.inspect(message)
-end
-```
-
-```elixir
-my_function = &(&1 + &2)
-my_function = fn param1, param2 -> param1 + param2 end
-
-my_function.(1, 1)
-```
-
-```elixir
-defmodule Increment do
-  def increment(integer) do
-    integer + 1
-  end
-
-  def increment(integer, increment_by) do
-    integer + increment_by
-  end
-end
-
-# 2 types of anonymous functions
-increment = &(&1 + 1)
-increment = fn integer -> integer + 1 end
-
-# 2 ways of using capture operator
-# 1. to define to a function &(&1 + &2)
-# 2. to refer to a function definition &function/1 
-
-Enum.map(1..3, &Increment.increment/1)
-Enum.map(1..3, &Increment.increment(&1, 2))
-```
-
-```elixir
-# expected = "hello"
-# actual = %{test: "hi"}
-
-# assert %{test: ^expected} = actual
-
-case %{test: "value"} do
-  %{test: v} = map ->
-    v
-end
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Basics
 
@@ -127,56 +68,7 @@ end
   * [Mazes](exercises/mazes.livemd)
   * Extra: Performance Optimization
 
-```elixir
-:atoms
-"strings"
-
-{:ok, "value"}
-{:error, "error message"}
-
-[:error, "error message"]
-
-{1, 2, 3, 4}
-[1, 2, 3, 4]
-
-list = [1, 2, 3]
-
-new_list = [0 | list]
-
-list
-
-[3 | [2 | [1 | []]]]
-```
-
-```elixir
-%{key: "value"}
-
-[key: "value"]
-
-kw_list = [{:key, 1}, {"key", 1}]
-```
-
-```elixir
-user = %{name: "Jon"}
-
-user[:admin][:role][:member]
-```
-
-```elixir
-{_, b, _} = {1, 2, 3}
-```
-
-```elixir
-Enum.map([a: 1, b: 2], fn {_key, value} ->
-  value
-end)
-```
-
-### Pattern Matching Discussion
-
-```elixir
-
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Control Flow And Abstraction
 
@@ -188,24 +80,7 @@ end)
   * [Rock Paper Scissors](exercises/rock_paper_scissors.livemd) (Solve as many ways as you can)
   * Extra: https://exercism.org/tracks/elixir/concepts
 
-```elixir
-# definition of a function -> function is data
-# calling a function -> I/O -> output of a function.
-call_with_20 = fn function -> function.(20) end
-
-# definition
-double = fn n -> n * 2 end
-Enum.map([1, 2, 3], double)
-
-# calling
-double.(20)
-```
-
-### Pin Operator
-
-```elixir
-
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Modules And Structs
 
@@ -223,101 +98,7 @@ double.(20)
 
 * [week 1 review]()
 
-```elixir
-defmodule Vehicles do
-  # nested modules
-  defmodule Bike do
-    def pedal do
-      "I'm biking"
-    end
-  end
-
-  defmodule Sedan do
-    def gas do
-      "I'm driving"
-    end
-  end
-end
-
-defmodule Vehicles.Car do
-  def gas do
-    "I'm also driving"
-  end
-end
-
-Vehicles.Car.gas()
-
-defmodule Person do
-  defp think do
-    "Thinking something"
-  end
-
-  def say do
-    "Speaking something"
-  end
-end
-
-Person.say()
-# public vs private functions
-# define data within module
-
-# defmodule MyModule do
-#   def my_function do
-#     "return value"
-#   end
-# end
-
-# MyModule.my_function()
-```
-
-```elixir
-defmodule RockPaperScissors do
-  @winners [{:rock, :scissors}, {:scissors, :paper}, {:paper, :rock}]
-
-  def beats?(choice1, choice2) do
-    {choice1, choice2} in @winners
-  end
-
-  def play() do
-    case {@player1, @player2} do
-      {:rock, :scissors} -> "Player 1 wins"
-    end
-  end
-end
-```
-
-```elixir
-RockPaperScissors.ai()
-```
-
-```elixir
-[_, _, variable] = [1, 2, 3]
-
-variable
-```
-
-```elixir
-fn ->
-  nil
-end
-```
-
-```elixir
-# definition of a struct
-defmodule LunchBox do
-  @enforce_keys [:main_course, :side_dish]
-  defstruct @enforce_keys ++ [:dessert]
-  # [:dessert, :main_course, :side_dish]
-  # [:desert, [:main_course, :side_dish]]
-end
-```
-
-```elixir
-# instance of a struct
-lunchbox = %LunchBox{dessert: "Broccoli", main_course: "Pork Cutlet", side_dish: "Rice"}
-
-lunchbox.dessert
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Enumeration
 
@@ -329,147 +110,7 @@ lunchbox.dessert
   * [Named Number Lists](exercises/named_number_lists.livemd)
   * [Measurements](exercises/measurements.livemd)
 
-```elixir
-Enum.map("", fn each -> nil end)
-```
-
-```elixir
-string = "hello"
-charlist = ~c""
-
-~c"ABC" == [?A, ?B, ?C]
-~c"ABC" == [65, 66, 67]
-
-defmodule Example do
-  def function do
-    [100, 101, 102]
-  end
-end
-
-Example.function() |> IO.inspect(charlists: :as_list)
-```
-
-```elixir
-# map vs filter vs reduce
-# arity
-# capture operator w/callbacks
-# How to create your own Livebooks for AOC: https://adventofcode.com/
-# How to import Livebooks: https://github.com/DockYard-Academy/curriculum/blob/main/exercises/deprecated_counting_votes.livemd
-```
-
-```elixir
-# enumerables
-# lists
-# maps
-# keyword lists
-# strings? NO
-# tuples? NO
-# mapsets
-# collections vs enumerables
-
-Enum.map("hello", fn each -> each end)
-```
-
-```elixir
-Enum.map({1, 2, 3}, fn each -> each end)
-```
-
-```elixir
-~c"hello"
-```
-
-```elixir
-?h
-```
-
-```elixir
-?A
-```
-
-```elixir
-[65, 66, 67]
-
-[20, 22, 23]
-|> Enum.map(fn each -> each + 30 end)
-|> IO.inspect(label: "My Label", charlists: :as_list)
-```
-
-```elixir
-# map -> transform every element in a collection
-# filter -> remove elements from a collection
-# What is Enum.reduce? -> 
-# accumulator
-
-#INPUT/OUTPUT
-# Enum.map: enumerable (same number) -> enumerable (same number) 
-# Enum.filter: enumerable -> enumerable with same or fewer values (same elements)
-# Enum.reduce: enumerable -> anything
-
-
-
-[1, 2, 3] -> Enum.map -> [2, 3, 4]
-
-
-# double all elements in a list -> map
-# remove even elements from a list -> filter
-# sum elements in a list -> reduce
-[1, 1, 1] -> 3
-
-# Why reduce?
-# -> output is an integer
-# -> map: transform each element, same length
-# -> filter: no transformation, same or fewer
-```
-
-```elixir
-# map (same length, tranforming elements) NO
-# list (enumerable) of strings -> string (not enumerable)
-# reduce (enumerable - SMASH -> output (anything))
-#  -> "hello"
-list = ["h", "e", "l", "l", "o"]
-
-# initial_accumulator = ""
-# element -> "h" accumulator -> "h"
-# element -> "e" acc -> "he"
-# element -> "l" acc -> "hel"
-# element -> "l" acc -> "hell"
-# element -> "o" acc -> "hello"
-
-# solve the easier problem
-acc = "hell"
-element = "o"
-output = acc <> element
-
-# output -> "hello"
-
-Enum.reduce(list, "", fn each, acc ->
-  IO.inspect(acc: acc, each: each)
-  acc <> each
-end)
-```
-
-```elixir
-# map -> take an enumerable, does something to each out -> outputs a list of the same length.
-# filter -> filter values from an enumerable based on some condition (length is same or less)
-# reduce -> take an initial accumulator, enumerate on enumerable, build the acc value.
-```
-
-```elixir
-favourite_number = 7
-
-guess = 7
-
-case guess do
-  num when num == favourite_number -> "correct"
-  _ -> "wrong"
-end
-
-assert false
-
-# operation: ==
-# left: 1
-# right: 2
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Built-in Modules
 
@@ -491,52 +132,7 @@ assert false
   * [Anagram](exercises/anagram.livemd)
   * [Comprehension Search](exercises/comprehension_search.livemd)
 
-```elixir
-"hello"
-```
-
-```elixir
-:timer.tc(fn ->
-  for n <- 1..1_000_000 do
-    n * 2
-  end
-end)
-```
-
-```elixir
-:timer.tc(fn ->
-  Enum.map(1..1_000_000, fn each -> each * 2 end)
-end)
-```
-
-```elixir
-# "hello" -> ["h", "e", "l", "l", "o"]
-# {1, 2, 3, 4, 5} -> [1, 2, 3, 4, 5]
-# 1234 -> [1, 2, 3, 4]
-
-String.split("hello", "", trim: true)
-Tuple.to_list({1, 2, 3, 4, 5})
-Integer.digits(1234)
-```
-
-```elixir
-list = ["h", "e", "l", "l", "o"]
-List.to_string(["h", "e", "l", "l", "o"])
-
-Enum.reduce(list, "", fn each, acc ->
-  acc <> each
-end)
-
-Enum.join(list, "-")
-```
-
-```elixir
-List.to_tuple([1, 2, 3, 4, 5])
-```
-
-```elixir
-Integer.undigits([1, 2, 3, 4])
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Reduce
 
@@ -547,9 +143,7 @@ Integer.undigits([1, 2, 3, 4])
   * [Custom Enum With Reduce](exercises/custom_enum_with_reduce.livemd)
   * Bonus: [Data Traversal](exercises/data_traversal.livemd)
 
-```elixir
-OptionParser.parse(["--source", "lib"], strict: [source: :string])
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Dates And Time
 
@@ -560,44 +154,7 @@ OptionParser.parse(["--source", "lib"], strict: [source: :string])
   * [Itinerary](exercises/itinerary.livemd)
   * Bonus: [Timeline](exercises/timeline.livemd)
 
-```elixir
-date = Date.new!(2023, 6, 20)
-
-Map.from_struct(date)
-```
-
-```elixir
-datetime = DateTime.utc_now()
-
-Map.from_struct(datetime)
-```
-
-```elixir
-DateTime.add(datetime, 2, :day)
-```
-
-```elixir
-datetime
-```
-
-```elixir
-past_datetime = DateTime.add(datetime, -2, :day)
-```
-
-```elixir
-# :lt
-DateTime.compare(datetime, past_datetime)
-```
-
-```elixir
-datetime
-```
-
-```elixir
-"2022 June 14th 7am"
-
-Calendar.strftime(datetime, "%Y %B %d")
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### String Manipulation
 
@@ -610,62 +167,7 @@ Calendar.strftime(datetime, "%Y %B %d")
   * Bonus: [Rollable Expressions](exercises/rollable_expressions.livemd)
   * Bonus: [Phone Number Parsing](exercises/phone_number_parsing.livemd)
 
-```elixir
-Kernel.to_string(~c"hello")
-```
-
-```elixir
-str = """
-999-999-9999
-999-999-9999
-999-999-9999
-999-999-9999
-999-999-9999
-999-999-9999
-"""
-
-Regex.scan(~r/(\d{3})-(\d{3})-(\d{4})/, str)
-```
-
-```elixir
-value = "b"
-
-str = "ac"
-
-"a" <> "b"
-
-"a#{1 + 1}c"
-```
-
-```elixir
-str = """
-888-999-9999
-888-999-9999
-888-999-9999
-888-999-9999
-888-999-9999
-XXX-999-XXXX
-"""
-
-Regex.replace(~r/(\d{3})-(\d{3})-(\d{4})/, str, "XXX-\\2-XXXX")
-
-# Regex.replace(~r/(\d{3})-(\d{3})-(\d{4})/, str, fn _full_match, _, thingy, _third ->
-#   "XXX-#{second}-XXXX"
-# end)
-```
-
-```elixir
-Regex.replace(~r/b/, "abc", fn each -> 97 end)
-```
-
-```elixir
-is_binary(<<2::2>>)
-is_bitstring(<<2::2>>)
-```
-
-```elixir
-"a" in ["a"]
-```
+<!-- livebook:{"break_markdown":true} -->
 
 ### Recursion
 
@@ -676,91 +178,6 @@ is_bitstring(<<2::2>>)
   * [Lucas Numbers](exercises/lucas_numbers.livemd)
   * Bonus: [Factorial](exercises/factorial.livemd)
   * Bonus: [Pascals Triangle](exercises/pascals_triangle.livemd)
-
-```elixir
-def Fib do
-  def fib(0), do: 1
-
-  def fib(n) do
-    fib(n + 1) + fib()
-  end
-end
-
-# loop(0)
-# loop(1)
-# loop(2)
-# loop(3)
-# loop(4)
-# loop(5) -> 5
-
-# pop
-```
-
-```elixir
-# 5 ideas
-# another function definition
-# control flow
-# case statement
-# cond
-# if
-# guard
-# 
-
-def Stack do
-end
-
-defmodule FunctionDefinition do
-  def again(count \\ 5)
-
-  def again(0) do
-    IO.puts("FINISHED")
-  end
-
-  def again(count) do
-    IO.puts(count)
-    again(count - 1)
-  end
-end
-
-defmodule ControlFlow do
-  def again(count \\ 5) do
-    if count <= 0 do
-      IO.puts("FINISHED")
-    else
-      again(count - 1)
-    end
-
-    case count do
-      0 ->
-        IO.puts("FINISHED")
-
-      _ ->
-        IO.puts(count)
-        again(count - 1)
-    end
-
-    cond do
-      count <= 0 ->
-        IO.puts("FINISHED")
-
-      true ->
-        IO.puts(count)
-        again(count - 1)
-    end
-  end
-end
-
-# infinite recursion
-# Kid.again()
-```
-
-```elixir
-Kernel.+(Kernel.+(1, 1), Kernel.+(2, 2))
-
-# Kernel.+(2, 4)
-# 2
-# 4
-```
 
 ## Mix Projects
 

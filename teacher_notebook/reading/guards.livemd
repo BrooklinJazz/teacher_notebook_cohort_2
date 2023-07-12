@@ -129,6 +129,21 @@ end
 RockPaperScissors.winner(:rock)
 ```
 
+```elixir
+defmodule CompileTimeExample do
+  # executed at compile time
+  @random Enum.random(1..100)
+  def random do
+    # runtime
+    @random
+  end
+end
+```
+
+```elixir
+CompileTimeExample.random()
+```
+
 Invalid guesses will now raise a [FunctionClauseError](https://hexdocs.pm/elixir/FunctionClauseError.html).
 
 ```elixir
@@ -292,6 +307,10 @@ defmodule Percent do
   def display(percent) do
   end
 end
+```
+
+```elixir
+:erlang.binary_to_term(<<131, 75, 6::24>>)
 ```
 
 ## Further Reading

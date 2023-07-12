@@ -37,7 +37,31 @@ Upon completing this lesson, a student should be able to answer the following qu
 * How do you achieve data-based polymorphism using protocols?
 * Why might you use protocols instead of some control flow structure or some alternative means of achieving data-based polymorphism?
 
+```elixir
+String.to_atom("ok")
+```
+
+```elixir
+Enum.each(1..1_000_000, fn each ->
+  String.to_atom("#{each}")
+end)
+```
+
+```elixir
+:erlang.system_info(:atom_count)
+```
+
+```elixir
+# atom -> map function -> # integer
+
+String.to_existing_atom("1000001")
+```
+
 ## Protocols
+
+```elixir
+Enum.map({1, 2, 3}, fn each -> each end)
+```
 
 In English, a protocol means a set of rules or procedures. In Elixir, a protocol allows us to
 create a common functionality, with different implementations.
@@ -77,7 +101,9 @@ flowchart
   EN --> k[Keyword List]
 ```
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+
+```
 
 It then executes the appropriate instructions depending on which data type the [Enum](https://hexdocs.pm/elixir/Enum.html) function
 is called with.
