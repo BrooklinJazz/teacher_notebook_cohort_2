@@ -111,37 +111,6 @@ defmodule PokelixirTest do
            }
   end
 
-  test "many_pokemon_from_json/1" do
-    assert Pokelixir.many_pokemon_from_json([@charizard_json, @charizard_json]) == [
-             %Pokemon{
-               id: 6,
-               name: "charizard",
-               hp: 78,
-               attack: 84,
-               defense: 78,
-               special_attack: 109,
-               special_defense: 85,
-               speed: 100,
-               height: 17,
-               weight: 905,
-               types: ["fire", "flying"]
-             },
-             %Pokemon{
-               id: 6,
-               name: "charizard",
-               hp: 78,
-               attack: 84,
-               defense: 78,
-               special_attack: 109,
-               special_defense: 85,
-               speed: 100,
-               height: 17,
-               weight: 905,
-               types: ["fire", "flying"]
-             }
-           ]
-  end
-
   test "pokemon_from_json/1" do
     result = Pokelixir.pokemon_from_json(@charizard_json)
     assert result.id == 6

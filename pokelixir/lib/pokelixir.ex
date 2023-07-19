@@ -12,9 +12,9 @@ defmodule Pokelixir do
     map = Jason.decode!(body)
     # async_all(map["results"])
     Enum.map(map["results"], fn pokemon ->
-      PokemonAPI.get(pokemon["name"]).body
+      %Finch.Response{body: json} = PokemonAPI.get(pokemon["name"])
+      pokemon_from_json(json)
     end)
-    |> many_pokemon_from_json()
   end
 
   # def async_all(_results, acc \\ [])
@@ -27,7 +27,7 @@ defmodule Pokelixir do
   #     Enum.map(something, fn pokemon ->
   #       Task.async(fn ->
   #         %Finch.Response{body: json} = PokemonAPI.get(pokemon["name"])
-  #         json
+  #         pokemon_from_json(json)
   #       end)
   #     end)
   #     |> Task.await_many()
@@ -38,10 +38,6 @@ defmodule Pokelixir do
   def get(name) do
     %Finch.Response{body: json} = PokemonAPI.get(name)
     pokemon_from_json(json)
-  end
-
-  def many_pokemon_from_json(json_list) do
-    Enum.map(json_list, &pokemon_from_json/1)
   end
 
   def pokemon_from_json(json) do
