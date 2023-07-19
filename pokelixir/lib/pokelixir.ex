@@ -17,23 +17,23 @@ defmodule Pokelixir do
     |> many_pokemon_from_json()
   end
 
-  def async_all(_results, acc \\ [])
-  def async_all([], acc), do: acc
+  # def async_all(_results, acc \\ [])
+  # def async_all([], acc), do: acc
 
-  def async_all(results, acc) do
-    {something, rest} = Enum.split(results, System.schedulers_online())
+  # def async_all(results, acc) do
+  #   {something, rest} = Enum.split(results, System.schedulers_online())
 
-    requests =
-      Enum.map(something, fn pokemon ->
-        Task.async(fn ->
-          %Finch.Response{body: json} = PokemonAPI.get(pokemon["name"])
-          json
-        end)
-      end)
-      |> Task.await_many()
+  #   requests =
+  #     Enum.map(something, fn pokemon ->
+  #       Task.async(fn ->
+  #         %Finch.Response{body: json} = PokemonAPI.get(pokemon["name"])
+  #         json
+  #       end)
+  #     end)
+  #     |> Task.await_many()
 
-    async_all(rest, requests ++ acc)
-  end
+  #   async_all(rest, requests ++ acc)
+  # end
 
   def get(name) do
     %Finch.Response{body: json} = PokemonAPI.get(name)
