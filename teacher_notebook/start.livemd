@@ -33,7 +33,9 @@ For new students, we recommend that you [start here](reading/start_here.livemd).
   * [GitHub Engineering Journal](exercises/github_engineering_journal.livemd)
   * Bonus: [GitHub Collab](exercises/github_collab.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+1 + 1
+```
 
 ### Basics
 
@@ -276,7 +278,78 @@ For new students, we recommend that you [start here](reading/start_here.livemd).
   * Drills: [Process](exercises/process_drills.livemd)
   * [Process Mailbox](exercises/process_mailbox.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+# start a process
+spawn(fn -> IO.puts("I am alive!") end)
+
+# start a linked process
+spawn_link(fn -> IO.puts("I am alive and linked!") end)
+
+# send a message
+send(self(), :paycheck)
+
+# receive a message
+receive do
+  any_message -> IO.inspect(any_message, label: "I received")
+end
+```
+
+```elixir
+# GenServers
+
+defmodule Counter do
+  use GenServer
+
+  def init(_opts) do
+    {:ok, 0}
+  end
+
+  def handle_call(:increment, _from, state) do
+    {:reply, :ok, state + 1}
+  end
+
+  def handle_cast(:increment, state) do
+    {:noreply, state + 1}
+  end
+end
+```
+
+```elixir
+# start a GenServer process
+{:ok, pid} = GenServer.start_link(Counter, [])
+
+# send a message
+GenServer.call(pid, :increment)
+
+# receive a message
+```
+
+```elixir
+:sys.get_state(pid)
+```
+
+```elixir
+:erlang.process_info(self(), :messages)
+```
+
+```elixir
+self()
+```
+
+```elixir
+self()
+```
+
+```elixir
+receive do
+  {:paycheck, amount} -> IO.puts("Thanks for the #{amount} dollars!")
+  :paycheck -> IO.puts("Thanks for the money!")
+end
+```
+
+```elixir
+send(self(), {:paycheck, 100})
+```
 
 ### GenServers
 

@@ -1,3 +1,5 @@
+<!-- livebook:{"default_language":"erlang"} -->
+
 # Score Tracker
 
 ```elixir
@@ -92,7 +94,7 @@ Implement the `ScoreTracker` module below.
 ```elixir
 defmodule ScoreTracker do
   @moduledoc """
-  iex> {:ok, pid} = ScoreTracker.start_link([])
+  iex> {:ok, pid} = ScoreTracker.start_link([name: nil])
   iex> ScoreTracker.add_points(pid, 10)
   :ok
   iex> ScoreTracker.current_score(pid)
@@ -102,7 +104,9 @@ defmodule ScoreTracker do
 
   # Client API
 
-  def start_link(_opts) do
+  def start_link(opts) do
+    name = Keyword.get(opts, :name, __MODULE__)
+    GenServer.start_link(__MODULE__, [], name: name)
   end
 
   def score(score_tracker_pid, amount) do
@@ -114,6 +118,7 @@ defmodule ScoreTracker do
   # Server API
 
   def init(_init_arg) do
+    {:ok, 0}
   end
 
   def handle_cast({:add_points, amount}, state) do
@@ -122,6 +127,28 @@ defmodule ScoreTracker do
   def handle_call(:current_score, _from, state) do
   end
 end
+```
+
+```elixir
+{:ok, pid} = ScoreTracker.start_link([])
+```
+
+```elixir
+ScoreTracker.start_link(name: ScoreTracker)
+```
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule ScoreTrackerTest do
+  use ExUnit.Case
+
+  test "start_link/1" do
+    {:ok, pid} = GenServer.start_link([])
+  end
+end
+
+ExUnit.run()
 ```
 
 ## Bonus: Multiplayer Score Tracker

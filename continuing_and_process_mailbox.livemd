@@ -1,6 +1,15 @@
-# Untitled notebook
+# Processes and GenServers
 
 ## Section
+
+```elixir
+# pid = spawn(fn -> Process.sleep(10000) end)
+send(self(), :my_message)
+:erlang.process_info(self(), :messages) |> IO.inspect()
+:c.flush()
+:erlang.process_info(self(), :messages) |> IO.inspect()
+# :erlang.process_info(pid, :messages) |> IO.inspect()
+```
 
 ```elixir
 pid = spawn(fn -> Process.sleep(10000) end)

@@ -147,6 +147,7 @@ defmodule Worker do
   use GenServer
 
   def start_link(_opts) do
+    IO.inspect(binding())
     GenServer.start_link(__MODULE__, [], [])
   end
 
@@ -162,7 +163,7 @@ Every supervisor is also a process. The [Supervisor.start_link/2](https://hexdoc
 children = [
   %{
     id: :worker1,
-    start: {Worker, :start_link, [1]}
+    start: {Worker, :start_link, [[]]}
   },
   %{
     id: :worker2,
@@ -177,6 +178,10 @@ children = [
 {:ok, supervisor_pid} = Supervisor.start_link(children, strategy: :one_for_one)
 ```
 
+```elixir
+
+```
+
 ### Your Turn
 
 <!-- livebook:{"break_markdown":true} -->
@@ -185,6 +190,10 @@ Here, we've used the livebook-exclusive [Kino.Process.sup_tree/2](https://hexdoc
 
 ```elixir
 Kino.Process.sup_tree(supervisor_pid)
+```
+
+```elixir
+Supervisor.which_children(supervisor_pid)
 ```
 
 When we kill one of the processes under the supervision tree, it will be restarted. For demonstration purposes only, you can use the [:c.pid/3](https://www.erlang.org/doc/man/c.html#pid-3) function from erlang to manually create the `pid` from the diagram above where `727` should be a pid from the diagram above.
@@ -363,7 +372,7 @@ so the timeline of crashes should be:
 Uncomment and run the cell below to see the timeline of crashes, then re-comment it.
 
 ```elixir
-# {:ok, supervisor_pid} = Supervisor.start_link(children, strategy: :one_for_one, max_restarts: 5)
+{:ok, supervisor_pid} = Supervisor.start_link(children, strategy: :one_for_one, max_restarts: 5)
 ```
 
 ### One For All
