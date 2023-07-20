@@ -10,11 +10,23 @@ defmodule Pokelixir do
     %Finch.Response{body: body} = PokemonAPI.all(limit)
 
     map = Jason.decode!(body)
-    # async_all(map["results"])
+
     Enum.map(map["results"], fn pokemon ->
       %Finch.Response{body: json} = PokemonAPI.get(pokemon["name"])
       pokemon_from_json(json)
     end)
+
+    # Asycn Version
+    # async_all(map["results"])
+
+    # Too Much Concurrency Version
+    # Enum.map(map["results"], fn pokemon ->
+    #   Task.async(fn ->
+    #     %Finch.Response{body: json} = PokemonAPI.get(pokemon["name"])
+    #     pokemon_from_json(json)
+    #   end)
+    # end)
+    # |> Task.await_many()
   end
 
   # def async_all(_results, acc \\ [])

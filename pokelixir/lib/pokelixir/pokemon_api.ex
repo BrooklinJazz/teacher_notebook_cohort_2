@@ -2,7 +2,7 @@ defmodule Pokelixir.PokemonAPI do
   @callback get(String.t()) :: Pokelixir.Pokemon.t()
   @callback all(integer()) :: Pokelixir.Pokemon.t()
   def all(limit \\ 10000), do: impl().all(limit)
-  def get(name), do: IO.inspect(impl()).get(name)
+  def get(name), do: impl().get(name)
   defp impl, do: Application.get_env(:pokelixir, :pokemon_api, Pokelixir.ExternalPokemonAPI)
 end
 
