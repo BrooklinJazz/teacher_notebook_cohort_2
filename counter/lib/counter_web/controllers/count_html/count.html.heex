@@ -1,0 +1,14 @@
+Count is <%= @count %>
+<%= inspect(@greeting) %>
+
+<%= if assigns[:color] do %>
+  assigns.color
+<% end %>
+
+<.link navigate={~p"/count?count=#{@count + 1}"}>Increment</.link>
+
+<.form :let={f} for={%{}} action={~p"/count"}>
+  <.input type="number" field={f[:increment]} />
+  <.input type="hidden" field={f[:count]} value={@count} />
+  <.button>Submit</.button>
+</.form>
