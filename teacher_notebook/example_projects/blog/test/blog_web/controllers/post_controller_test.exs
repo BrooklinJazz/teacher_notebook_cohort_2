@@ -22,8 +22,10 @@ defmodule BlogWeb.PostControllerTest do
     end
 
     test "search for posts - non-matching", %{conn: conn} do
+      # Arrange
       user = user_fixture()
       post = post_fixture(title: "some title", user_id: user.id)
+      # Act
       conn = get(conn, ~p"/posts", title: "Non-Matching")
       refute html_response(conn, 200) =~ post.title
     end

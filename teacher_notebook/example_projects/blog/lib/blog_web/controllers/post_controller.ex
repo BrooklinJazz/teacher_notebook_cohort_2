@@ -7,7 +7,7 @@ defmodule BlogWeb.PostController do
   alias Blog.Posts.Post
   alias Blog.Tags
 
-  plug(:require_user_owns_post when action in [:edit, :update, :delete])
+  plug :require_user_owns_post when action in [:edit, :update, :delete]
   plug :page_title
 
   def index(conn, %{"title" => title}) do

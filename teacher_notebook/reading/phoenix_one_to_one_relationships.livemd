@@ -218,6 +218,32 @@ def changeset(post, attrs, tags \\ []) do
 end
 ```
 
+```elixir
+some_data = %{
+  key1: %{
+    key1: %{
+      key1: "value1",
+      key2: "value2"
+    },
+    key2: %{
+      key1: "value1",
+      key2: "value2"
+    }
+  },
+  key2: %{}
+}
+
+if some_data[:key1][:key1][:key1] && some_data[:key2][:key2][:key2] do
+  some_data.key1.key1.key1 <> some_data.key2.key2.key2
+end
+
+if(assigns[:current_user][:phone_number])
+```
+
+```elixir
+nil[:key]
+```
+
 ## Context Tests
 
 Generally a context should (at minimum) test the create, update, and delete behavior of a resource.

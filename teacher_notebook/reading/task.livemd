@@ -42,6 +42,22 @@ Upon completing this lesson, a student should be able to answer the following qu
 We've already seen we can use [Kernel.spawn/1](https://hexdocs.pm/elixir/Kernel.html#spawn/1) or `Kernal.spawn_link/1` to spawn a process that performs some work and then dies.
 
 ```elixir
+task1 =
+  Task.async(fn ->
+    1
+  end)
+
+int = 1
+
+task2 =
+  Task.async(fn ->
+    "#{int} bottles"
+  end)
+
+Task.await_many([task1, task2])
+```
+
+```elixir
 spawn_pid =
   spawn(fn ->
     IO.puts("Job Started")
@@ -72,14 +88,22 @@ Process.alive?(task_pid) || IO.puts("task is dead")
 With [Task](https://hexdocs.pm/elixir/Task.html), we can use `async/1` and `await/1` to spawn a process, perform some calculation, and the retrieve the value when it's finished.
 
 ```elixir
-task =
+task1 =
   Task.async(fn ->
     # simulating expensive calculation
     Process.sleep(1000)
     "response!"
   end)
 
-Task.await(task)
+task2 =
+  Task.async(fn ->
+    # simulating expensive calculation
+    Process.sleep(1000)
+    "response!"
+  end)
+
+Task.await(task1)
+Task.await(task2)
 ```
 
 We can run two computations concurrently by separating them into two different [Task](https://hexdocs.pm/elixir/Task.html) processes.

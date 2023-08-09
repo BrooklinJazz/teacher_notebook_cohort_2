@@ -457,7 +457,9 @@ send(self(), {:paycheck, 100})
 * Exercises
   * [Blog: Search](exercises/blog_search.livemd)
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+
+```
 
 ### Phoenix Forms And Components
 

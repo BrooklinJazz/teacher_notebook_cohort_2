@@ -177,12 +177,14 @@ Now when we kill a [Task](https://hexdocs.pm/elixir/Task.html) started with the 
 Supervisor.which_children(MyTaskSupervisor)
 |> IO.inspect(label: "Started children")
 
+Kino.Process.sup_tree(MyTaskSupervisor) |> Kino.render()
+
 Process.exit(pid, :kill)
 
 Process.sleep(1000)
-
-Supervisor.which_children(MyTaskSupervisor)
-|> IO.inspect(label: "Children after exit")
+Kino.Process.sup_tree(MyTaskSupervisor)
+# Supervisor.which_children(MyTaskSupervisor)
+# |> IO.inspect(label: "Children after exit")
 ```
 
 ## Further Reading

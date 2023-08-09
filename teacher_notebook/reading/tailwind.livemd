@@ -299,7 +299,7 @@ Create a paragraph tag that will wrap text on a new line when wider than 10rem.
 For example, this paragraph will wrap words when the text is wider than 10rem.<p>
 </p>
 
-<!-- livebook:{"attrs":{},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"html":"<p class=\"bg-red-400 max-w-[10px] w-10 break-all\">Test thest test test test</p>"},"chunks":null,"kind":"Elixir.Kino.TailwindPlayground","livebook_object":"smart_cell"} -->
 
 ```elixir
 Kino.nothing()

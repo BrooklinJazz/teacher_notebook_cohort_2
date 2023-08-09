@@ -1,0 +1,52 @@
+# Untitled notebook
+
+```elixir
+Mix.install([
+  {:benchee, "~> 1.1"}
+])
+```
+
+## Section
+
+```elixir
+size = 10_000_000
+
+list = Enum.to_list(1..size)
+tuple = List.to_tuple(list)
+
+{worst_case_list, _} = :timer.tc(fn -> Enum.at(list, size - 1) end)
+{worst_case_tuple, _} = :timer.tc(fn -> elem(tuple, size - 1) end)
+
+{best_case_list, _} = :timer.tc(fn -> Enum.at(list, 0) end)
+{best_case_tuple, _} = :timer.tc(fn -> elem(tuple, 0) end)
+
+IO.inspect(%{
+  worst_case_list: worst_case_list,
+  worst_case_tuple: worst_case_tuple,
+  best_case_list: best_case_list,
+  best_case_tuple: best_case_tuple
+})
+```
+
+```elixir
+size = 10_000_000
+
+list = Enum.to_list(1..size)
+tuple = List.to_tuple(list)
+```
+
+```elixir
+:timer.tc(fn -> Enum.at(list, size - 1) end)
+```
+
+```elixir
+:timer.tc(fn -> elem(tuple, size - 1) end)
+```
+
+```elixir
+:timer.tc(fn -> Enum.at(list, 0) end)
+```
+
+```elixir
+:timer.tc(fn -> elem(tuple, 0) end)
+```

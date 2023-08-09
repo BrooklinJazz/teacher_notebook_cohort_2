@@ -263,7 +263,13 @@ scope "/", BlogWeb do
 end
 ```
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+scope "/", BlogWeb do
+  pipe_through([:browser])
+
+  resources("/posts", PostController, only: [:index, :show])
+end
+```
 
 ### Requiring User Owns Resource
 
@@ -361,9 +367,12 @@ It's just like having a case statement where the first clause always matches.
 url = "/posts/new"
 
 case url do
-  "/posts" <> id -> "show route"
-  # this case clause will never match.
-  "/posts/new" -> "new route"
+  "/posts/new" ->
+    "new route"
+
+  "/posts" <> id ->
+    "show route"
+    # this case clause will never match.
 end
 ```
 
@@ -493,6 +502,10 @@ Here's an example of hiding an element based on if the user owns a particular re
     Delete
   </.link>
 <% end %>
+```
+
+```elixir
+nil[:key]
 ```
 
 ## Preloading Nested Associations

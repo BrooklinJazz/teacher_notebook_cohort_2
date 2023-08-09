@@ -1,0 +1,10 @@
+# Untitled notebook
+
+## Section
+
+```elixir
+students = ~w(ShawnH, Ian,	Aleena, Patrick,	Luis,	Mario,	Mona,	Reagan,	Jakup,	Rod,	Jazz,	ShawnC)
+
+Enum.shuffle(students)
+|> Enum.chunk_every(3)
+```
