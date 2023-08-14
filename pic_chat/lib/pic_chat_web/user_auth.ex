@@ -5,6 +5,7 @@ defmodule PicChatWeb.UserAuth do
   import Phoenix.Controller
 
   alias PicChat.Accounts
+  alias PicChat.Messages
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -164,8 +165,9 @@ defmodule PicChatWeb.UserAuth do
 
   def on_mount(:user_owns_message, params, session, socket) do
     socket = mount_current_user(socket, session)
+    message = Messages.get_message!(params["id"])
 
-    if socket.assigns.current_user == params["id"] do
+    if socket.assigns.current_user.id == message.user_id do
       {:cont, socket}
     else
       socket =
@@ -176,7 +178,6 @@ defmodule PicChatWeb.UserAuth do
       {:halt, socket}
     end
   end
-
 
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(socket, session)

@@ -1,4 +1,4 @@
-defmodule PicChat.MessagesTest do
+jdefmodule PicChat.MessagesTest do
   use PicChat.DataCase
 
   alias PicChat.Messages
@@ -7,11 +7,13 @@ defmodule PicChat.MessagesTest do
     alias PicChat.Messages.Message
 
     import PicChat.MessagesFixtures
+    import PicChat.AccountsFixtures
 
     @invalid_attrs %{content: nil}
 
     test "list_messages/0 returns all messages" do
-      message = message_fixture()
+      user = user_fixture()
+      message = message_fixture(user_id: user.id)
       assert Messages.list_messages() == [message]
     end
 
@@ -21,7 +23,8 @@ defmodule PicChat.MessagesTest do
     end
 
     test "create_message/1 with valid data creates a message" do
-      valid_attrs = %{content: "some content"}
+      user = user_fixture()
+      valid_attrs = %{content: "some content", user_id: user.id}
 
       assert {:ok, %Message{} = message} = Messages.create_message(valid_attrs)
       assert message.content == "some content"
