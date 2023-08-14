@@ -17,7 +17,7 @@
     <div class="sr-only">
       <.link navigate={~p"/messages/#{message}"}>Show</.link>
     </div>
-    <.link patch={~p"/messages/#{message}/edit"}>Edit</.link>
+    <.link navigate={~p"/messages/#{message}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, message}}>
     <.link
@@ -42,5 +42,6 @@
     action={@live_action}
     message={@message}
     patch={~p"/messages"}
+    current_user={@current_user}
   />
 </.modal>

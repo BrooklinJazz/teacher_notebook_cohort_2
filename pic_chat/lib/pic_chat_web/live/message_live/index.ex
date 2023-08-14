@@ -22,9 +22,16 @@ defmodule PicChatWeb.MessageLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Message")
-    |> assign(:message, %Message{})
+    IO.inspect(socket.assigns[:current_user], label: "CURRENT USER")
+
+    if socket.assigns[:current_user] do
+      socket
+      |> assign(:page_title, "New Message")
+      |> assign(:message, %Message{})
+    else
+      dbg(socket)
+      socket |> redirect(to: ~p"/users/log_in")
+    end
   end
 
   defp apply_action(socket, :index, _params) do
@@ -41,8 +48,12 @@ defmodule PicChatWeb.MessageLive.Index do
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     message = Messages.get_message!(id)
-    {:ok, _} = Messages.delete_message(message)
 
-    {:noreply, stream_delete(socket, :messages, message)}
+    if message.user_id == socket.assigns.current_user.id do
+      {:ok, _} = Messages.delete_message(message)
+      {:noreply, stream_delete(socket, :messages, message)}
+    else
+      {:noreply, socket}
+    end
   end
 end
