@@ -6,7 +6,10 @@ defmodule PicChatWeb.MessageLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    IO.inspect(socket.assigns.live_action, label: "MOUNTING")
+    if connected?(socket) do
+      PicChatWeb.Endpoint.subscribe("chat:1")
+    end
+
     {:ok, stream(socket, :messages, Messages.list_messages())}
   end
 
@@ -22,14 +25,11 @@ defmodule PicChatWeb.MessageLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
-    IO.inspect(socket.assigns[:current_user], label: "CURRENT USER")
-
     if socket.assigns[:current_user] do
       socket
       |> assign(:page_title, "New Message")
       |> assign(:message, %Message{})
     else
-      dbg(socket)
       socket |> redirect(to: ~p"/users/log_in")
     end
   end
@@ -42,6 +42,14 @@ defmodule PicChatWeb.MessageLive.Index do
 
   @impl true
   def handle_info({PicChatWeb.MessageLive.FormComponent, {:saved, message}}, socket) do
+    {:noreply, stream_insert(socket, :messages, message, at: 0)}
+  end
+
+  def handle_info(%Phoenix.Socket.Broadcast{topic: "chat:1", event: "new_message", payload: message}, socket) do
+    {:noreply, stream_insert(socket, :messages, message, at: 0)}
+  end
+
+  def handle_info(%Phoenix.Socket.Broadcast{topic: "chat:1", event: "edit_message", payload: message}, socket) do
     {:noreply, stream_insert(socket, :messages, message, at: 0)}
   end
 

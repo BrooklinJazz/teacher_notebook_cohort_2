@@ -135,7 +135,7 @@ PS --broadcast event--> S3
 
 There are three main steps to implement a simple PubSub system.
 
-1. Use [Endpoint.subscribe/2](https://hexdocs.pm/phoenix/Phoenix.Endpoint.html#c:subscribe/2) which calls [Phoenix.PubSuber.subscribe/3](https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html#subscribe/3) to subscribe the relevant processes to a topic.
+1. Use [Endpoint.subscribe/2](https://hexdocs.pm/phoenix/Phoenix.Endpoint.html#c:subscribe/2) which calls [Phoenix.PubSub.subscribe/3](https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html#subscribe/3) to subscribe the relevant processes to a topic.
 2. Broadcast a message to all subscribers of a topic using a broadcast function such as [Endpoint.broadcast/3](https://hexdocs.pm/phoenix/Phoenix.Endpoint.html#c:broadcast/3) or [Endpoint.broadcast_from/4](https://hexdocs.pm/phoenix/Phoenix.Endpoint.html#c:broadcast_from/4) (does not send a message to the caller)
 3. Handle the broadcasted message in the subscriber processes with a [handle_info/2](https://hexdocs.pm/elixir/GenServer.html#c:handle_info/2) callback.
 

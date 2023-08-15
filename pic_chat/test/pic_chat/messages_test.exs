@@ -1,4 +1,4 @@
-jdefmodule PicChat.MessagesTest do
+defmodule PicChat.MessagesTest do
   use PicChat.DataCase
 
   alias PicChat.Messages

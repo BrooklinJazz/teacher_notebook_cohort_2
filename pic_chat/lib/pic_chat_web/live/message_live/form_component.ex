@@ -20,7 +20,11 @@ defmodule PicChatWeb.MessageLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:content]} type="text" label="Content" />
-        <.input field={@form[:user_id]} type="hidden" value={@current_user.id}/>
+        <.input field={@form[:user_id]} type="hidden" value={@current_user.id} />
+        <.live_file_input upload={@uploads.picture} />
+          <%= if Enum.any?(@uploads.picture.entries) do %>
+          <.live_img_preview entry={hd(@uploads.picture.entries)} width="75" />
+          <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Message</.button>
         </:actions>
@@ -36,7 +40,8 @@ defmodule PicChatWeb.MessageLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_form(changeset)}
+     |> assign_form(changeset)
+     |> allow_upload(:picture, accept: ~w(.jpg .jpeg .png))}
   end
 
   @impl true
@@ -50,12 +55,21 @@ defmodule PicChatWeb.MessageLive.FormComponent do
   end
 
   def handle_event("save", %{"message" => message_params}, socket) do
+    file_uploads =
+      consume_uploaded_entries(socket, :picture, fn %{path: path}, entry ->
+        dest = Path.join("priv/static/uploads", entry.uuid <> "_" <> entry.client_name)
+        File.cp!(path, dest)
+        {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+      end)
+
+    message_params = Map.put(message_params, "picture", List.first(file_uploads))
     save_message(socket, socket.assigns.action, message_params)
   end
 
   defp save_message(socket, :edit, message_params) do
     case Messages.update_message(socket.assigns.message, message_params) do
       {:ok, message} ->
+        PicChatWeb.Endpoint.broadcast_from(self(), "chat:1", "edit_message", message)
         notify_parent({:saved, message})
 
         {:noreply,
@@ -72,6 +86,7 @@ defmodule PicChatWeb.MessageLive.FormComponent do
     case Messages.create_message(message_params) do
       {:ok, message} ->
         notify_parent({:saved, message})
+        PicChatWeb.Endpoint.broadcast_from!(self(), "chat:1", "new_message", message)
 
         {:noreply,
          socket
