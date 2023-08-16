@@ -15,6 +15,24 @@ defmodule PicChatWeb.MessageLiveTest do
     %{message: message}
   end
 
+  describe "PubSub" do
+    test "create message appears for subscribers", %{conn: conn} do
+      publisher = user_fixture()
+      subscriber = user_fixture()
+
+      {:ok, publisher_live, html} = conn |> log_in_user(publisher) |> live(~p"/messages/new")
+
+      {:ok, subscriber_live, html} = conn |> log_in_user(subscriber) |> live(~p"/messages/")
+      random_content = "some content#{Enum.random(1..10)}"
+
+      assert publisher_live
+             |> form("#message-form", message: %{content: random_content})
+             |> render_submit()
+
+      assert render(subscriber_live) =~ random_content
+    end
+  end
+
   describe "Index" do
     setup [:create_message]
 

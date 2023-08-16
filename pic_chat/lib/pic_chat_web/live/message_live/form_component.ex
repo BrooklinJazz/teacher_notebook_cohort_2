@@ -69,8 +69,8 @@ defmodule PicChatWeb.MessageLive.FormComponent do
   defp save_message(socket, :edit, message_params) do
     case Messages.update_message(socket.assigns.message, message_params) do
       {:ok, message} ->
-        PicChatWeb.Endpoint.broadcast_from(self(), "chat:1", "edit_message", message)
         notify_parent({:saved, message})
+        PicChatWeb.Endpoint.broadcast_from(self(), "chat:1", "edit_message", message)
 
         {:noreply,
          socket

@@ -53,12 +53,16 @@ defmodule PicChatWeb.MessageLive.Index do
     {:noreply, stream_insert(socket, :messages, message, at: 0)}
   end
 
+  def handle_info(%Phoenix.Socket.Broadcast{topic: "chat:1", event: "delete_message", payload: message}, socket) do
+    {:noreply, stream_delete(socket, :messages, message)}
+  end
+
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     message = Messages.get_message!(id)
-
     if message.user_id == socket.assigns.current_user.id do
       {:ok, _} = Messages.delete_message(message)
+      PicChatWeb.Endpoint.broadcast_from!(self(), "chat:1", "delete_message", message)
       {:noreply, stream_delete(socket, :messages, message)}
     else
       {:noreply, socket}
