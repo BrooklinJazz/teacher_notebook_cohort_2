@@ -28,6 +28,15 @@ defmodule PicChat.Messages do
     |> Repo.all()
   end
 
+  def todays_messages() do
+    todays_date = DateTime.new!(Date.utc_today(), ~T[00:00:00])
+    # filter for todays messages (Alena and Jakub)
+    from(m in Message,
+      where: m.inserted_at > ^todays_date,
+      order_by: [desc: :id, desc: :inserted_at]
+      )
+    |> Repo.all()
+  end
   @doc """
   Gets a single message.
 

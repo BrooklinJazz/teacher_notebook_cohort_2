@@ -22,9 +22,9 @@ defmodule PicChatWeb.MessageLive.FormComponent do
         <.input field={@form[:content]} type="text" label="Content" />
         <.input field={@form[:user_id]} type="hidden" value={@current_user.id} />
         <.live_file_input upload={@uploads.picture} />
-          <%= if Enum.any?(@uploads.picture.entries) do %>
+        <%= if Enum.any?(@uploads.picture.entries) do %>
           <.live_img_preview entry={hd(@uploads.picture.entries)} width="75" />
-          <% end %>
+        <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Message</.button>
         </:actions>
