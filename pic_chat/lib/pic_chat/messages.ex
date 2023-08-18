@@ -17,8 +17,15 @@ defmodule PicChat.Messages do
       [%Message{}, ...]
 
   """
-  def list_messages do
-    Repo.all(Message)
+  def list_messages(opts \\ []) do
+    limit = Keyword.get(opts, :limit)
+    offset = Keyword.get(opts, :offset, 0)
+
+    Message
+    |> from(order_by: [desc: :id, desc: :inserted_at])
+    |> offset(^offset)
+    |> limit(^limit)
+    |> Repo.all()
   end
 
   @doc """

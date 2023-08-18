@@ -11,6 +11,17 @@ defmodule PicChat.MessagesTest do
 
     @invalid_attrs %{content: nil}
 
+    test "list_messages/1 returns paginated messages" do
+      user = user_fixture()
+      message1 = message_fixture(user_id: user.id)
+      message2 = message_fixture(user_id: user.id)
+
+      assert Messages.list_messages(limit: 1, offset: 0) == [message2]
+      assert Messages.list_messages(limit: 1, offset: 1) == [message1]
+
+      assert Messages.list_messages(limit: 2, offset: 0) == [message2, message1]
+    end
+
     test "list_messages/0 returns all messages" do
       user = user_fixture()
       message = message_fixture(user_id: user.id)

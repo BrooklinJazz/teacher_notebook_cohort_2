@@ -18,17 +18,55 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
+import { Socket } from "phoenix"
+import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+let scrollAt = () => {
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+    let clientHeight = document.documentElement.clientHeight
+
+    return scrollTop / (scrollHeight - clientHeight) * 100
+}
+
+let Hooks = {
+    InfiniteScroll: {
+        loading: false,
+        mounted() {
+            this.handleEvent("highlight", (e) => {
+                console.log("highlighted")
+                let el = document.getElementById(`messages-${e.message_id}`)
+                if (el) {
+                    el.classList.add("bg-flash-red")
+                }
+            })
+
+            console.log("I'll get you, Peter Pan!")
+
+            window.addEventListener("scroll", e => {
+                if (!this.loading && scrollAt() >= 90) {
+                    console.log("LOADING MORE")
+                    this.pushEvent("load-more", {})
+                    this.loading = true
+                }
+            })
+        },
+        updated() {
+            console.log("ILL UPDATE YOU PETER PAN")
+            this.loading = false
+        }
+    }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })
 
 // Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
+topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
+
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
@@ -38,4 +76,6 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+
 

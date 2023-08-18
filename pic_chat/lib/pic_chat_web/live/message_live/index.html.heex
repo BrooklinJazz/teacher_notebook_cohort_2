@@ -6,10 +6,10 @@
     </.link>
   </:actions>
 </.header>
-
 <.table
   id="messages"
   rows={@streams.messages}
+  phx-hook="InfiniteScroll"
   row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message}") end}
 >
   <:col :let={{_id, message}} label="Content"><%= message.content %></:col>
@@ -28,7 +28,7 @@
     </.link>
   </:action>
 </.table>
-
+<.button phx-click="load-more">Load More</.button>
 <.modal
   :if={@live_action in [:new, :edit]}
   id="message-modal"

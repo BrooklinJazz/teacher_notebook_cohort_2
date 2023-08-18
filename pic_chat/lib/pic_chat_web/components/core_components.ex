@@ -449,6 +449,8 @@ defmodule PicChatWeb.CoreComponents do
   attr :row_id, :any, default: nil, doc: "the function for generating the row id"
   attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
 
+  attr :rest, :global, doc: "the arbitrary HTML attributes to apply to the table tag"
+
   attr :row_item, :any,
     default: &Function.identity/1,
     doc: "the function for mapping each row before calling the :col and :action slots"
@@ -466,7 +468,7 @@ defmodule PicChatWeb.CoreComponents do
       end
 
     ~H"""
-    <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
+    <div id={"#{@id}-parent"} class="overflow-y-auto px-4 sm:overflow-visible sm:px-0" {@rest}>
       <table class="w-[40rem] mt-11 sm:w-full">
         <thead class="text-sm text-left leading-6 text-zinc-500">
           <tr>

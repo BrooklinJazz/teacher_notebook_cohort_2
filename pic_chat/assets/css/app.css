@@ -3,3 +3,15 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+@keyframes animateColor {
+    0% {
+        background-color: red;
+    }
+    100% {
+        background-color: current;
+    }
+}
+
+.bg-flash-red {
+    animation: animateColor 1s ease-out;
+}
