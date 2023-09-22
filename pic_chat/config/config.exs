@@ -10,6 +10,11 @@ import Config
 config :pic_chat,
   ecto_repos: [PicChat.Repo]
 
+config :pic_chat, Oban,
+  repo: PicChat.Repo,
+  plugins: [Oban.Plugins.Pruner, {Oban.Plugins.Cron, crontab: [{"0 8 * * *", PicChat.Workers.DailyEmail}]}],
+  queues: [default: 10]
+
 # Configures the endpoint
 config :pic_chat, PicChatWeb.Endpoint,
   url: [host: "localhost"],

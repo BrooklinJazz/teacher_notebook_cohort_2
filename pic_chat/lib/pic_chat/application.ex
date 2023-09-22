@@ -12,6 +12,7 @@ defmodule PicChat.Application do
       PicChatWeb.Telemetry,
       # Start the Ecto repository
       PicChat.Repo,
+      {Oban, Application.fetch_env!(:pic_chat, Oban)},
       # Start the PubSub system
       {Phoenix.PubSub, name: PicChat.PubSub},
       # Start Finch
@@ -20,6 +21,7 @@ defmodule PicChat.Application do
       PicChatWeb.Endpoint
       # Start a worker by calling: PicChat.Worker.start_link(arg)
       # {PicChat.Worker, arg}
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
